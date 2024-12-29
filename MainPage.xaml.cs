@@ -6,14 +6,14 @@ namespace BlocksGame
 {
     public class MainPageView : BindableObject
     {
-        int theBestScore;
-        public int TheBestScore
+        static int theBestScore;
+        public static int TheBestScore
         {
             get => theBestScore;
             set
             {
                 theBestScore = value;
-                OnPropertyChanged(TheBestScoreStr);
+
             }
         }
         public uint Width { get; set; }
@@ -22,7 +22,10 @@ namespace BlocksGame
         public string TheBestScoreStr
         {
             get { return "The Best Score: " + TheBestScore; }
-
+            set
+            {
+                OnPropertyChanged();
+            }
         }
         public ICommand Start { get; set; }
         public int[] PickerOptions { get; } =
@@ -65,7 +68,11 @@ namespace BlocksGame
             Global.MainPageView = this.BindingContext as MainPageView;
             Global.MainPage = this;
         }
-
+        protected override void OnAppearing()
+        {
+            base.OnAppearing();
+            Global.MainPageView.TheBestScoreStr = Global.MainPageView.TheBestScoreStr;
+        }
     }
 
 }

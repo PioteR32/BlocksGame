@@ -11,6 +11,7 @@ namespace BlocksGame
 
         public static MainPageView MainPageView { get; set; }
         public static MainPage MainPage { get; set; }
+        public static GamePage GamePage { get; set; }
         public static string GlobalPath { get; } = Microsoft.Maui.Storage.FileSystem.AppDataDirectory;
         /// <summary>
         /// Create grid columns and rows
@@ -29,7 +30,12 @@ namespace BlocksGame
                 grid.RowDefinitions.Add(new RowDefinition { Height = GridLength.Auto });
             }
         }
-
+        public static double Impressivenes(double number ,int potęga)
+        {
+            if (potęga == 0)
+                return 1;
+            return number * Impressivenes(number , potęga--);
+        }
         public static bool CreateFolder(string nameOfFolder)
         {
             string folderPath = "";

@@ -23,17 +23,26 @@ public partial class GamePage : ContentPage
     public static IList<Block> ToChoose { get; set; } = [];
 
     private static readonly object lockObject = new object();
-    DisplayInfo displayInfo = DeviceDisplay.MainDisplayInfo;
-    static double screenWidth;
-    static double screenHeight;
-    public GamePage(uint width , uint height)
+    static int score = 0;
+    public int Score
     {
-        screenWidth = displayInfo.Width;
-        screenHeight = displayInfo.Height;
-
+        get => score;
+        set
+        {
+            score = value;
+            OnPropertyChanged(nameof(ScoreStr));
+        }
+    }
+    public string ScoreStr
+    {
+        get => "Score: " + score;
+    }
+    public GamePage(uint width, uint height)
+    {
+        Global.GamePage = this;
         b = new BlocksBoard(width, height);
         InitializeComponent();
-        layout = MainAbsoluteLayout;
+        ToChoose = new List<Block>();
         Board = b.CreateGrid();
         VerticalStackLayout.Children.Add(Board);
         for (int i = 0; i < 3; i++)
@@ -53,14 +62,14 @@ public partial class GamePage : ContentPage
     }
     private void AddXToBlocks()
     {
-        while(ToChoose[0].GridX + ToChoose[0].GridY <= 0)
-        for (int i = 0; i < ToChoose.Count; i++)
-        {
-            ToChoose[i].GridX = Blocks.X;
-            ToChoose[i].GridY = Blocks.Y;
-        }
+        while (ToChoose[0].GridX <= 0 || ToChoose[0].GridY <= 0)
+            for (int i = 0; i < ToChoose.Count; i++)
+            {
+                ToChoose[i].GridX = Blocks.X;
+                ToChoose[i].GridY = Blocks.Y;
+            }
     }
-    public static void MenageToChoose(Grid layout, BlocksBoard b)
+    public async void MenageToChoose(Grid layout, BlocksBoard b)
     {
         int beginBlocksToChoose = ToChoose.Count;
         int BlocksToChoose = 0;
@@ -72,9 +81,9 @@ public partial class GamePage : ContentPage
 
         beginBlocksToChoose = BlocksToChoose;
         IsGetUserScore(b);
-        if (IsUserLose(b))
+        if(IsUserLose(b))
         {
-            return;
+            await Navigation.PopAsync();
         }
 
         if (BlocksToChoose == 0)
@@ -94,7 +103,7 @@ public partial class GamePage : ContentPage
         }
 
     }
-    private static void IsGetUserScore(BlocksBoard b)
+    private void IsGetUserScore(BlocksBoard b)
     {
         IList<int> completedRows = CheckCompletedRows(b);
         IList<int> completedColumns = CheckCompletedColumns(b);
@@ -114,16 +123,30 @@ public partial class GamePage : ContentPage
                 b.fields[column, i].BackgroundColor = Color.FromRgb(255, 0, 0);
             }
         }
+
+        if (completedColumns.Count != 0 && completedRows.Count != 0)
+            Score += (int)Global.Impressivenes((int)b.Width, completedColumns.Count) * (int)Global.Impressivenes(b.Height, completedRows.Count);
+        else if (completedColumns.Count != 0)
+            Score += (int)Global.Impressivenes((int)b.Width, completedColumns.Count);
+        else if (completedRows.Count != 0)
+            Score += (int)Global.Impressivenes(b.Height, completedRows.Count);
+
+        if (Score > MainPageView.TheBestScore)
+        {
+            MainPageView.TheBestScore = Score;
+        }
     }
-    private static bool IsUserLose(BlocksBoard b)
+    //Do poprawy
+    public static bool IsUserLose(BlocksBoard b)
     {
         for (int i = 0; i < ToChoose.Count; i++)
             for (int j = 0, k = 0; j < b.fields.GetLength(1); k++)
             {
-                if (ToChoose[i].IsFreeSpaceOnBlock(k, j))
-                {
-                    return false;
-                }
+                if (ToChoose[i].BlockView.IsVisible)
+                    if (ToChoose[i].IsFreeSpaceOnBlock(k, j))
+                    {
+                        return false;
+                    }
                 if (k + 1 == b.fields.GetLength(0))
                 {
                     k = -1;
