@@ -274,20 +274,12 @@ namespace BlocksGame
                 case GestureStatus.Completed:
                     if (!AddBlockToBoard())
                     {
-                        await grid.TranslateTo(e.TotalX, e.TotalY);
-                        if (GamePage.IsUserLose(blocksBoard))
-                        {
-                            return;
-                        }
+                        await grid.TranslateTo(e.TotalX, e.TotalY); 
                     }
                     else
                     {
                         BlockView.IsVisible = false;
                         Global.GamePage.MenageToChoose((Grid)BlockView.Parent, blocksBoard);
-                        if (GamePage.IsUserLose(blocksBoard))
-                        {
-                            return;
-                        }
                     }
                     break;
                 case GestureStatus.Canceled:
@@ -297,10 +289,6 @@ namespace BlocksGame
                     {
                         BlockView.IsVisible = false;
                          Global.GamePage.MenageToChoose((Grid)BlockView.Parent, blocksBoard);
-                        if (GamePage.IsUserLose(blocksBoard))
-                        {
-                            return;
-                        }
                     }
                     break;
             }
@@ -308,6 +296,7 @@ namespace BlocksGame
 
         private bool AddBlockToBoard()
         {
+            GamePage.ChangeGridXY((Grid)BlockView.Parent);
             var boardGrid = blocksBoard.BoardView;
             double boardColumnWidth = boardGrid.Width / blocksBoard.Width;
             double boardColumnHeight = boardGrid.Height / blocksBoard.Height;
@@ -324,6 +313,7 @@ namespace BlocksGame
                             blocksBoard.fields[position.y, position.x ].BackgroundColor = BackgroundColor;
                             blocksBoard.fields[position.y, position.x].IsFree = false;
                         }
+                        
                         return true;
                     }
                 }
@@ -396,7 +386,7 @@ namespace BlocksGame
             }
             return true;
         }
-        private bool IsPositionInGrid(int columnPosition, int rowPosition, IList<PositionsInTable> positions)
+        private bool IsPositionInGrid(int rowPosition, int columnPosition, IList<PositionsInTable> positions)
         {
             try
             {
@@ -449,22 +439,22 @@ namespace BlocksGame
         public static Block GenerateBlock(BlocksBoard blocksBoard)
         {
             Random random = new Random();
-            int numberOfBlocks = random.Next(1, (int)blocksBoard.Width * (int)blocksBoard.Height / 2 - 1);
+            int numberOfBlocks = random.Next(1,5);
 
             return new Block(GenerateBlockStructure(blocksBoard, numberOfBlocks), blocksBoard);
         }
         public static bool[,] GenerateBlockStructure(BlocksBoard blocksBoard, int numberOfBlocks)
         {
             Random random = new Random();
-            bool[,] tmp = new bool[blocksBoard.Width, blocksBoard.Height];
+            bool[,] tmp = new bool[blocksBoard.Height, blocksBoard.Width];
 
             for (int i = 0; i < numberOfBlocks; i++)
             {
                 int x = random.Next((int)blocksBoard.Width);
                 int y = random.Next((int)blocksBoard.Height);
-                if (!tmp[x, y])
+                if (!tmp[y, x])
                 {
-                    tmp[x, y] = true;
+                    tmp[y, x] = true;
                 }
                 else
                     i--;

@@ -34,7 +34,8 @@ namespace BlocksGame
         {
             if (potęga == 0)
                 return 1;
-            return number * Impressivenes(number , potęga--);
+            potęga--;
+            return number * Impressivenes(number , potęga);
         }
         public static bool CreateFolder(string nameOfFolder)
         {

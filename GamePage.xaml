@@ -8,8 +8,7 @@
     <VerticalStackLayout x:Name="MainAbsoluteLayout">
         <VerticalStackLayout x:Name="VerticalStackLayout">
             <Label Text="{Binding ScoreStr}" BindingContext="{x:Reference Page}" FontSize="Header"  HorizontalOptions="Center" HorizontalTextAlignment="Center"/>
-            <Grid x:Name="board" HorizontalOptions="Center"/>
-            <Grid x:Name="blocks" HorizontalOptions="Center"/>
+           
         </VerticalStackLayout>
     </VerticalStackLayout>
 </ContentPage>

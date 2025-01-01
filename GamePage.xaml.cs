@@ -3,6 +3,7 @@
 using Microsoft.Maui.Controls.PlatformConfiguration.GTKSpecific;
 using Microsoft.Maui.Handlers;
 using Microsoft.Maui.Layouts;
+using System.Data.Common;
 
 
 namespace BlocksGame;
@@ -15,8 +16,8 @@ public partial class GamePage : ContentPage
     {
         ColumnSpacing = 20,
         HorizontalOptions = LayoutOptions.Center,
-        VerticalOptions = LayoutOptions.Center,
         Padding = 10,
+        BackgroundColor = Color.FromRgb(0, 0, 255),
     };
     AbsoluteLayout layout = new AbsoluteLayout();
     BlocksBoard b;
@@ -37,7 +38,7 @@ public partial class GamePage : ContentPage
     {
         get => "Score: " + score;
     }
-    public GamePage(uint width, uint height)
+    public GamePage(uint width, uint height, uint numberOfBlocksToChoose)
     {
         Global.GamePage = this;
         b = new BlocksBoard(width, height);
@@ -45,13 +46,13 @@ public partial class GamePage : ContentPage
         ToChoose = new List<Block>();
         Board = b.CreateGrid();
         VerticalStackLayout.Children.Add(Board);
-        for (int i = 0; i < 3; i++)
+        for (int i = 0; i < numberOfBlocksToChoose; i++)
         {
             ToChoose.Add(Block.GenerateBlock(b));
         }
-        board = Board;
-        blocks = Blocks;
-        Global.CreateGrid(Blocks, 3, 1);
+        //board = Board;
+        //blocks = Blocks;
+        Global.CreateGrid(Blocks, numberOfBlocksToChoose, 1);
         for (int i = 0; i < ToChoose.Count; i++)
         {
             ToChoose[i].ShowBlock(i, 0, Blocks);
@@ -81,7 +82,7 @@ public partial class GamePage : ContentPage
 
         beginBlocksToChoose = BlocksToChoose;
         IsGetUserScore(b);
-        if(IsUserLose(b))
+        if (IsUserLose(b))
         {
             await Navigation.PopAsync();
         }
@@ -103,64 +104,88 @@ public partial class GamePage : ContentPage
         }
 
     }
+    public static void ChangeGridXY(Grid layout)
+    {
+        for (int i = 0; i < ToChoose.Count; i++)
+        {
+            ToChoose[i].GridX = layout.X;
+            ToChoose[i].GridY = layout.Y;
+        }
+    }
     private void IsGetUserScore(BlocksBoard b)
     {
-        IList<int> completedRows = CheckCompletedRows(b);
-        IList<int> completedColumns = CheckCompletedColumns(b);
-        foreach (int row in completedRows)
+        IList<int>  completedRows = CheckCompletedRows(b);
+        IList<int> completedolumns =  CheckCompletedColumns(b);
+        foreach (int column in completedolumns)
         {
             for (int i = 0; i < b.fields.GetLength(0); i++)
             {
-                b.fields[i, row].IsFree = true;
-                b.fields[i, row].BackgroundColor = Color.FromRgb(255, 0, 0);
+                b.fields[i,column].IsFree = true;
+                b.fields[i,column].BackgroundColor = Color.FromRgb(255, 0, 0);
             }
         }
-        foreach (int column in completedColumns)
+        foreach (int row in completedRows)
         {
             for (int i = 0; i < b.fields.GetLength(1); i++)
             {
-                b.fields[column, i].IsFree = true;
-                b.fields[column, i].BackgroundColor = Color.FromRgb(255, 0, 0);
+                b.fields[row,i].IsFree = true;
+                b.fields[row,i].BackgroundColor = Color.FromRgb(255, 0, 0);
             }
         }
 
-        if (completedColumns.Count != 0 && completedRows.Count != 0)
-            Score += (int)Global.Impressivenes((int)b.Width, completedColumns.Count) * (int)Global.Impressivenes(b.Height, completedRows.Count);
-        else if (completedColumns.Count != 0)
-            Score += (int)Global.Impressivenes((int)b.Width, completedColumns.Count);
+        if (completedRows.Count != 0 && completedolumns.Count != 0)
+            Score += (int)Global.Impressivenes((int)b.Width, completedRows.Count) * (int)Global.Impressivenes(b.Height, completedolumns.Count);
         else if (completedRows.Count != 0)
-            Score += (int)Global.Impressivenes(b.Height, completedRows.Count);
+            Score += (int)Global.Impressivenes((int)b.Width, completedRows.Count);
+        else if (completedolumns.Count != 0)
+            Score += (int)Global.Impressivenes(b.Height, completedolumns.Count);
 
         if (Score > MainPageView.TheBestScore)
         {
             MainPageView.TheBestScore = Score;
+            MainPageView.ChangeTheBestScoreInFile(Score);
         }
     }
-    //Do poprawy
     public static bool IsUserLose(BlocksBoard b)
     {
+        int unVisableElements = 0;
         for (int i = 0; i < ToChoose.Count; i++)
-            for (int j = 0, k = 0; j < b.fields.GetLength(1); k++)
-            {
-                if (ToChoose[i].BlockView.IsVisible)
+            if (ToChoose[i].BlockView.IsVisible)
+                for (int j = 0, k = 0; j < b.fields.GetLength(1); k++)
+                {
+
                     if (ToChoose[i].IsFreeSpaceOnBlock(k, j))
                     {
                         return false;
                     }
-                if (k + 1 == b.fields.GetLength(0))
-                {
-                    k = -1;
-                    j++;
+                    else
+                    {
+
+                    }
+
+                    if (k + 1 == b.fields.GetLength(0))
+                    {
+                        k = -1;
+                        j++;
+                    }
                 }
+            else
+            {
+                unVisableElements++;
             }
-        return true;
+        if (unVisableElements != ToChoose.Count)
+            return true;
+        else
+        {
+            return false;
+        }
     }
     private static IList<int> CheckCompletedColumns(BlocksBoard b)
     {
         IList<int> completedRows = new List<int>();
         for (int i = 0, j = 0; i < b.Width; j++)
         {
-            if (b.fields[i, j].IsFree)
+            if (b.fields[j, i].IsFree)
             {
                 i++;
                 j = -1;
@@ -180,7 +205,7 @@ public partial class GamePage : ContentPage
         IList<int> completedColumns = new List<int>();
         for (int i = 0, j = 0; j < b.Height; i++)
         {
-            if (b.fields[i, j].IsFree)
+            if (b.fields[j, i].IsFree)
             {
                 j++;
                 i = -1;

@@ -13,19 +13,19 @@ namespace BlocksGame
         double MinimumHeightRequest = 30;
         public uint Width { get; private set; }
         public uint Height { get; private set; }
-        public  Field[,] fields;
+        public Field[,] fields;
         public Grid BoardView { get; private set; }
-        public BlocksBoard(uint width,uint height)
+        public BlocksBoard(uint width, uint height)
         {
             this.Width = width;
             this.Height = height;
-            fields = new Field[width, height];
+            fields = new Field[height, width];
         }
         public Grid CreateGrid()
         {
-            var grid = new Grid { /*Margin = 10, Padding = 10 ,*/HorizontalOptions = LayoutOptions.Center};
+            var grid = new Grid { /*Margin = 10, Padding = 10 ,*/HorizontalOptions = LayoutOptions.Center };
             Global.CreateGrid(grid, Width, Height);
-            for (int i = 0, j = 0; j < this.Height; i++)
+            for (int i = 0, j = 0; j < this.Width; i++)
             {
                 fields[i, j] = new Field();
                 var label = new Label
@@ -50,26 +50,41 @@ namespace BlocksGame
                     VerticalOptions = LayoutOptions.End,
                 };
                 grid.Children.Add(label);
-                grid.SetColumn(label, i);
-                grid.SetRow(label, j);
+                grid.SetColumn(label, j);
+                grid.SetRow(label, i);
 
                 grid.Children.Add(bound);
-                grid.SetColumn(bound, i);
-                grid.SetRow(bound,j);
+                grid.SetColumn(bound, j);
+                grid.SetRow(bound, i);
 
                 grid.Children.Add(downBound);
-                grid.SetColumn(downBound, i);
-                grid.SetRow(downBound, j);
+                grid.SetColumn(downBound, j);
+                grid.SetRow(downBound, i);
 
-                if (i == this.Width - 1)
+                if (i == this.Height - 1)
                 {
                     i = -1;
                     j++;
                 }
-               
+
             }
             BoardView = grid;
             return grid;
+        }
+
+        public bool IsClear()
+        {
+            for (int i = 0; i < fields.GetLength(0); i++)
+            {
+                for (int j = 0; j < fields.GetLength(1); j++)
+                {
+                    if(!fields[i, j].IsFree)
+                    {
+                        return false;
+                    }
+                }
+            }
+            return true;
         }
     }
 }

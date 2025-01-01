@@ -15,6 +15,7 @@
             <HorizontalStackLayout Padding="20"> 
                 <Picker SelectedItem="{Binding Width}" ItemsSource="{Binding PickerOptions}" HorizontalOptions="Start" Title="Board Width"/>
                 <Picker SelectedItem="{Binding Height}" ItemsSource="{Binding PickerOptions}" HorizontalOptions="End" Title="Board Height"/>
+                <Picker SelectedItem="{Binding NumberOfBlocksToChoose}" ItemsSource="{Binding PickerOptions}" HorizontalOptions="End" Title="Blocks to choose"/>
             </HorizontalStackLayout>
         </VerticalStackLayout>
     </ScrollView>

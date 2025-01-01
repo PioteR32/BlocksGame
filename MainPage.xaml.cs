@@ -7,13 +7,13 @@ namespace BlocksGame
     public class MainPageView : BindableObject
     {
         static int theBestScore;
+        public uint NumberOfBlocksToChoose { get; set; } = 0;
         public static int TheBestScore
         {
             get => theBestScore;
             set
             {
                 theBestScore = value;
-
             }
         }
         public uint Width { get; set; }
@@ -34,9 +34,9 @@ namespace BlocksGame
         };
         public async void StartGame()
         {
-            if(Width > 1 && Height > 1)
+            if(Width > 1 && Height > 1 && NumberOfBlocksToChoose > 1)
             {
-                GamePage gamePage = new GamePage(Width, Height);
+                GamePage gamePage = new GamePage(Width, Height, NumberOfBlocksToChoose);
                 await Global.MainPage.Navigation.PushAsync(gamePage);
             }
         }
@@ -48,15 +48,21 @@ namespace BlocksGame
             if (!Directory.Exists(folderPath))
             {
                 Global.CreateFolder(folderPath);
-                if (!File.Exists(folderPath + "/" + nameof(TheBestScore) + ".txt"))
-                {
-                    StreamWriter str = new StreamWriter(folderPath + "/" + nameof(TheBestScore) + ".txt");
-                    str.Write("0");
-                    str.Close();
-                }
-                StreamReader reader = new StreamReader(folderPath + "/" + nameof(TheBestScore) + ".txt");
-                TheBestScore = int.Parse(reader.ReadToEnd());
             }
+            if (!File.Exists(folderPath + "/" + nameof(TheBestScore) + ".txt"))
+            {
+                ChangeTheBestScoreInFile();
+            }
+            StreamReader reader = new StreamReader(folderPath + "/" + nameof(TheBestScore) + ".txt");
+            TheBestScore = int.Parse(reader.ReadToEnd());
+            reader.Close();
+        }
+        public static void ChangeTheBestScoreInFile(int theBestScore = 0)
+        {
+            string folderPath = Path.Combine(FileSystem.AppDataDirectory, "BlockGame");
+            StreamWriter str = new StreamWriter(folderPath + "/" + nameof(TheBestScore) + ".txt");
+            str.Write(theBestScore.ToString());
+            str.Close();
         }
     }
     public partial class MainPage : ContentPage
