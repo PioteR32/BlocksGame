@@ -439,7 +439,7 @@ namespace BlocksGame
         public static Block GenerateBlock(BlocksBoard blocksBoard)
         {
             Random random = new Random();
-            int numberOfBlocks = random.Next(1,5);
+            int numberOfBlocks = random.Next(1,((int)blocksBoard.Width + (int)blocksBoard.Height) / 2);
 
             return new Block(GenerateBlockStructure(blocksBoard, numberOfBlocks), blocksBoard);
         }
