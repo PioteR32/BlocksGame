@@ -193,7 +193,7 @@ namespace BlocksGame
                 grid.SetRow(label, i);
 
 
-                var bound = new Label
+                var leftBound = new Label
                 {
                     BindingContext = tmp,
                     BackgroundColor = Color.FromRgb(255, 0, 0),
@@ -202,7 +202,11 @@ namespace BlocksGame
                     HorizontalOptions = LayoutOptions.Start,
                 };
 
-                bound.SetBinding(Label.HeightRequestProperty, new Binding("Height"));
+                leftBound.SetBinding(Label.HeightRequestProperty, new Binding("Height"));
+                grid.Children.Add(leftBound);
+                grid.SetColumn(leftBound, j);
+                grid.SetRow(leftBound, i);
+
                 var downBound = new Label
                 {
                     BindingContext = tmp,
@@ -211,14 +215,39 @@ namespace BlocksGame
                     HeightRequest = 1,
                     VerticalOptions = LayoutOptions.End,
                 };
-                downBound.SetBinding(Label.WidthRequestProperty, new Binding("Width"));
-                grid.Children.Add(bound);
-                grid.SetColumn(bound, j);
-                grid.SetRow(bound, i);
 
+                downBound.SetBinding(Label.WidthRequestProperty, new Binding("Width"));
                 grid.Children.Add(downBound);
                 grid.SetColumn(downBound, j);
                 grid.SetRow(downBound, i);
+
+                var hightBound = new Label
+                {
+                    BindingContext = tmp,
+                    BackgroundColor = Color.FromRgb(255, 0, 0),
+                    WidthRequest = 10,
+                    HeightRequest = 1,
+                    VerticalOptions = LayoutOptions.Start,
+                };
+
+                hightBound.SetBinding(Label.WidthRequestProperty, new Binding("Width"));
+                grid.Children.Add(hightBound);
+                grid.SetColumn(hightBound, j);
+                grid.SetRow(hightBound, i);
+
+                var rightBound = new Label
+                {
+                    BindingContext = tmp,
+                    BackgroundColor = Color.FromRgb(255, 0, 0),
+                    WidthRequest = 1,
+                    HeightRequest = 10,
+                    HorizontalOptions = LayoutOptions.End,
+                };
+
+                rightBound.SetBinding(Label.HeightRequestProperty, new Binding("Height"));
+                grid.Children.Add(rightBound);
+                grid.SetColumn(rightBound, j);
+                grid.SetRow(rightBound, i);
 
                 if (i == BlockStructure.GetLength(0) - 1)
                 {

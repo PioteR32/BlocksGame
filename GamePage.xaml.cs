@@ -17,7 +17,6 @@ public partial class GamePage : ContentPage
         ColumnSpacing = 20,
         HorizontalOptions = LayoutOptions.Center,
         Padding = 10,
-        BackgroundColor = Color.FromRgb(0, 0, 255),
     };
     AbsoluteLayout layout = new AbsoluteLayout();
     BlocksBoard b;
@@ -58,8 +57,7 @@ public partial class GamePage : ContentPage
             ToChoose[i].ShowBlock(i, 0, Blocks);
         }
         VerticalStackLayout.Children.Add(Blocks);
-        MenageToChooseThread = new Thread(new ThreadStart(AddXToBlocks));
-        MenageToChooseThread.Start();
+      
     }
     private void AddXToBlocks()
     {
