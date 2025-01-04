@@ -22,8 +22,8 @@ namespace BlocksGame
         public Image Image;
         public Color BackgroundColor = Color.FromRgb(0, 0, 0);
         BlocksBoard blocksBoard;
-        public double GridX = 0;
-        public double GridY = 0;
+        private double fieldWidth = 20;
+        private double fieldHeight = 20;
         public Grid BlockView { get; set; }
         /// <summary>
         /// Structure Of Block 
@@ -34,18 +34,18 @@ namespace BlocksGame
         bool isInGrid = true;
         public bool[,] CutStructure(IList<List<bool>> structure)
         {
-            for(int i = 0; i < structure.Count;i++)
+            for (int i = 0; i < structure.Count; i++)
             {
                 bool isToDelete = true;
-                for(int j = 0; j < structure[i].Count;j++)
+                for (int j = 0; j < structure[i].Count; j++)
                 {
-                    if(structure[i][j])
+                    if (structure[i][j])
                     {
                         isToDelete = false;
                         break;
                     }
                 }
-                if(isToDelete)
+                if (isToDelete)
                 {
                     structure.Remove(structure[i]);
                     i--;
@@ -65,42 +65,42 @@ namespace BlocksGame
                 }
                 if (isToDelete)
                 {
-                    for(int i = 0;i < structure.Count;i++)
+                    for (int i = 0; i < structure.Count; i++)
                     {
                         structure[i].Remove(structure[i][j]);
                     }
                     j--;
                 }
             }
-            return ChangeIListToTable2D(structure); 
+            return ChangeIListToTable2D(structure);
         }
         public static T[,] ChangeIListToTable2D<T>(IList<List<T>> list)
         {
             T[,] tmp = new T[list.Count, list[0].Count];
-            for(int i = 0; i < list.Count; i++)
+            for (int i = 0; i < list.Count; i++)
             {
-                for(int j = 0; j < list[i].Count;j++)
+                for (int j = 0; j < list[i].Count; j++)
                 {
-                    tmp[i,j] = list[i][j];
+                    tmp[i, j] = list[i][j];
                 }
             }
             return tmp;
         }
         public static IList<List<T>> ChangeTable2DToIList<T>(T[,] table)
         {
-            IList<List<T>> list = (IList < List < T >> )new List<List<T>>();
+            IList<List<T>> list = (IList<List<T>>)new List<List<T>>();
 
             for (int i = 0; i < table.GetLength(0); i++)
             {
                 list.Add(new List<T>());
                 for (int j = 0; j < table.GetLength(1); j++)
                 {
-                    list[i].Add(table[i,j]);
+                    list[i].Add(table[i, j]);
                 }
             }
             return list;
         }
-      
+
         public Grid CreateBlock()
         {
             var grid = new Grid();
@@ -118,15 +118,15 @@ namespace BlocksGame
                 {
                     BindingContext = tmp,
                     BackgroundColor = tmp.BackgroundColor,
-                    MinimumWidthRequest = 10,
-                    MinimumHeightRequest = 10,
+                    MinimumWidthRequest = fieldWidth,
+                    MinimumHeightRequest = fieldHeight,
                 };
                 grid.Children.Add(label);
                 grid.SetColumn(label, j);
                 grid.SetRow(label, i);
 
 
-                var bound = new Label
+                var leftBound = new Label
                 {
                     BindingContext = tmp,
                     BackgroundColor = Color.FromRgb(255, 0, 0),
@@ -135,7 +135,11 @@ namespace BlocksGame
                     HorizontalOptions = LayoutOptions.Start,
                 };
 
-                bound.SetBinding(Label.HeightRequestProperty, new Binding("Height"));
+                leftBound.SetBinding(Label.HeightRequestProperty, new Binding("Height"));
+                grid.Children.Add(leftBound);
+                grid.SetColumn(leftBound, j);
+                grid.SetRow(leftBound, i);
+
                 var downBound = new Label
                 {
                     BindingContext = tmp,
@@ -144,14 +148,40 @@ namespace BlocksGame
                     HeightRequest = 1,
                     VerticalOptions = LayoutOptions.End,
                 };
-                downBound.SetBinding(Label.WidthRequestProperty, new Binding("Width"));
-                grid.Children.Add(bound);
-                grid.SetColumn(bound, j);
-                grid.SetRow(bound, i);
 
+                downBound.SetBinding(Label.WidthRequestProperty, new Binding("Width"));
                 grid.Children.Add(downBound);
                 grid.SetColumn(downBound, j);
                 grid.SetRow(downBound, i);
+
+                var hightBound = new Label
+                {
+                    BindingContext = tmp,
+                    BackgroundColor = Color.FromRgb(255, 0, 0),
+                    WidthRequest = 10,
+                    HeightRequest = 1,
+                    VerticalOptions = LayoutOptions.Start,
+                };
+
+                hightBound.SetBinding(Label.WidthRequestProperty, new Binding("Width"));
+                grid.Children.Add(hightBound);
+                grid.SetColumn(hightBound, j);
+                grid.SetRow(hightBound, i);
+
+                var rightBound = new Label
+                {
+                    BindingContext = tmp,
+                    BackgroundColor = Color.FromRgb(255, 0, 0),
+                    WidthRequest = 1,
+                    HeightRequest = 10,
+                    HorizontalOptions = LayoutOptions.End,
+                };
+
+                rightBound.SetBinding(Label.HeightRequestProperty, new Binding("Height"));
+                grid.Children.Add(rightBound);
+                grid.SetColumn(rightBound, j);
+                grid.SetRow(rightBound, i);
+
 
                 if (i == BlockStructure.GetLength(0) - 1)
                 {
@@ -165,6 +195,7 @@ namespace BlocksGame
             {
                 PanGetsureFnc(e, grid);
             }; grid.GestureRecognizers.Add(panGesture);
+            BlockView = grid;
             return grid;
         }
         public Grid CreateBlock(double widthRequest, double heightRequest)
@@ -285,25 +316,48 @@ namespace BlocksGame
             }; grid.GestureRecognizers.Add(panGesture);
             return grid;
         }
-        private async void PanGetsureFnc(PanUpdatedEventArgs e,Grid grid)
+        private void ChangeBlockView(double newWidth, double newHeight,Grid grid)
+        {
+            foreach (var child in grid)
+            {
+                if (child.DesiredSize.Width > 10 && child.DesiredSize.Height > 10)
+                {
+                    Label childL = child as Label;
+                    childL.WidthRequest = newWidth;
+                    childL.HeightRequest = newHeight;
+                }
+            }
+        }
+        bool isToChange = true;
+        private async void PanGetsureFnc(PanUpdatedEventArgs e, Grid grid)
         {
             switch (e.StatusType)
             {
                 case GestureStatus.Running:
+                  
+                    if (DeviceInfo.Platform == DevicePlatform.Android || DeviceInfo.Platform == DevicePlatform.iOS)
+                    {
+                        grid.TranslationX += e.TotalX; grid.TranslationY += e.TotalY;
+                    }
+                    else
+                    {
+                        grid.TranslationX = e.TotalX; grid.TranslationY = e.TotalY;
+                    }
+                    if (grid.Width/grid.ColumnDefinitions.Count != blocksBoard.BoardView.Width / blocksBoard.Width)
+                    {
 
-                    grid.TranslationX = e.TotalX; grid.TranslationY = e.TotalY;
-                    //if (grid.Children[0].Width != blocksBoard.BoardView.Width / blocksBoard.Width)
-                    //{
-                    //    var gridv2 = CreateBlock(blocksBoard.BoardView.Width / blocksBoard.Width, blocksBoard.BoardView.Height / blocksBoard.Height);
-
-                    //    grid = gridv2;
-                    //    // Aktualizacja referencji na nowy grid grid = gridv2;
-                    //}
+                        ChangeBlockView(blocksBoard.BoardView.Width / blocksBoard.Width ,
+                            blocksBoard.BoardView.Height / blocksBoard.Height ,
+                            grid);
+                        
+                    }
                     break;
                 case GestureStatus.Completed:
                     if (!AddBlockToBoard())
                     {
-                        await grid.TranslateTo(e.TotalX, e.TotalY); 
+                        await grid.TranslateTo(e.TotalX, e.TotalY);
+                        ChangeBlockView(fieldWidth,fieldHeight,grid);
+                        isToChange = true;
                     }
                     else
                     {
@@ -313,11 +367,15 @@ namespace BlocksGame
                     break;
                 case GestureStatus.Canceled:
                     if (!AddBlockToBoard())
+                    {
                         await grid.TranslateTo(e.TotalX, e.TotalY);
+                        ChangeBlockView(fieldWidth, fieldHeight, grid);
+                        isToChange = true;
+                    }
                     else
                     {
                         BlockView.IsVisible = false;
-                         Global.GamePage.MenageToChoose((Grid)BlockView.Parent, blocksBoard);
+                        Global.GamePage.MenageToChoose((Grid)BlockView.Parent, blocksBoard);
                     }
                     break;
             }
@@ -325,24 +383,25 @@ namespace BlocksGame
 
         private bool AddBlockToBoard()
         {
-            GamePage.ChangeGridXY((Grid)BlockView.Parent);
+            
+            Position grid = GamePage.GetGridXY((Grid)BlockView.Parent);
             var boardGrid = blocksBoard.BoardView;
             double boardColumnWidth = boardGrid.Width / blocksBoard.Width;
             double boardColumnHeight = boardGrid.Height / blocksBoard.Height;
             IList<PositionsInTable> positions = new List<PositionsInTable>();
             for (int i = 0, j = 0; j < blocksBoard.Height; i += 1)
             {
-                if (BlockView.X + GridX + BlockView.TranslationX > i * boardColumnWidth + boardGrid.X && BlockView.X + GridX + BlockView.TranslationX < (i + 1) * boardColumnWidth + boardGrid.X
-                    && BlockView.Y + GridY + BlockView.TranslationY > j * boardColumnHeight + boardGrid.Y && BlockView.Y + GridY  + BlockView.TranslationY < (j + 1) * boardColumnHeight + boardGrid.Y)
+                if (BlockView.X + grid.X + BlockView.TranslationX > i * boardColumnWidth + boardGrid.X && BlockView.X + grid.X + BlockView.TranslationX < (i + 1) * boardColumnWidth + boardGrid.X
+                    && BlockView.Y + grid.Y + BlockView.TranslationY > j * boardColumnHeight + boardGrid.Y && BlockView.Y + grid.Y + BlockView.TranslationY < (j + 1) * boardColumnHeight + boardGrid.Y)
                 {
                     if (IsFreeSpaceOnBlock(i, j, boardColumnWidth, boardColumnHeight, positions))
                     {
                         foreach (var position in positions)
                         {
-                            blocksBoard.fields[position.y, position.x ].BackgroundColor = BackgroundColor;
+                            blocksBoard.fields[position.y, position.x].BackgroundColor = BackgroundColor;
                             blocksBoard.fields[position.y, position.x].IsFree = false;
                         }
-                        
+
                         return true;
                     }
                 }
@@ -372,7 +431,7 @@ namespace BlocksGame
             {
                 if (BlockStructure[j, i])
                 {
-                   
+
                     if (!IsPositionInGrid(j + y, i + x, positions))
                     {
                         return false;
@@ -419,7 +478,7 @@ namespace BlocksGame
         {
             try
             {
-                if (blocksBoard.fields[rowPosition,columnPosition ].IsFree)
+                if (blocksBoard.fields[rowPosition, columnPosition].IsFree)
                     foreach (IView view in blocksBoard.BoardView.Children)
                     {
 
@@ -468,7 +527,7 @@ namespace BlocksGame
         public static Block GenerateBlock(BlocksBoard blocksBoard)
         {
             Random random = new Random();
-            int numberOfBlocks = random.Next(1,((int)blocksBoard.Width + (int)blocksBoard.Height) / 2);
+            int numberOfBlocks = random.Next(1, ((int)blocksBoard.Width + (int)blocksBoard.Height) / 2);
 
             return new Block(GenerateBlockStructure(blocksBoard, numberOfBlocks), blocksBoard);
         }

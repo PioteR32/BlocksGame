@@ -6,9 +6,11 @@
              Title="GamePage" x:Name="Page">
 
     <VerticalStackLayout x:Name="MainAbsoluteLayout">
+
         <VerticalStackLayout x:Name="VerticalStackLayout">
             <Label Text="{Binding ScoreStr}" BindingContext="{x:Reference Page}" FontSize="Header"  HorizontalOptions="Center" HorizontalTextAlignment="Center"/>
-           
+
         </VerticalStackLayout>
+
     </VerticalStackLayout>
 </ContentPage>

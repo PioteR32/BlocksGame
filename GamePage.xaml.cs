@@ -4,10 +4,15 @@ using Microsoft.Maui.Controls.PlatformConfiguration.GTKSpecific;
 using Microsoft.Maui.Handlers;
 using Microsoft.Maui.Layouts;
 using System.Data.Common;
+using System.Xml.Linq;
 
 
 namespace BlocksGame;
-
+public struct Position
+{
+    public double X { get; set; }
+    public double Y { get; set; }
+}
 public partial class GamePage : ContentPage
 {
     Grid Board;
@@ -39,6 +44,7 @@ public partial class GamePage : ContentPage
     }
     public GamePage(uint width, uint height, uint numberOfBlocksToChoose)
     {
+        Score = 0;
         Global.GamePage = this;
         b = new BlocksBoard(width, height);
         InitializeComponent();
@@ -56,18 +62,10 @@ public partial class GamePage : ContentPage
         {
             ToChoose[i].ShowBlock(i, 0, Blocks);
         }
+
         VerticalStackLayout.Children.Add(Blocks);
-      
     }
-    private void AddXToBlocks()
-    {
-        while (ToChoose[0].GridX <= 0 || ToChoose[0].GridY <= 0)
-            for (int i = 0; i < ToChoose.Count; i++)
-            {
-                ToChoose[i].GridX = Blocks.X;
-                ToChoose[i].GridY = Blocks.Y;
-            }
-    }
+
     public async void MenageToChoose(Grid layout, BlocksBoard b)
     {
         int beginBlocksToChoose = ToChoose.Count;
@@ -96,48 +94,57 @@ public partial class GamePage : ContentPage
             {
 
                 ToChoose[i].ShowBlock(i, 1, layout);
-                ToChoose[i].GridX = layout.X;
-                ToChoose[i].GridY = layout.Y;
+
             }
         }
 
     }
-    public static void ChangeGridXY(Grid layout)
+    public static Position GetGridXY(Grid layout)
     {
-        for (int i = 0; i < ToChoose.Count; i++)
+        return new Position
         {
-            ToChoose[i].GridX = layout.X;
-            ToChoose[i].GridY = layout.Y;
-        }
+            X = layout.X,
+            Y = layout.Y,
+        };
     }
     private void IsGetUserScore(BlocksBoard b)
     {
-        IList<int>  completedRows = CheckCompletedRows(b);
-        IList<int> completedolumns =  CheckCompletedColumns(b);
-        foreach (int column in completedolumns)
+        IList<int> completedRows = CheckCompletedRows(b);
+        IList<int> completedColumns = CheckCompletedColumns(b);
+        foreach (int column in completedColumns)
         {
             for (int i = 0; i < b.fields.GetLength(0); i++)
             {
-                b.fields[i,column].IsFree = true;
-                b.fields[i,column].BackgroundColor = Color.FromRgb(255, 0, 0);
+                b.fields[i, column].IsFree = true;
+                b.fields[i, column].BackgroundColor = Color.FromRgb(255, 0, 0);
             }
         }
         foreach (int row in completedRows)
         {
             for (int i = 0; i < b.fields.GetLength(1); i++)
             {
-                b.fields[row,i].IsFree = true;
-                b.fields[row,i].BackgroundColor = Color.FromRgb(255, 0, 0);
+                b.fields[row, i].IsFree = true;
+                b.fields[row, i].BackgroundColor = Color.FromRgb(255, 0, 0);
             }
         }
+        SumScore(completedRows.Count, completedColumns.Count);
+    }
+    private void SumScore(int numberOfCompletedRows,int numberOfCompletedColumns)
+    {
 
-        if (completedRows.Count != 0 && completedolumns.Count != 0)
-            Score += (int)Global.Impressivenes((int)b.Width, completedRows.Count) * (int)Global.Impressivenes(b.Height, completedolumns.Count);
-        else if (completedRows.Count != 0)
-            Score += (int)Global.Impressivenes((int)b.Width, completedRows.Count);
-        else if (completedolumns.Count != 0)
-            Score += (int)Global.Impressivenes(b.Height, completedolumns.Count);
-
+        int score = 0;
+        if (numberOfCompletedRows != 0 && numberOfCompletedColumns != 0)
+            score += (int)Global.Impressivenes((int)b.Width, numberOfCompletedRows) * (int)Global.Impressivenes(b.Height, numberOfCompletedColumns);
+        else if (numberOfCompletedRows != 0)
+            score += (int)Global.Impressivenes((int)b.Width, numberOfCompletedRows);
+        else if (numberOfCompletedColumns != 0)
+            score += (int)Global.Impressivenes(b.Height, numberOfCompletedColumns);
+        if (b.IsClear())
+        {
+            Score += (int)Global.Impressivenes(score, 2);
+        }
+        else
+            Score += score;
         if (Score > MainPageView.TheBestScore)
         {
             MainPageView.TheBestScore = Score;
