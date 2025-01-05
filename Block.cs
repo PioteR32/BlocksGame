@@ -34,6 +34,14 @@ namespace BlocksGame
         bool isInGrid = true;
         public bool[,] CutStructure(IList<List<bool>> structure)
         {
+
+            DeleteRows(structure);
+            DeleteColumns(structure);
+            return ChangeIListToTable2D(structure);
+        }
+        public static void DeleteRows(IList<List<bool>> structure)
+        {
+            List<bool> rows = new List<bool>();
             for (int i = 0; i < structure.Count; i++)
             {
                 bool isToDelete = true;
@@ -45,13 +53,44 @@ namespace BlocksGame
                         break;
                     }
                 }
-                if (isToDelete)
+
+                rows.Add(isToDelete);
+            }
+            IsToDelete(rows);
+            for (int i = 0; i < rows.Count; i++)
+            {
+                if (rows[i])
                 {
-                    structure.Remove(structure[i]);
+                    structure.RemoveAt(i);
+                    rows.RemoveAt(i);
                     i--;
                 }
             }
+           
+        }
+        private static void IsToDelete(List<bool> bools)
+        {
+            int tmp = -1;
+            for (int i = 0; i < bools.Count; i++)
+            {
+                bool s = bools[i];
+                if (!s)
+                {
+                    if (tmp != -1 && !s)
+                    {
+                        for (int j = tmp; j < i; j++)
+                        {
+                            bools[j] = false;
+                        }
+                    }
+                    tmp = i;
 
+                }
+            }
+        }
+        public static void DeleteColumns(IList<List<bool>> structure)
+        {
+            List<bool> columns = new List<bool>();
             for (int j = 0; j < structure[0].Count; j++)
             {
                 bool isToDelete = true;
@@ -63,16 +102,22 @@ namespace BlocksGame
                         break;
                     }
                 }
-                if (isToDelete)
+                columns.Add(isToDelete);
+            }
+            IsToDelete(columns);
+            for (int j = 0; j < columns.Count; j++)
+            {
+                if (columns[j])
                 {
                     for (int i = 0; i < structure.Count; i++)
                     {
-                        structure[i].Remove(structure[i][j]);
+                        structure[i].RemoveAt(j);
                     }
+                    columns.RemoveAt(j);
                     j--;
                 }
             }
-            return ChangeIListToTable2D(structure);
+
         }
         public static T[,] ChangeIListToTable2D<T>(IList<List<T>> list)
         {
@@ -316,7 +361,7 @@ namespace BlocksGame
             }; grid.GestureRecognizers.Add(panGesture);
             return grid;
         }
-        private void ChangeBlockView(double newWidth, double newHeight,Grid grid)
+        private void ChangeBlockView(double newWidth, double newHeight, Grid grid)
         {
             foreach (var child in grid)
             {
@@ -334,7 +379,7 @@ namespace BlocksGame
             switch (e.StatusType)
             {
                 case GestureStatus.Running:
-                  
+
                     if (DeviceInfo.Platform == DevicePlatform.Android || DeviceInfo.Platform == DevicePlatform.iOS)
                     {
                         grid.TranslationX += e.TotalX; grid.TranslationY += e.TotalY;
@@ -343,20 +388,20 @@ namespace BlocksGame
                     {
                         grid.TranslationX = e.TotalX; grid.TranslationY = e.TotalY;
                     }
-                    if (grid.Width/grid.ColumnDefinitions.Count != blocksBoard.BoardView.Width / blocksBoard.Width)
+                    if (grid.Width / grid.ColumnDefinitions.Count != blocksBoard.BoardView.Width / blocksBoard.Width)
                     {
 
-                        ChangeBlockView(blocksBoard.BoardView.Width / blocksBoard.Width ,
-                            blocksBoard.BoardView.Height / blocksBoard.Height ,
+                        ChangeBlockView(blocksBoard.BoardView.Width / blocksBoard.Width,
+                            blocksBoard.BoardView.Height / blocksBoard.Height,
                             grid);
-                        
+
                     }
                     break;
                 case GestureStatus.Completed:
                     if (!AddBlockToBoard())
                     {
                         await grid.TranslateTo(e.TotalX, e.TotalY);
-                        ChangeBlockView(fieldWidth,fieldHeight,grid);
+                        ChangeBlockView(fieldWidth, fieldHeight, grid);
                         isToChange = true;
                     }
                     else
@@ -383,7 +428,7 @@ namespace BlocksGame
 
         private bool AddBlockToBoard()
         {
-            
+
             Position grid = GamePage.GetGridXY((Grid)BlockView.Parent);
             var boardGrid = blocksBoard.BoardView;
             double boardColumnWidth = boardGrid.Width / blocksBoard.Width;
@@ -524,12 +569,25 @@ namespace BlocksGame
             views.SetColumn(this.BlockView, x);
             views.SetRow(this.BlockView, y);
         }
+        /// <summary>
+        /// Generate block on blocksBoard width and height
+        /// </summary>
+        /// <param name="blocksBoard"></param>
+        /// <returns></returns>
         public static Block GenerateBlock(BlocksBoard blocksBoard)
         {
             Random random = new Random();
             int numberOfBlocks = random.Next(1, ((int)blocksBoard.Width + (int)blocksBoard.Height) / 2);
 
-            return new Block(GenerateBlockStructure(blocksBoard, numberOfBlocks), blocksBoard);
+            return new Block(GenerateBlockStructure(blocksBoard, numberOfBlocks),
+                //new bool[,]
+                //{
+                //   {false,false,false },
+                //   { true,false,false },
+                //   {false,true,false},
+
+                //},
+                blocksBoard);
         }
         public static bool[,] GenerateBlockStructure(BlocksBoard blocksBoard, int numberOfBlocks)
         {
@@ -547,6 +605,17 @@ namespace BlocksGame
                 else
                     i--;
             }
+            StreamWriter streamReader = new StreamWriter(Global.GlobalPath + "/" + "log.txt", true);
+            for (int i = 0; i < tmp.GetLength(0); i++)
+            {
+                streamReader.Write("\n");
+                for (int j = 0; j < tmp.GetLength(1); j++)
+                {
+                    streamReader.Write(tmp[i, j]);
+                }
+            }
+            streamReader.Write("\n");
+            streamReader.Close();
             return tmp;
         }
     }

@@ -38,9 +38,15 @@ public partial class GamePage : ContentPage
             OnPropertyChanged(nameof(ScoreStr));
         }
     }
+    string scoreStr = "Score: ";
     public string ScoreStr
     {
-        get => "Score: " + score;
+        get => scoreStr + score;
+        set
+        {
+            scoreStr = value;
+            OnPropertyChanged();
+        }
     }
     public GamePage(uint width, uint height, uint numberOfBlocksToChoose)
     {
@@ -78,11 +84,6 @@ public partial class GamePage : ContentPage
 
         beginBlocksToChoose = BlocksToChoose;
         IsGetUserScore(b);
-        if (IsUserLose(b))
-        {
-            await Navigation.PopAsync();
-        }
-
         if (BlocksToChoose == 0)
         {
 
@@ -97,7 +98,14 @@ public partial class GamePage : ContentPage
 
             }
         }
-
+        if (IsUserLose(b))
+        {
+            loseButton.IsVisible = true;
+        }
+    }
+    public async void LoseButtonClicked(object sender, EventArgs e)
+    {
+        await Navigation.PopAsync();
     }
     public static Position GetGridXY(Grid layout)
     {
@@ -147,6 +155,7 @@ public partial class GamePage : ContentPage
             Score += score;
         if (Score > MainPageView.TheBestScore)
         {
+            ScoreStr = "New The Best Score :";
             MainPageView.TheBestScore = Score;
             MainPageView.ChangeTheBestScoreInFile(Score);
         }

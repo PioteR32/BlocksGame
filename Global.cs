@@ -12,7 +12,7 @@ namespace BlocksGame
         public static MainPageView MainPageView { get; set; }
         public static MainPage MainPage { get; set; }
         public static GamePage GamePage { get; set; }
-        public static string GlobalPath { get; } = Microsoft.Maui.Storage.FileSystem.AppDataDirectory;
+        public static string GlobalPath { get; set; } = Microsoft.Maui.Storage.FileSystem.AppDataDirectory;
         /// <summary>
         /// Create grid columns and rows
         /// </summary>

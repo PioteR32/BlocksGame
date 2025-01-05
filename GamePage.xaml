@@ -9,7 +9,9 @@
 
         <VerticalStackLayout x:Name="VerticalStackLayout">
             <Label Text="{Binding ScoreStr}" BindingContext="{x:Reference Page}" FontSize="Header"  HorizontalOptions="Center" HorizontalTextAlignment="Center"/>
-
+            <VerticalStackLayout>
+                <Button x:Name="loseButton" Clicked="LoseButtonClicked" Text="Lose" IsVisible="False"/>
+            </VerticalStackLayout>
         </VerticalStackLayout>
 
     </VerticalStackLayout>
