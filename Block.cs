@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+//using static Android.Icu.Text.Transliterator;
 
 namespace BlocksGame
 {
@@ -469,9 +470,6 @@ namespace BlocksGame
         }
         private bool IsFreeSpaceOnBlock(int x, int y, double boardColumnWidth, double boardColumnHeight, IList<PositionsInTable> positions)
         {
-
-            PositionsInTable firstVisableBlock = new PositionsInTable(0, 0);
-            bool isFirstVisableBlock = false;
             for (int i = 0, j = 0; j < BlockStructure.GetLength(0); i++)
             {
                 if (BlockStructure[j, i])
@@ -492,26 +490,16 @@ namespace BlocksGame
         }
         public bool IsFreeSpaceOnBlock(int x, int y)
         {
-            var boardGrid = blocksBoard.BoardView;
-            double boardColumnWidth = boardGrid.Width / blocksBoard.Width;
-            double boardColumnHeight = boardGrid.Height / blocksBoard.Height;
-            PositionsInTable firstVisableBlock = new PositionsInTable(0, 0);
-            bool isFirstVisableBlock = false;
-            for (int i = 0, j = 0; j < BlockStructure.GetLength(1); i++)
+            for (int i = 0, j = 0; j < BlockStructure.GetLength(0); i++)
             {
-                if (BlockStructure[i, j])
+                if (BlockStructure[j, i])
                 {
-                    if (!isFirstVisableBlock)
-                    {
-                        firstVisableBlock = new PositionsInTable(i, j);
-                        isFirstVisableBlock = true;
-                    }
-                    if (!IsPositionInGrid(i + x - firstVisableBlock.x, j + y - firstVisableBlock.y))
+                    if (!IsPositionInGrid(j + y, i + x))
                     {
                         return false;
                     }
                 }
-                if (i + 1 == BlockStructure.GetLength(0))
+                if (i + 1 == BlockStructure.GetLength(1))
                 {
                     i = -1;
                     j++;
@@ -541,7 +529,7 @@ namespace BlocksGame
             }
             return false;
         }
-        private bool IsPositionInGrid(int columnPosition, int rowPosition)
+        private bool IsPositionInGrid(int rowPosition, int columnPosition)
         {
             try
             {
@@ -605,17 +593,6 @@ namespace BlocksGame
                 else
                     i--;
             }
-            StreamWriter streamReader = new StreamWriter(Global.GlobalPath + "/" + "log.txt", true);
-            for (int i = 0; i < tmp.GetLength(0); i++)
-            {
-                streamReader.Write("\n");
-                for (int j = 0; j < tmp.GetLength(1); j++)
-                {
-                    streamReader.Write(tmp[i, j]);
-                }
-            }
-            streamReader.Write("\n");
-            streamReader.Close();
             return tmp;
         }
     }

@@ -21,7 +21,7 @@ namespace BlocksGame
             this.Height = height;
             fields = new Field[height, width];
         }
-        public Grid CreateGrid()
+        public void CreateGrid()
         {
             var grid = new Grid { /*Margin = 10, Padding = 10 ,*/HorizontalOptions = LayoutOptions.Center };
             Global.CreateGrid(grid, Width, Height);
@@ -69,7 +69,6 @@ namespace BlocksGame
 
             }
             BoardView = grid;
-            return grid;
         }
 
         public bool IsClear()

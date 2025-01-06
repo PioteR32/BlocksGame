@@ -15,8 +15,8 @@ public struct Position
 }
 public partial class GamePage : ContentPage
 {
+    Thread UserScoreThread;
     Grid Board;
-    Thread MenageToChooseThread;
     Grid Blocks = new Grid
     {
         ColumnSpacing = 20,
@@ -48,15 +48,16 @@ public partial class GamePage : ContentPage
             OnPropertyChanged();
         }
     }
-    public GamePage(uint width, uint height, uint numberOfBlocksToChoose)
+    public  GamePage(uint width, uint height, uint numberOfBlocksToChoose)
     {
         Score = 0;
         Global.GamePage = this;
         b = new BlocksBoard(width, height);
         InitializeComponent();
         ToChoose = new List<Block>();
-        Board = b.CreateGrid();
-        VerticalStackLayout.Children.Add(Board);
+        Thread createBoard = new Thread(new ThreadStart(b.CreateGrid));
+        createBoard.Start();
+   
         for (int i = 0; i < numberOfBlocksToChoose; i++)
         {
             ToChoose.Add(Block.GenerateBlock(b));
@@ -68,11 +69,17 @@ public partial class GamePage : ContentPage
         {
             ToChoose[i].ShowBlock(i, 0, Blocks);
         }
-
+        createBoard.Join();
+        Board = b.BoardView;
+        VerticalStackLayout.Children.Add(Board);
         VerticalStackLayout.Children.Add(Blocks);
     }
-
-    public async void MenageToChoose(Grid layout, BlocksBoard b)
+    /// <summary>
+    /// Check that player lose and give score
+    /// </summary>
+    /// <param name="layout"></param>
+    /// <param name="b"></param>
+    public void MenageToChoose(Grid layout, BlocksBoard b)
     {
         int beginBlocksToChoose = ToChoose.Count;
         int BlocksToChoose = 0;
@@ -83,6 +90,7 @@ public partial class GamePage : ContentPage
         }
 
         beginBlocksToChoose = BlocksToChoose;
+
         IsGetUserScore(b);
         if (BlocksToChoose == 0)
         {
@@ -98,6 +106,7 @@ public partial class GamePage : ContentPage
 
             }
         }
+
         if (IsUserLose(b))
         {
             loseButton.IsVisible = true;
@@ -115,8 +124,9 @@ public partial class GamePage : ContentPage
             Y = layout.Y,
         };
     }
-    private void IsGetUserScore(BlocksBoard b)
+    private void IsGetUserScore(object blocksBoard)
     {
+        BlocksBoard b  = blocksBoard as BlocksBoard;
         IList<int> completedRows = CheckCompletedRows(b);
         IList<int> completedColumns = CheckCompletedColumns(b);
         foreach (int column in completedColumns)
@@ -137,7 +147,7 @@ public partial class GamePage : ContentPage
         }
         SumScore(completedRows.Count, completedColumns.Count);
     }
-    private void SumScore(int numberOfCompletedRows,int numberOfCompletedColumns)
+    private void SumScore(int numberOfCompletedRows, int numberOfCompletedColumns)
     {
 
         int score = 0;
@@ -187,12 +197,9 @@ public partial class GamePage : ContentPage
             {
                 unVisableElements++;
             }
-        if (unVisableElements != ToChoose.Count)
-            return true;
-        else
-        {
-            return false;
-        }
+
+        return true;
+
     }
     private static IList<int> CheckCompletedColumns(BlocksBoard b)
     {
