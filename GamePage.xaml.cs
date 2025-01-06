@@ -26,6 +26,7 @@ public partial class GamePage : ContentPage
     AbsoluteLayout layout = new AbsoluteLayout();
     BlocksBoard b;
     public static IList<Block> ToChoose { get; set; } = [];
+    public static IList<Block> NextToChoose { get; set; } = [];
 
     private static readonly object lockObject = new object();
     static int score = 0;
@@ -127,7 +128,7 @@ public partial class GamePage : ContentPage
     private void IsGetUserScore(object blocksBoard)
     {
         BlocksBoard b  = blocksBoard as BlocksBoard;
-        IList<int> completedRows = CheckCompletedRows(b);
+        IList<int> completedRows =  CheckCompletedRows(b);
         IList<int> completedColumns = CheckCompletedColumns(b);
         foreach (int column in completedColumns)
         {
@@ -149,7 +150,6 @@ public partial class GamePage : ContentPage
     }
     private void SumScore(int numberOfCompletedRows, int numberOfCompletedColumns)
     {
-
         int score = 0;
         if (numberOfCompletedRows != 0 && numberOfCompletedColumns != 0)
             score += (int)Global.Impressivenes((int)b.Width, numberOfCompletedRows) * (int)Global.Impressivenes(b.Height, numberOfCompletedColumns);
@@ -201,7 +201,7 @@ public partial class GamePage : ContentPage
         return true;
 
     }
-    private static IList<int> CheckCompletedColumns(BlocksBoard b)
+    private  static IList<int> CheckCompletedColumns(BlocksBoard b)
     {
         IList<int> completedRows = new List<int>();
         for (int i = 0, j = 0; i < b.Width; j++)
@@ -221,7 +221,7 @@ public partial class GamePage : ContentPage
         }
         return completedRows;
     }
-    private static IList<int> CheckCompletedRows(BlocksBoard b)
+    private  static IList<int> CheckCompletedRows(BlocksBoard b)
     {
         IList<int> completedColumns = new List<int>();
         for (int i = 0, j = 0; j < b.Height; i++)
