@@ -561,27 +561,35 @@ namespace BlocksGame
         public static Block GenerateBlock(BlocksBoard blocksBoard)
         {
             Random random = new Random();
-            int numberOfBlocks = random.Next(1, ((int)blocksBoard.Width + (int)blocksBoard.Height) / 2);
-
-            return new Block(GenerateBlockStructure(blocksBoard, numberOfBlocks),
-                //new bool[,]
-                //{
-                //   {false,false,false },
-                //   { true,false,false },
-                //   {false,true,false},
-
-                //},
-                blocksBoard);
+            int numberOfBlocks = random.Next(1, ((int)blocksBoard.Width + (int)blocksBoard.Height) / 2 -1);
+            return new Block(GenerateBlockStructure(blocksBoard, numberOfBlocks),blocksBoard);
         }
+           /// <summary>
+        /// Generate Blocks 
+        /// </summary>
+        /// <param name="blocksBoard"></param>
+        /// <param name="numberOfBlocks">number of Fields in Block</param>
+        /// <returns></returns>
         public static bool[,] GenerateBlockStructure(BlocksBoard blocksBoard, int numberOfBlocks)
         {
+            int width,height;
+            if((int)blocksBoard.Width < 5)
+            {
+                width = (int)blocksBoard.Width;
+                height = (int)blocksBoard.Height;
+            }
+            else
+            {
+                width = 5;
+                height = 5;
+            }
             Random random = new Random();
             bool[,] tmp = new bool[blocksBoard.Height, blocksBoard.Width];
 
             for (int i = 0; i < numberOfBlocks; i++)
             {
-                int x = random.Next((int)blocksBoard.Width);
-                int y = random.Next((int)blocksBoard.Height);
+                int x = random.Next(width);
+                int y = random.Next(height);
                 if (!tmp[y, x])
                 {
                     tmp[y, x] = true;
