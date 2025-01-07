@@ -44,7 +44,7 @@ namespace BlocksGame
         {
             Start = new Command(StartGame);
             string folderPath = Path.Combine(FileSystem.AppDataDirectory, "BlockGame");
-            Directory.Delete(folderPath, true);
+            //Directory.Delete(folderPath, true);
             if (!Directory.Exists(folderPath))
             {
                 Global.CreateFolder(folderPath);

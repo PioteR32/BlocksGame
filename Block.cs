@@ -35,7 +35,6 @@ namespace BlocksGame
         bool isInGrid = true;
         public bool[,] CutStructure(IList<List<bool>> structure)
         {
-
             DeleteRows(structure);
             DeleteColumns(structure);
             return ChangeIListToTable2D(structure);
@@ -67,7 +66,7 @@ namespace BlocksGame
                     i--;
                 }
             }
-           
+
         }
         private static void IsToDelete(List<bool> bools)
         {
@@ -79,10 +78,7 @@ namespace BlocksGame
                 {
                     if (tmp != -1 && !s)
                     {
-                        for (int j = tmp; j < i; j++)
-                        {
-                            bools[j] = false;
-                        }
+                        bools[tmp + 1] = false;
                     }
                     tmp = i;
 
