@@ -35,11 +35,13 @@ namespace BlocksGame
         bool isInGrid = true;
         public bool[,] CutStructure(IList<List<bool>> structure)
         {
-            DeleteRows(structure);
-            DeleteColumns(structure);
+            int structureWidth = structure[0].Count;
+            int structureHeight = structure.Count;
+            DeleteRows(structure, structureWidth);
+            DeleteColumns(structure, structureHeight);
             return ChangeIListToTable2D(structure);
         }
-        public static void DeleteRows(IList<List<bool>> structure)
+        public static void DeleteRows(IList<List<bool>> structure, int structureWidth)
         {
             List<bool> rows = new List<bool>();
             for (int i = 0; i < structure.Count; i++)
@@ -56,7 +58,12 @@ namespace BlocksGame
 
                 rows.Add(isToDelete);
             }
-            IsToDelete(rows);
+            if (structureWidth < 4)
+                IsToDelete34(rows);
+            else if (structureWidth < 8)
+            {
+                IsToDelete567(rows);
+            }
             for (int i = 0; i < rows.Count; i++)
             {
                 if (rows[i])
@@ -68,7 +75,7 @@ namespace BlocksGame
             }
 
         }
-        private static void IsToDelete(List<bool> bools)
+        private static void IsToDelete567(List<bool> bools)
         {
             int tmp = -1;
             for (int i = 0; i < bools.Count; i++)
@@ -85,7 +92,25 @@ namespace BlocksGame
                 }
             }
         }
-        public static void DeleteColumns(IList<List<bool>> structure)
+        private static void IsToDelete34(List<bool> bools)
+        {
+            int tmp = -1;
+            for (int i = 0; i < bools.Count; i++)
+            {
+                bool s = bools[i];
+                if (!s)
+                {
+                    if (tmp != -1 && !s)
+                    {
+                        for(int j = tmp; j < i;j++)
+                            bools[j] = false;
+                    }
+                    tmp = i;
+
+                }
+            }
+        }
+        public static void DeleteColumns(IList<List<bool>> structure, int structureHeight)
         {
             List<bool> columns = new List<bool>();
             for (int j = 0; j < structure[0].Count; j++)
@@ -101,7 +126,12 @@ namespace BlocksGame
                 }
                 columns.Add(isToDelete);
             }
-            IsToDelete(columns);
+            if (structureHeight < 4)
+                IsToDelete34(columns);
+            else if (structureHeight < 7)
+            {
+                IsToDelete567(columns);
+            }
             for (int j = 0; j < columns.Count; j++)
             {
                 if (columns[j])
