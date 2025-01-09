@@ -135,7 +135,7 @@ public partial class GamePage : ContentPage
             for (int i = 0; i < b.fields.GetLength(0); i++)
             {
                 b.fields[i, column].IsFree = true;
-                b.fields[i, column].BackgroundColor = Color.FromRgb(255, 0, 0);
+                b.fields[i, column].BackgroundColor = Field.DefaultColor;
             }
         }
         foreach (int row in completedRows)
@@ -143,7 +143,7 @@ public partial class GamePage : ContentPage
             for (int i = 0; i < b.fields.GetLength(1); i++)
             {
                 b.fields[row, i].IsFree = true;
-                b.fields[row, i].BackgroundColor = Color.FromRgb(255, 0, 0);
+                b.fields[row, i].BackgroundColor = Field.DefaultColor;
             }
         }
         SumScore(completedRows.Count, completedColumns.Count);

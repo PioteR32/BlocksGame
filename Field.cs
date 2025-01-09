@@ -11,7 +11,8 @@ namespace BlocksGame
         public bool IsFree { get; set; } = true;
         public Field() { }
         public Field(Color color, bool isFree) { BackgroundColor = color; this.IsFree = IsFree; }
-        Color backgroundColor = Color.FromRgb(255, 0, 0);
+        Color backgroundColor = Color.FromRgba(0, 0, 0,200);
+        public static Color DefaultColor { get; } = Color.FromRgba(0, 0, 0, 200);
         public Color BackgroundColor
         {
             get => backgroundColor;

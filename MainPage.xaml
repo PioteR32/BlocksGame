@@ -7,9 +7,11 @@
         <local:MainPageView/>
     </ContentPage.BindingContext>
     <ScrollView>
+        
         <VerticalStackLayout
             Padding="30,0"
             Spacing="25">
+            <Image Source="Resources/Images/dotnet_bot.png" BackgroundColor="Blue" />
             <Label Text="{Binding TheBestScoreStr}" FontSize="Header"/>
             <Button Command="{Binding Start}" Text="Start" />
             <HorizontalStackLayout Padding="20"> 

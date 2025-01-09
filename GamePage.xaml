@@ -3,12 +3,13 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="BlocksGame.GamePage"
              xmlns:local="clr-namespace:BlocksGame"
-             Title="GamePage" x:Name="Page">
+             Title="GamePage" x:Name="Page"
+             BindingContext="{x:Reference Page}">
 
     <VerticalStackLayout x:Name="MainAbsoluteLayout">
 
         <VerticalStackLayout x:Name="VerticalStackLayout">
-            <Label Text="{Binding ScoreStr}" BindingContext="{x:Reference Page}" FontSize="Header"  HorizontalOptions="Center" HorizontalTextAlignment="Center"/>
+            <Label Text="{Binding ScoreStr}"  FontSize="Header"  HorizontalOptions="Center" HorizontalTextAlignment="Center"/>
             <VerticalStackLayout>
                 <Button x:Name="loseButton" Clicked="LoseButtonClicked" Text="Lose" IsVisible="False"/>
             </VerticalStackLayout>

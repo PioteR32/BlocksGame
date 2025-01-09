@@ -21,7 +21,7 @@ namespace BlocksGame
             BlockView = CreateBlock();
         }
         public Image Image;
-        public Color BackgroundColor = Color.FromRgb(0, 0, 0);
+        public Color BackgroundColor = Color.FromRgb(255, 0, 0);
         BlocksBoard blocksBoard;
         private double fieldWidth = 20;
         private double fieldHeight = 20;
@@ -185,7 +185,7 @@ namespace BlocksGame
                     tmp = new Field(BackgroundColor, false);
                 }
                 else
-                    tmp = new Field(Color.FromRgba(255, 0, 0, 100), true);
+                    tmp = new Field(Color.FromRgba(0, 0, 0, 100), true);
                 var label = new Label
                 {
                     BindingContext = tmp,
@@ -201,7 +201,7 @@ namespace BlocksGame
                 var leftBound = new Label
                 {
                     BindingContext = tmp,
-                    BackgroundColor = Color.FromRgb(255, 0, 0),
+                    BackgroundColor = Color.FromRgb(0, 0, 0),
                     WidthRequest = 1,
                     HeightRequest = 10,
                     HorizontalOptions = LayoutOptions.Start,
@@ -215,7 +215,7 @@ namespace BlocksGame
                 var downBound = new Label
                 {
                     BindingContext = tmp,
-                    BackgroundColor = Color.FromRgb(255, 0, 0),
+                    BackgroundColor = Color.FromRgb(0, 0, 0),
                     WidthRequest = 10,
                     HeightRequest = 1,
                     VerticalOptions = LayoutOptions.End,
@@ -229,7 +229,7 @@ namespace BlocksGame
                 var hightBound = new Label
                 {
                     BindingContext = tmp,
-                    BackgroundColor = Color.FromRgb(255, 0, 0),
+                    BackgroundColor = Color.FromRgb(0, 0, 0),
                     WidthRequest = 10,
                     HeightRequest = 1,
                     VerticalOptions = LayoutOptions.Start,
@@ -243,7 +243,7 @@ namespace BlocksGame
                 var rightBound = new Label
                 {
                     BindingContext = tmp,
-                    BackgroundColor = Color.FromRgb(255, 0, 0),
+                    BackgroundColor = Color.FromRgb(0, 0, 0),
                     WidthRequest = 1,
                     HeightRequest = 10,
                     HorizontalOptions = LayoutOptions.End,
@@ -591,7 +591,11 @@ namespace BlocksGame
         public static Block GenerateBlock(BlocksBoard blocksBoard)
         {
             Random random = new Random();
-            int numberOfBlocks = random.Next(1, ((int)blocksBoard.Width + (int)blocksBoard.Height) / 2 -1);
+            int numberOfBlocks;
+            if (blocksBoard.Width > 3 && blocksBoard.Height > 3)
+                numberOfBlocks = random.Next(1, ((int)blocksBoard.Width + (int)blocksBoard.Height) / 2 - 1);
+            else
+                numberOfBlocks = random.Next(1, ((int)blocksBoard.Width + (int)blocksBoard.Height) / 2 + 1);
             return new Block(GenerateBlockStructure(blocksBoard, numberOfBlocks),blocksBoard);
         }
            /// <summary>

@@ -26,7 +26,7 @@ namespace BlocksGame
             var grid = new Grid { /*Margin = 10, Padding = 10 ,*/HorizontalOptions = LayoutOptions.Center };
             Global.CreateGrid(grid, Width, Height);
             for (int i = 0, j = 0; j < this.Width; i++)
-            {
+            {CarouselView 
                 fields[i, j] = new Field();
                 var label = new Label
                 {
