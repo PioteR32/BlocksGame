@@ -26,40 +26,60 @@ namespace BlocksGame
             var grid = new Grid { /*Margin = 10, Padding = 10 ,*/HorizontalOptions = LayoutOptions.Center };
             Global.CreateGrid(grid, Width, Height);
             for (int i = 0, j = 0; j < this.Width; i++)
-            {CarouselView 
+            {
                 fields[i, j] = new Field();
                 var label = new Label
                 {
                     BindingContext = fields[i, j],
-                    //MinimumWidthRequest = MinimumWidthRequest,
-                    //MinimumHeightRequest = MinimumHeightRequest,
                 };
-                label.SetBinding(Label.BackgroundColorProperty, new Binding("BackgroundColor"));
-                var bound = new Label
+                label.SetBinding(Label.BackgroundColorProperty, new Binding(nameof(Field.BackgroundColor)));
+                grid.Children.Add(label);
+                grid.SetColumn(label, j);
+                grid.SetRow(label, i);
+                var leftBound = new Label
                 {
-                    BackgroundColor = Color.FromRgb(0, 0, 0),
+                    BackgroundColor = Global.BoundsColor,
                     WidthRequest = 1,
                     HeightRequest = MinimumHeightRequest,
                     HorizontalOptions = LayoutOptions.Start,
                 };
+                grid.Children.Add(leftBound);
+                grid.SetColumn(leftBound, j);
+                grid.SetRow(leftBound, i);
+
                 var downBound = new Label
                 {
-                    BackgroundColor = Color.FromRgb(0, 0, 0),
+                    BackgroundColor = Global.BoundsColor,
                     WidthRequest = MinimumWidthRequest,
                     HeightRequest = 1,
                     VerticalOptions = LayoutOptions.End,
                 };
-                grid.Children.Add(label);
-                grid.SetColumn(label, j);
-                grid.SetRow(label, i);
-
-                grid.Children.Add(bound);
-                grid.SetColumn(bound, j);
-                grid.SetRow(bound, i);
-
                 grid.Children.Add(downBound);
                 grid.SetColumn(downBound, j);
                 grid.SetRow(downBound, i);
+
+                var hightBound = new Label
+                {
+                    BackgroundColor = Global.BoundsColor,
+                    WidthRequest = MinimumWidthRequest,
+                    HeightRequest = 1,
+                    VerticalOptions = LayoutOptions.Start,
+                };
+                grid.Children.Add(hightBound);
+                grid.SetColumn(hightBound, j);
+                grid.SetRow(hightBound, i);
+
+                var rightBound = new Label
+                {
+                    BackgroundColor = Global.BoundsColor,
+                    WidthRequest = 1,
+                    HeightRequest = MinimumHeightRequest,
+                    HorizontalOptions = LayoutOptions.End,
+                };
+                grid.Children.Add(rightBound);
+                grid.SetColumn(rightBound, j);
+                grid.SetRow(rightBound, i);
+
 
                 if (i == this.Height - 1)
                 {

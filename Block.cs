@@ -35,13 +35,13 @@ namespace BlocksGame
         bool isInGrid = true;
         public bool[,] CutStructure(IList<List<bool>> structure)
         {
-            int structureWidth = structure[0].Count;
             int structureHeight = structure.Count;
-            DeleteRows(structure, structureWidth);
-            DeleteColumns(structure, structureHeight);
+            int structureWidth = structure[0].Count;
+            DeleteRows(structure, structureHeight);
+            DeleteColumns(structure, structureWidth);
             return ChangeIListToTable2D(structure);
         }
-        public static void DeleteRows(IList<List<bool>> structure, int structureWidth)
+        public static void DeleteRows(IList<List<bool>> structure, int structureHeight)
         {
             List<bool> rows = new List<bool>();
             for (int i = 0; i < structure.Count; i++)
@@ -55,12 +55,11 @@ namespace BlocksGame
                         break;
                     }
                 }
-
                 rows.Add(isToDelete);
             }
-            if (structureWidth < 4)
+            if (structureHeight < 4)
                 IsToDelete34(rows);
-            else if (structureWidth < 8)
+            else if (structureHeight < 8)
             {
                 IsToDelete567(rows);
             }
@@ -102,7 +101,7 @@ namespace BlocksGame
                 {
                     if (tmp != -1 && !s)
                     {
-                        for(int j = tmp; j < i;j++)
+                        for (int j = tmp; j < i; j++)
                             bools[j] = false;
                     }
                     tmp = i;
@@ -110,7 +109,7 @@ namespace BlocksGame
                 }
             }
         }
-        public static void DeleteColumns(IList<List<bool>> structure, int structureHeight)
+        public static void DeleteColumns(IList<List<bool>> structure, int structureWidth)
         {
             List<bool> columns = new List<bool>();
             for (int j = 0; j < structure[0].Count; j++)
@@ -126,9 +125,9 @@ namespace BlocksGame
                 }
                 columns.Add(isToDelete);
             }
-            if (structureHeight < 4)
+            if (structureWidth < 4)
                 IsToDelete34(columns);
-            else if (structureHeight < 7)
+            else if (structureWidth < 7)
             {
                 IsToDelete567(columns);
             }
@@ -201,7 +200,7 @@ namespace BlocksGame
                 var leftBound = new Label
                 {
                     BindingContext = tmp,
-                    BackgroundColor = Color.FromRgb(0, 0, 0),
+                    BackgroundColor = Global.BoundsColor,
                     WidthRequest = 1,
                     HeightRequest = 10,
                     HorizontalOptions = LayoutOptions.Start,
@@ -215,7 +214,7 @@ namespace BlocksGame
                 var downBound = new Label
                 {
                     BindingContext = tmp,
-                    BackgroundColor = Color.FromRgb(0, 0, 0),
+                    BackgroundColor = Global.BoundsColor,
                     WidthRequest = 10,
                     HeightRequest = 1,
                     VerticalOptions = LayoutOptions.End,
@@ -229,7 +228,7 @@ namespace BlocksGame
                 var hightBound = new Label
                 {
                     BindingContext = tmp,
-                    BackgroundColor = Color.FromRgb(0, 0, 0),
+                    BackgroundColor = Global.BoundsColor,
                     WidthRequest = 10,
                     HeightRequest = 1,
                     VerticalOptions = LayoutOptions.Start,
@@ -243,7 +242,7 @@ namespace BlocksGame
                 var rightBound = new Label
                 {
                     BindingContext = tmp,
-                    BackgroundColor = Color.FromRgb(0, 0, 0),
+                    BackgroundColor = Global.BoundsColor,
                     WidthRequest = 1,
                     HeightRequest = 10,
                     HorizontalOptions = LayoutOptions.End,
@@ -592,13 +591,15 @@ namespace BlocksGame
         {
             Random random = new Random();
             int numberOfBlocks;
-            if (blocksBoard.Width > 3 && blocksBoard.Height > 3)
+            if (blocksBoard.Width != blocksBoard.Height)
+                numberOfBlocks = random.Next(1, ((int)blocksBoard.Width + (int)blocksBoard.Height) / 2);
+            else if (blocksBoard.Width > 3 || blocksBoard.Height > 3)
                 numberOfBlocks = random.Next(1, ((int)blocksBoard.Width + (int)blocksBoard.Height) / 2 - 1);
             else
                 numberOfBlocks = random.Next(1, ((int)blocksBoard.Width + (int)blocksBoard.Height) / 2 + 1);
-            return new Block(GenerateBlockStructure(blocksBoard, numberOfBlocks),blocksBoard);
+            return new Block(GenerateBlockStructure(blocksBoard, numberOfBlocks), blocksBoard);
         }
-           /// <summary>
+        /// <summary>
         /// Generate Blocks 
         /// </summary>
         /// <param name="blocksBoard"></param>
@@ -606,10 +607,18 @@ namespace BlocksGame
         /// <returns></returns>
         public static bool[,] GenerateBlockStructure(BlocksBoard blocksBoard, int numberOfBlocks)
         {
-            int width,height;
-            if((int)blocksBoard.Width < 5)
+            int width = (int)blocksBoard.Width, height = (int)blocksBoard.Height;
+            if ((int)blocksBoard.Width < 5 && (int)blocksBoard.Height < 5)
             {
                 width = (int)blocksBoard.Width;
+                height = (int)blocksBoard.Height;
+            }
+            else if ((int)blocksBoard.Width < 5)
+            {
+                width = (int)blocksBoard.Width;
+            }
+            else if (blocksBoard.Height < 5)
+            {
                 height = (int)blocksBoard.Height;
             }
             else

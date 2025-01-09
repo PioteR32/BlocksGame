@@ -49,7 +49,7 @@ public partial class GamePage : ContentPage
             OnPropertyChanged();
         }
     }
-    public  GamePage(uint width, uint height, uint numberOfBlocksToChoose)
+    public GamePage(uint width, uint height, uint numberOfBlocksToChoose)
     {
         Score = 0;
         Global.GamePage = this;
@@ -58,7 +58,7 @@ public partial class GamePage : ContentPage
         ToChoose = new List<Block>();
         Thread createBoard = new Thread(new ThreadStart(b.CreateGrid));
         createBoard.Start();
-   
+
         for (int i = 0; i < numberOfBlocksToChoose; i++)
         {
             ToChoose.Add(Block.GenerateBlock(b));
@@ -72,8 +72,8 @@ public partial class GamePage : ContentPage
         }
         createBoard.Join();
         Board = b.BoardView;
-        VerticalStackLayout.Children.Add(Board);
-        VerticalStackLayout.Children.Add(Blocks);
+        MainStackLayout.Children.Add(Board);
+        MainStackLayout.Children.Add(Blocks);
     }
     /// <summary>
     /// Check that player lose and give score
@@ -127,8 +127,8 @@ public partial class GamePage : ContentPage
     }
     private void IsGetUserScore(object blocksBoard)
     {
-        BlocksBoard b  = blocksBoard as BlocksBoard;
-        IList<int> completedRows =  CheckCompletedRows(b);
+        BlocksBoard b = blocksBoard as BlocksBoard;
+        IList<int> completedRows = CheckCompletedRows(b);
         IList<int> completedColumns = CheckCompletedColumns(b);
         foreach (int column in completedColumns)
         {
@@ -146,9 +146,9 @@ public partial class GamePage : ContentPage
                 b.fields[row, i].BackgroundColor = Field.DefaultColor;
             }
         }
-        SumScore(completedRows.Count, completedColumns.Count);
+        SumScore(completedRows.Count, completedColumns.Count, b);
     }
-    private void SumScore(int numberOfCompletedRows, int numberOfCompletedColumns)
+    private void SumScore(int numberOfCompletedRows, int numberOfCompletedColumns, BlocksBoard board)
     {
         int score = 0;
         if (numberOfCompletedRows != 0 && numberOfCompletedColumns != 0)
@@ -167,7 +167,7 @@ public partial class GamePage : ContentPage
         {
             ScoreStr = "New The Best Score :";
             MainPageView.TheBestScore = Score;
-            MainPageView.ChangeTheBestScoreInFile(Score);
+            MainPageView.ChangeTheBestScoreInFile((int)board.Width, (int)board.Height, ToChoose.Count, Score);
         }
     }
     public static bool IsUserLose(BlocksBoard b)
@@ -201,7 +201,7 @@ public partial class GamePage : ContentPage
         return true;
 
     }
-    private  static IList<int> CheckCompletedColumns(BlocksBoard b)
+    private static IList<int> CheckCompletedColumns(BlocksBoard b)
     {
         IList<int> completedRows = new List<int>();
         for (int i = 0, j = 0; i < b.Width; j++)
@@ -221,7 +221,7 @@ public partial class GamePage : ContentPage
         }
         return completedRows;
     }
-    private  static IList<int> CheckCompletedRows(BlocksBoard b)
+    private static IList<int> CheckCompletedRows(BlocksBoard b)
     {
         IList<int> completedColumns = new List<int>();
         for (int i = 0, j = 0; j < b.Height; i++)

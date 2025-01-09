@@ -7,17 +7,16 @@
         <local:MainPageView/>
     </ContentPage.BindingContext>
     <ScrollView>
-        
+
         <VerticalStackLayout
             Padding="30,0"
             Spacing="25">
-            <Image Source="Resources/Images/dotnet_bot.png" BackgroundColor="Blue" />
             <Label Text="{Binding TheBestScoreStr}" FontSize="Header"/>
             <Button Command="{Binding Start}" Text="Start" />
-            <HorizontalStackLayout Padding="20"> 
-                <Picker SelectedItem="{Binding Width}" ItemsSource="{Binding PickerOptions}" HorizontalOptions="Start" Title="Board Width"/>
-                <Picker SelectedItem="{Binding Height}" ItemsSource="{Binding PickerOptions}" HorizontalOptions="End" Title="Board Height"/>
-                <Picker SelectedItem="{Binding NumberOfBlocksToChoose}" ItemsSource="{Binding PickerOptions}" HorizontalOptions="End" Title="Blocks to choose"/>
+            <HorizontalStackLayout Padding="20">
+                <Picker SelectedItem="{Binding Width}" ItemsSource="{Binding PickerOptions}"   HorizontalOptions="Start" Title="Board Width"/>
+                <Picker SelectedItem="{Binding Height}" ItemsSource="{Binding PickerOptions}" HorizontalOptions="End"  Title="Board Height"/>
+                <Picker SelectedItem="{Binding NumberOfBlocksToChoose}" ItemsSource="{Binding PickerOptions}"  HorizontalOptions="End" Title="Blocks to choose"/>
             </HorizontalStackLayout>
         </VerticalStackLayout>
     </ScrollView>

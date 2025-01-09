@@ -8,7 +8,7 @@ namespace BlocksGame
 {
     public class Global
     {
-
+        public static Color BoundsColor = Color.FromRgba(255, 255, 0, 200);
         public static MainPageView MainPageView { get; set; }
         public static MainPage MainPage { get; set; }
         public static GamePage GamePage { get; set; }

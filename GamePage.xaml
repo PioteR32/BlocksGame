@@ -8,7 +8,7 @@
 
     <VerticalStackLayout x:Name="MainAbsoluteLayout">
 
-        <VerticalStackLayout x:Name="VerticalStackLayout">
+        <VerticalStackLayout x:Name="MainStackLayout">
             <Label Text="{Binding ScoreStr}"  FontSize="Header"  HorizontalOptions="Center" HorizontalTextAlignment="Center"/>
             <VerticalStackLayout>
                 <Button x:Name="loseButton" Clicked="LoseButtonClicked" Text="Lose" IsVisible="False"/>
