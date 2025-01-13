@@ -545,19 +545,21 @@ namespace BlocksGame
                     j++;
                 }
             }
+            if (TmpAddedBlocksPositions != null)
+                if (TmpAddedBlocksPositions.Count > 0)
+                {
+                    DeleteTmpBlocks();
+                    TmpAddedBlocksPositions = new List<Position>();
+                }
             return false;
         }
-        private void  DeleteTmpBlocks()
+        private void DeleteTmpBlocks()
         {
-            for (int k = 0; k < blocksBoard.fields.GetLength(0); k++)
+            foreach (Position position in TmpAddedBlocksPositions)
             {
-                for (int l = 0; l < blocksBoard.fields.GetLength(1); l++)
-                {
-                    if (blocksBoard.fields[k, l].IsFree)
-                        blocksBoard.fields[k, l].BackgroundColor = Field.DefaultColor;
-                }
+                if (blocksBoard.fields[(int)position.Y, (int)position.X].IsFree)
+                    blocksBoard.fields[(int)position.Y, (int)position.X].BackgroundColor = Field.DefaultColor;
             }
-
         }
         private bool IsThisSamePositions(IList<Position> positions, IList<Position> positionsToCheck)
         {
@@ -632,16 +634,12 @@ namespace BlocksGame
             try
             {
                 if (blocksBoard.fields[rowPosition, columnPosition].IsFree)
-                    foreach (IView view in blocksBoard.BoardView.Children)
-                    {
+                {
+                    positions.Add(new PositionsInTable(columnPosition, rowPosition));
+                    return true;
+                }
 
-                        if (blocksBoard.BoardView.GetColumn(view) == columnPosition && blocksBoard.BoardView.GetRow(view) == rowPosition)
-                        {
-                            positions.Add(new PositionsInTable(columnPosition, rowPosition));
-                            return true;
-                        }
 
-                    }
             }
             catch
             {
@@ -654,15 +652,12 @@ namespace BlocksGame
             try
             {
                 if (blocksBoard.fields[rowPosition, columnPosition].IsFree)
-                    foreach (IView view in blocksBoard.BoardView.Children)
-                    {
 
-                        if (blocksBoard.BoardView.GetColumn(view) == columnPosition && blocksBoard.BoardView.GetRow(view) == rowPosition)
-                        {
-                            return true;
-                        }
+                {
+                    return true;
+                }
 
-                    }
+
             }
             catch
             {
