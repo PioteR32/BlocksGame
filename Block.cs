@@ -518,32 +518,28 @@ namespace BlocksGame
             double boardColumnWidth = boardGrid.Width / blocksBoard.Width;
             double boardColumnHeight = boardGrid.Height / blocksBoard.Height;
             IList<PositionsInTable> positions = new List<PositionsInTable>();
-            for (int i = 0, j = 0; j < blocksBoard.Height; i += 1)
+            for (int j = 0; j < blocksBoard.Height; j++)
             {
-                if (BlockView.X + grid.X + BlockView.TranslationX > i * boardColumnWidth + boardGrid.X && BlockView.X + grid.X + BlockView.TranslationX < (i + 1) * boardColumnWidth + boardGrid.X
-                    && BlockView.Y + grid.Y + BlockView.TranslationY > j * boardColumnHeight + boardGrid.Y && BlockView.Y + grid.Y + BlockView.TranslationY < (j + 1) * boardColumnHeight + boardGrid.Y)
-                {
-                    if (IsFreeSpaceOnBlock(i, j, boardColumnWidth, boardColumnHeight, positions))
+                for (int i = 0; i < blocksBoard.Width; i++)
+                    if (BlockView.X + grid.X + BlockView.TranslationX > i * boardColumnWidth + boardGrid.X && BlockView.X + grid.X + BlockView.TranslationX < (i + 1) * boardColumnWidth + boardGrid.X
+                       && BlockView.Y + grid.Y + BlockView.TranslationY > j * boardColumnHeight + boardGrid.Y && BlockView.Y + grid.Y + BlockView.TranslationY < (j + 1) * boardColumnHeight + boardGrid.Y)
                     {
-                        List<Position> actualPositions = new List<Position>();
-                        foreach (var position in positions)
+                        if (IsFreeSpaceOnBlock(i, j, boardColumnWidth, boardColumnHeight, positions))
                         {
-                            blocksBoard.fields[position.y, position.x].BackgroundColor = BackgroundColor;
-                            actualPositions.Add(new Position(position.x, position.y));
+                            List<Position> actualPositions = new List<Position>();
+                            foreach (var position in positions)
+                            {
+                                blocksBoard.fields[position.y, position.x].BackgroundColor = BackgroundColor;
+                                actualPositions.Add(new Position(position.x, position.y));
+                            }
+                            if (!IsThisSamePositions(TmpAddedBlocksPositions, actualPositions))
+                            {
+                                DeleteTmpBlocks();
+                            }
+                            TmpAddedBlocksPositions = actualPositions;
+                            return true;
                         }
-                        if (!IsThisSamePositions(TmpAddedBlocksPositions, actualPositions))
-                        {
-                            DeleteTmpBlocks();
-                        }
-                        TmpAddedBlocksPositions = actualPositions;
-                        return true;
                     }
-                }
-                if (i + 1 == blocksBoard.Width)
-                {
-                    i = -1;
-                    j++;
-                }
             }
             if (TmpAddedBlocksPositions != null)
                 if (TmpAddedBlocksPositions.Count > 0)
