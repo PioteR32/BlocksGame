@@ -13,13 +13,14 @@ namespace BlocksGame
 {
     public class Block
     {
-        public Block(bool[,] BlockStructure, BlocksBoard BlocksBoard)
+        public Block(List<List<bool>> BlockStructure, BlocksBoard BlocksBoard)
         {
             this.BlockStructure = BlockStructure;
             this.blocksBoard = BlocksBoard;
-            this.BlockStructure = CutStructure(ChangeTable2DToIList(BlockStructure));
+            this.BlockStructure = CutStructure(BlockStructure);
             BlockView = CreateBlock();
         }
+
         public Image Image;
         public Color BackgroundColor = Color.FromRgb(255, 0, 0);
         BlocksBoard blocksBoard;
@@ -31,15 +32,15 @@ namespace BlocksGame
         /// true = 1 = have block in this position
         /// false = 0 = dont have block
         /// </summary>
-        bool[,] BlockStructure { get; set; } = new bool[9, 9];
+        List<List<bool>> BlockStructure { get; set; }
         bool isInGrid = true;
-        public bool[,] CutStructure(IList<List<bool>> structure)
+        public List<List<bool>> CutStructure(IList<List<bool>> structure)
         {
             int structureHeight = structure.Count;
             int structureWidth = structure[0].Count;
             DeleteRows(structure, structureHeight);
             DeleteColumns(structure, structureWidth);
-            return ChangeIListToTable2D(structure);
+            return (List<List<bool>>)structure;
         }
         public static void DeleteRows(IList<List<bool>> structure, int structureHeight)
         {
@@ -174,12 +175,22 @@ namespace BlocksGame
 
         public Grid CreateBlock()
         {
+            Random random = new Random();
+            int number = random.Next(4);
+            if (0 == number)
+                BackgroundColor = Color.FromArgb("#D32F2F");
+            else if (1 == number)
+                BackgroundColor = Color.FromArgb("#1E88E5");
+            else if (2 == number)
+                BackgroundColor = Color.FromArgb("#43A047");
+            else
+                BackgroundColor = Color.FromArgb("#FFD700");
             var grid = new Grid();
-            Global.CreateGrid(grid, (uint)BlockStructure.GetLength(1), (uint)BlockStructure.GetLength(0));
-            for (int i = 0, j = 0; j < BlockStructure.GetLength(1); i++)
+            Global.CreateGrid(grid, (uint)BlockStructure[0].Count, (uint)BlockStructure.Count);
+            for (int i = 0, j = 0; j < BlockStructure[0].Count; i++)
             {
                 Field tmp;
-                if (BlockStructure[i, j])
+                if (BlockStructure[i][j])
                 {
                     tmp = new Field(BackgroundColor, false);
                 }
@@ -254,7 +265,7 @@ namespace BlocksGame
                 grid.SetRow(rightBound, i);
 
 
-                if (i == BlockStructure.GetLength(0) - 1)
+                if (i == BlockStructure.Count - 1)
                 {
                     i = -1;
                     j++;
@@ -271,15 +282,25 @@ namespace BlocksGame
         }
         public Grid CreateBlock(double widthRequest, double heightRequest)
         {
+
             var grid = new Grid();
-            Global.CreateGrid(grid, (uint)BlockStructure.GetLength(0), (uint)BlockStructure.GetLength(1));
-            for (int i = 0, j = 0; j < BlockStructure.GetLength(1); i++)
+            Random random = new Random();
+            int number = random.Next(4);
+            if (0 == number)
+                BackgroundColor = Color.FromArgb("#D32F2F");
+            else if (1 == number)
+                BackgroundColor = Color.FromArgb("#1E88E5");
+            else if (2 == number)
+                BackgroundColor = Color.FromArgb("#43A047");
+            else
+                BackgroundColor = Color.FromArgb("#FFD700");
+            Global.CreateGrid(grid, (uint)BlockStructure.Count, (uint)BlockStructure[0].Count);
+            for (int i = 0, j = 0; j < BlockStructure[0].Count; i++)
             {
                 Field tmp;
-                if (BlockStructure[i, j])
+                if (BlockStructure[i][j])
                 {
                     tmp = new Field(BackgroundColor, false);
-
                 }
                 else
                     tmp = new Field(Color.FromRgba(255, 0, 0, 100), true);
@@ -351,7 +372,7 @@ namespace BlocksGame
                 grid.SetColumn(rightBound, j);
                 grid.SetRow(rightBound, i);
 
-                if (i == BlockStructure.GetLength(0) - 1)
+                if (i == BlockStructure.Count - 1)
                 {
                     i = -1;
                     j++;
@@ -365,8 +386,9 @@ namespace BlocksGame
                 {
                     case GestureStatus.Running:
 
-                        grid.TranslationX = e.TotalX; grid.TranslationY = e.TotalY;
-
+                        grid.TranslationX = e.TotalX;
+                        grid.TranslationY = e.TotalY;
+                        AddBlockToBoard();
                         break;
                     case GestureStatus.Completed:
                         if (!AddBlockToBoard())
@@ -414,6 +436,7 @@ namespace BlocksGame
                     {
                         grid.TranslationX = e.TotalX; grid.TranslationY = e.TotalY;
                     }
+                    AddBlockToBoardWhileRunning();
                     if (grid.Width / grid.ColumnDefinitions.Count != blocksBoard.BoardView.Width / blocksBoard.Width)
                     {
 
@@ -426,6 +449,7 @@ namespace BlocksGame
                 case GestureStatus.Completed:
                     if (!AddBlockToBoard())
                     {
+                        DeleteTmpBlocks();
                         await grid.TranslateTo(e.TotalX, e.TotalY);
                         ChangeBlockView(fieldWidth, fieldHeight, grid);
                         isToChange = true;
@@ -439,6 +463,7 @@ namespace BlocksGame
                 case GestureStatus.Canceled:
                     if (!AddBlockToBoard())
                     {
+                        DeleteTmpBlocks();
                         await grid.TranslateTo(e.TotalX, e.TotalY);
                         ChangeBlockView(fieldWidth, fieldHeight, grid);
                         isToChange = true;
@@ -454,7 +479,6 @@ namespace BlocksGame
 
         private bool AddBlockToBoard()
         {
-
             Position grid = GamePage.GetGridXY((Grid)BlockView.Parent);
             var boardGrid = blocksBoard.BoardView;
             double boardColumnWidth = boardGrid.Width / blocksBoard.Width;
@@ -483,6 +507,77 @@ namespace BlocksGame
                 }
             }
             return false;
+
+        }
+        List<Position> TmpAddedBlocksPositions = new List<Position>();
+
+        private bool AddBlockToBoardWhileRunning()
+        {
+            Position grid = GamePage.GetGridXY((Grid)BlockView.Parent);
+            var boardGrid = blocksBoard.BoardView;
+            double boardColumnWidth = boardGrid.Width / blocksBoard.Width;
+            double boardColumnHeight = boardGrid.Height / blocksBoard.Height;
+            IList<PositionsInTable> positions = new List<PositionsInTable>();
+            for (int i = 0, j = 0; j < blocksBoard.Height; i += 1)
+            {
+                if (BlockView.X + grid.X + BlockView.TranslationX > i * boardColumnWidth + boardGrid.X && BlockView.X + grid.X + BlockView.TranslationX < (i + 1) * boardColumnWidth + boardGrid.X
+                    && BlockView.Y + grid.Y + BlockView.TranslationY > j * boardColumnHeight + boardGrid.Y && BlockView.Y + grid.Y + BlockView.TranslationY < (j + 1) * boardColumnHeight + boardGrid.Y)
+                {
+                    if (IsFreeSpaceOnBlock(i, j, boardColumnWidth, boardColumnHeight, positions))
+                    {
+                        List<Position> actualPositions = new List<Position>();
+                        foreach (var position in positions)
+                        {
+                            blocksBoard.fields[position.y, position.x].BackgroundColor = BackgroundColor;
+                            actualPositions.Add(new Position(position.x, position.y));
+                        }
+                        if (!IsThisSamePositions(TmpAddedBlocksPositions, actualPositions))
+                        {
+                            DeleteTmpBlocks();
+                        }
+                        TmpAddedBlocksPositions = actualPositions;
+                        return true;
+                    }
+                }
+                if (i + 1 == blocksBoard.Width)
+                {
+                    i = -1;
+                    j++;
+                }
+            }
+            return false;
+        }
+        private void  DeleteTmpBlocks()
+        {
+            for (int k = 0; k < blocksBoard.fields.GetLength(0); k++)
+            {
+                for (int l = 0; l < blocksBoard.fields.GetLength(1); l++)
+                {
+                    if (blocksBoard.fields[k, l].IsFree)
+                        blocksBoard.fields[k, l].BackgroundColor = Field.DefaultColor;
+                }
+            }
+
+        }
+        private bool IsThisSamePositions(IList<Position> positions, IList<Position> positionsToCheck)
+        {
+            IList<Position> positionsTmp = new List<Position>(positions); IList<Position> positionsToCheckTmp = new List<Position>(positionsToCheck);
+            for (int i = 0; i < positionsTmp.Count; i++)
+            {
+                for (int j = 0; j < positionsToCheckTmp.Count; j++)
+                {
+                    if (positionsTmp[i] == positionsToCheckTmp[j])
+                    {
+                        positionsTmp.RemoveAt(i);
+                        positionsToCheckTmp.RemoveAt(j);
+                        j--;
+                    }
+                    else
+                        return false;
+                }
+                i--;
+            }
+            return true;
         }
         public struct PositionsInTable
         {
@@ -495,9 +590,9 @@ namespace BlocksGame
         }
         private bool IsFreeSpaceOnBlock(int x, int y, double boardColumnWidth, double boardColumnHeight, IList<PositionsInTable> positions)
         {
-            for (int i = 0, j = 0; j < BlockStructure.GetLength(0); i++)
+            for (int i = 0, j = 0; j < BlockStructure.Count; i++)
             {
-                if (BlockStructure[j, i])
+                if (BlockStructure[j][i])
                 {
 
                     if (!IsPositionInGrid(j + y, i + x, positions))
@@ -505,7 +600,7 @@ namespace BlocksGame
                         return false;
                     }
                 }
-                if (i + 1 == BlockStructure.GetLength(1))
+                if (i + 1 == BlockStructure[0].Count)
                 {
                     i = -1;
                     j++;
@@ -515,16 +610,16 @@ namespace BlocksGame
         }
         public bool IsFreeSpaceOnBlock(int x, int y)
         {
-            for (int i = 0, j = 0; j < BlockStructure.GetLength(0); i++)
+            for (int i = 0, j = 0; j < BlockStructure.Count; i++)
             {
-                if (BlockStructure[j, i])
+                if (BlockStructure[j][i])
                 {
                     if (!IsPositionInGrid(j + y, i + x))
                     {
                         return false;
                     }
                 }
-                if (i + 1 == BlockStructure.GetLength(1))
+                if (i + 1 == BlockStructure[0].Count)
                 {
                     i = -1;
                     j++;
@@ -605,42 +700,25 @@ namespace BlocksGame
         /// <param name="blocksBoard"></param>
         /// <param name="numberOfBlocks">number of Fields in Block</param>
         /// <returns></returns>
-        public static bool[,] GenerateBlockStructure(BlocksBoard blocksBoard, int numberOfBlocks)
+        public static List<List<bool>> GenerateBlockStructure(BlocksBoard blocksBoard, int numberOfBlocks)
         {
             int width = (int)blocksBoard.Width, height = (int)blocksBoard.Height;
-            if ((int)blocksBoard.Width < 5 && (int)blocksBoard.Height < 5)
-            {
-                width = (int)blocksBoard.Width;
-                height = (int)blocksBoard.Height;
-            }
-            else if ((int)blocksBoard.Width < 5)
-            {
-                width = (int)blocksBoard.Width;
-            }
-            else if (blocksBoard.Height < 5)
-            {
-                height = (int)blocksBoard.Height;
-            }
-            else
-            {
-                width = 5;
-                height = 5;
-            }
+
             Random random = new Random();
             bool[,] tmp = new bool[blocksBoard.Height, blocksBoard.Width];
-
+            List<List<bool>> list = (List<List<bool>>)ChangeTable2DToIList(tmp);
             for (int i = 0; i < numberOfBlocks; i++)
             {
                 int x = random.Next(width);
                 int y = random.Next(height);
-                if (!tmp[y, x])
+                if (!list[y][x])
                 {
-                    tmp[y, x] = true;
+                    list[y][x] = true;
                 }
                 else
                     i--;
             }
-            return tmp;
+            return list;
         }
     }
 }

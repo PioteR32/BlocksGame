@@ -10,8 +10,26 @@ using System.Xml.Linq;
 namespace BlocksGame;
 public struct Position
 {
+    public Position(double x, double y)
+    {
+        X = x; Y = y;
+    }
     public double X { get; set; }
     public double Y { get; set; }
+    public static bool operator ==(Position left, Position right)
+    {
+        if (left.X == right.X && left.Y == right.Y)
+            return true;
+        else
+            return false;
+    }
+    public static bool operator !=(Position left, Position right)
+    {
+        if (left.X != right.X || left.Y != right.Y)
+            return true;
+        else
+            return false;
+    }
 }
 public partial class GamePage : ContentPage
 {
