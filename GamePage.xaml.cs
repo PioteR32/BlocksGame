@@ -148,24 +148,10 @@ public partial class GamePage : ContentPage
         BlocksBoard b = blocksBoard as BlocksBoard;
         IList<int> completedRows = CheckCompletedRows(b);
         IList<int> completedColumns = CheckCompletedColumns(b);
-        foreach (int column in completedColumns)
-        {
-            for (int i = 0; i < b.fields.GetLength(0); i++)
-            {
-                b.fields[i, column].IsFree = true;
-                b.fields[i, column].BackgroundColor = Field.DefaultColor;
-            }
-        }
-        foreach (int row in completedRows)
-        {
-            for (int i = 0; i < b.fields.GetLength(1); i++)
-            {
-                b.fields[row, i].IsFree = true;
-                b.fields[row, i].BackgroundColor = Field.DefaultColor;
-            }
-        }
+        ChangeCompletedPositions(b, Field.DefaultColor, true, completedRows, completedColumns);
         SumScore(completedRows.Count, completedColumns.Count, b);
     }
+
     private void SumScore(int numberOfCompletedRows, int numberOfCompletedColumns, BlocksBoard board)
     {
         int score = 0;
@@ -219,7 +205,57 @@ public partial class GamePage : ContentPage
         return true;
 
     }
-    private static IList<int> CheckCompletedColumns(BlocksBoard b)
+    #region CompletedColumnsAndRows
+    /// <summary>
+    /// Changing isFree and Color in completed positions in board
+    /// </summary>
+    /// <param name="b"></param>
+    /// <param name="newColor"> new Color when position changed</param>
+    /// <param name="isFree"></param>
+    public static void ChangeCompletedPositions(BlocksBoard b,Color newColor,bool isFree, IList<int> completedRows, IList<int> completedColumns)
+    {
+        foreach (int column in completedColumns)
+        {
+            for (int i = 0; i < b.fields.GetLength(0); i++)
+            {
+                b.fields[i, column].IsFree = isFree;
+                b.fields[i, column].BackgroundColor = newColor ;
+            }
+        }
+        foreach (int row in completedRows)
+        {
+            for (int i = 0; i < b.fields.GetLength(1); i++)
+            {
+                b.fields[row, i].IsFree = isFree;
+                b.fields[row, i].BackgroundColor = newColor;
+            }
+        }
+    }
+    public static void ChangeCompletedPositions(BlocksBoard b, Color newColor, IList<int> completedRows, IList<int> completedColumns)
+    {
+        foreach (int column in completedColumns)
+        {
+            for (int i = 0; i < b.fields.GetLength(0); i++)
+            {
+                b.fields[i, column].BackgroundColor = newColor;
+                //object value = await b.fields[i, column].Label.ColorTo(b.fields[i, column].BackgroundColor, newColor, c => b.fields[i, column].Label.BackgroundColor = c, 10);
+            }
+        }
+        foreach (int row in completedRows)
+        {
+            for (int i = 0; i < b.fields.GetLength(1); i++)
+            {
+                b.fields[row, i].BackgroundColor = newColor;
+                //object value = await b.fields[row, i].Label.ColorTo(b.fields[row, i].BackgroundColor, newColor, c => b.fields[row, i].Label.BackgroundColor = c, 10);
+            }
+        }
+    }
+    /// <summary>
+    /// Check is columns completed
+    /// </summary>
+    /// <param name="b"></param>
+    /// <returns>List of columns positions</returns>
+    public static IList<int> CheckCompletedColumns(BlocksBoard b)
     {
         IList<int> completedRows = new List<int>();
         for (int i = 0, j = 0; i < b.Width; j++)
@@ -239,7 +275,32 @@ public partial class GamePage : ContentPage
         }
         return completedRows;
     }
-    private static IList<int> CheckCompletedRows(BlocksBoard b)
+    public static IList<int> CheckCompletedColumns(BlocksBoard b,Color DefaultColor)
+    {
+        IList<int> completedRows = new List<int>();
+        for (int i = 0, j = 0; i < b.Width; j++)
+        {
+            if (b.fields[j, i].BackgroundColor == DefaultColor)
+            {
+                i++;
+                j = -1;
+                continue;
+            }
+            if (j + 1 == b.Height)
+            {
+                completedRows.Add(i);
+                i++;
+                j = -1;
+            }
+        }
+        return completedRows;
+    }
+    /// <summary>
+    /// Check is row completed
+    /// </summary>
+    /// <param name="b"></param>
+    /// <returns>List of rows positions</returns>
+    public static IList<int> CheckCompletedRows(BlocksBoard b)
     {
         IList<int> completedColumns = new List<int>();
         for (int i = 0, j = 0; j < b.Height; i++)
@@ -259,6 +320,27 @@ public partial class GamePage : ContentPage
         }
         return completedColumns;
     }
+    public static IList<int> CheckCompletedRows(BlocksBoard b,Color DefaultColor)
+    {
+        IList<int> completedColumns = new List<int>();
+        for (int i = 0, j = 0; j < b.Height; i++)
+        {
+            if (b.fields[j, i].BackgroundColor == DefaultColor)
+            {
+                j++;
+                i = -1;
+                continue;
+            }
+            if (i + 1 == b.Width)
+            {
+                completedColumns.Add(j);
+                j++;
+                i = -1;
+            }
+        }
+        return completedColumns;
+    }
+    #endregion
     public async void NewButton(object sender, EventArgs e)
     {
         int i = 0;

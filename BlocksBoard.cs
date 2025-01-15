@@ -32,6 +32,7 @@ namespace BlocksGame
                 {
                     BindingContext = fields[i, j],
                 };
+                fields[i, j].BackgroundColor = Field.DefaultColor;
                 label.SetBinding(Label.BackgroundColorProperty, new Binding(nameof(Field.BackgroundColor)));
                 grid.Children.Add(label);
                 grid.SetColumn(label, j);

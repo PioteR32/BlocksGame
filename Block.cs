@@ -1,5 +1,6 @@
 ﻿//using Microsoft.UI.Xaml;
 //using GameplayKit;
+//using Android.Content.PM;
 using Microsoft.Maui;
 using Microsoft.Maui.Layouts;
 using System;
@@ -196,13 +197,24 @@ namespace BlocksGame
                 }
                 else
                     tmp = new Field(Color.FromRgba(0, 0, 0, 100), true);
+                //var border  = new Frame
+                //{
+                //    HeightRequest = fieldHeight,
+                //    WidthRequest = fieldWidth,
+                //    BackgroundColor = Global.BoundsColor
+                //};
+                //grid.Children.Add(border);
+                //grid.SetColumn(border, j);
+                //grid.SetRow(border, i);
                 var label = new Label
                 {
                     BindingContext = tmp,
                     BackgroundColor = tmp.BackgroundColor,
                     MinimumWidthRequest = fieldWidth,
                     MinimumHeightRequest = fieldHeight,
+                   
                 };
+                //border.AddLogicalChild(label);
                 grid.Children.Add(label);
                 grid.SetColumn(label, j);
                 grid.SetRow(label, i);
@@ -437,6 +449,9 @@ namespace BlocksGame
                         grid.TranslationX = e.TotalX; grid.TranslationY = e.TotalY;
                     }
                     AddBlockToBoardWhileRunning();
+                    IList<int> completedRows = GamePage.CheckCompletedRows(blocksBoard, Field.DefaultColor);
+                    IList<int> completedColumns = GamePage.CheckCompletedColumns(blocksBoard, Field.DefaultColor);
+                    GamePage.ChangeCompletedPositions(blocksBoard, this.BackgroundColor, completedRows, completedColumns);
                     if (grid.Width / grid.ColumnDefinitions.Count != blocksBoard.BoardView.Width / blocksBoard.Width)
                     {
 
@@ -553,8 +568,7 @@ namespace BlocksGame
         {
             foreach (Position position in TmpAddedBlocksPositions)
             {
-                if (blocksBoard.fields[(int)position.Y, (int)position.X].IsFree)
-                    blocksBoard.fields[(int)position.Y, (int)position.X].BackgroundColor = Field.DefaultColor;
+                blocksBoard.fields[(int)position.Y, (int)position.X].BackgroundColor = Field.DefaultColor;
             }
         }
         private bool IsThisSamePositions(IList<Position> positions, IList<Position> positionsToCheck)
