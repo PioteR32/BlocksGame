@@ -2,18 +2,78 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="BlocksGame.GamePage"
-             xmlns:local="clr-namespace:BlocksGame"
+             xmlns:local="clr-namespace:BlocksGame.Views"
+             xmlns:utils="clr-namespace:BlocksGame.UtilsMaui.UtilsMaui.Utils"
              Title="GamePage" x:Name="Page"
-             BindingContext="{x:Reference Page}">
+            >
+    <!--<ContentPage.BindingContext>
+        <local:GamePageView/>
+    </ContentPage.BindingContext>-->
+    <ScrollView>
+        <VerticalStackLayout x:Name="MainAbsoluteLayout">
 
-    <VerticalStackLayout x:Name="MainAbsoluteLayout">
+            <VerticalStackLayout x:Name="MainStackLayout">
+                <Label Text="{Binding ScoreStr}"  FontSize="Header"  HorizontalOptions="Center" HorizontalTextAlignment="Center"/>
+                <VerticalStackLayout>
+                    <Button x:Name="loseButton" Clicked="LoseButtonClicked" Text="Lose" IsVisible="False"/>
+                </VerticalStackLayout>
+                <Grid utils:GridHelpers.ColumnCount="{Binding BlocksBoard.Width}"
+                  utils:GridHelpers.RowCount="{Binding BlocksBoard.Height}"
+                   BackgroundColor="Transparent"
+                    HorizontalOptions="Center"
+                  x:Name="boardGrid"
+                  BindableLayout.ItemsSource="{Binding BlocksBoard.Fields}">
+                    <BindableLayout.ItemTemplate>
+                        <DataTemplate>
+                            <Border Grid.Row="{Binding RowPosition}" Grid.Column="{Binding ColumnPosition}" 
+                                BackgroundColor="Transparent">
+                                <Label WidthRequest="{Binding Width}" HeightRequest="{Binding Height}" BackgroundColor="{Binding BackgroundColor}"/>
+                            </Border>
+                        </DataTemplate>
+                    </BindableLayout.ItemTemplate>
 
-        <VerticalStackLayout x:Name="MainStackLayout">
-            <Label Text="{Binding ScoreStr}"  FontSize="Header"  HorizontalOptions="Center" HorizontalTextAlignment="Center"/>
-            <VerticalStackLayout>
-                <Button x:Name="loseButton" Clicked="LoseButtonClicked" Text="Lose" IsVisible="False"/>
+                </Grid>
+
+                <Grid utils:GridHelpers.ColumnCount="{Binding NumberOfBlocks}"
+                        utils:GridHelpers.RowCount="1"
+                        BackgroundColor="Transparent"
+                        HorizontalOptions="Center"
+                      ColumnSpacing="20"
+                      Padding="20"
+                    BindableLayout.ItemsSource="{Binding ToChoose}"
+                      x:Name="blocksView">
+                    <BindableLayout.ItemTemplate>
+                        <DataTemplate>
+                            <Grid utils:GridHelpers.ColumnCount="{Binding Width}"
+                                utils:GridHelpers.RowCount="{Binding Height}"
+                                 BackgroundColor="Transparent"
+                                 HorizontalOptions="Center"
+                                  Grid.Column="{Binding PositionInToChoose}"
+                                 BindableLayout.ItemsSource="{Binding Fields}"
+                                   ColumnSpacing="0"
+                                        Padding="0"
+                                  RowSpacing="0">
+                                <BindableLayout.ItemTemplate>
+                                    <DataTemplate>
+                                        <Border Grid.Column="{Binding ColumnPosition}"
+                                                Grid.Row="{Binding RowPosition}"
+                                                WidthRequest="{Binding Width}"
+                                                HeightRequest="{Binding Height}"
+                                                VerticalOptions="CenterAndExpand">
+                                            <Label WidthRequest="{Binding Width}" HeightRequest="{Binding Height}" Background="{Binding BackgroundColor}"/>
+                                        </Border>
+                                    </DataTemplate>
+                                </BindableLayout.ItemTemplate>
+                                <Grid.GestureRecognizers>
+                                    <PanGestureRecognizer PanUpdated="PanGetsureFnc"/>
+                                </Grid.GestureRecognizers>
+                            </Grid>
+                        </DataTemplate>
+                    </BindableLayout.ItemTemplate>
+
+                </Grid>
             </VerticalStackLayout>
-        </VerticalStackLayout>
 
-    </VerticalStackLayout>
+        </VerticalStackLayout>
+    </ScrollView>
 </ContentPage>

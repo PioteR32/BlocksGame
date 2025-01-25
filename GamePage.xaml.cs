@@ -1,10 +1,10 @@
 //using Microsoft.UI.Xaml.Documents;
-
 using Microsoft.Maui.Controls.PlatformConfiguration.GTKSpecific;
 using Microsoft.Maui.Handlers;
 using Microsoft.Maui.Layouts;
 using System.Data.Common;
 using System.Xml.Linq;
+using static BlocksGame.Block;
 
 
 namespace BlocksGame;
@@ -16,16 +16,16 @@ public struct Position
     }
     public double X { get; set; }
     public double Y { get; set; }
-    public static bool operator ==(Position left, Position right)
+    public static bool operator ==(Position p, Position p1)
     {
-        if (left.X == right.X && left.Y == right.Y)
+        if (p.X == p1.X && p.Y == p1.Y)
             return true;
         else
             return false;
     }
-    public static bool operator !=(Position left, Position right)
+    public static bool operator !=(Position p, Position p1)
     {
-        if (left.X != right.X || left.Y != right.Y)
+        if (p.X != p1.X || p.Y != p1.Y)
             return true;
         else
             return false;
@@ -33,79 +33,342 @@ public struct Position
 }
 public partial class GamePage : ContentPage
 {
-    Thread UserScoreThread;
-    Grid Board;
-    Grid Blocks = new Grid
-    {
-        ColumnSpacing = 20,
-        HorizontalOptions = LayoutOptions.Center,
-        Padding = 10,
-    };
-    AbsoluteLayout layout = new AbsoluteLayout();
-    BlocksBoard b;
+    List<Position> TmpAddedBlocksPositions = new List<Position>();
+    BlocksBoard BlocksBoard;
     public static IList<Block> ToChoose { get; set; } = [];
     public static IList<Block> NextToChoose { get; set; } = [];
 
-    private static readonly object lockObject = new object();
     static int score = 0;
-    public int Score
-    {
-        get => score;
-        set
-        {
-            score = value;
-            OnPropertyChanged(nameof(ScoreStr));
-        }
-    }
-    string scoreStr = "Score: ";
-    public string ScoreStr
-    {
-        get => scoreStr + score;
-        set
-        {
-            scoreStr = value;
-            OnPropertyChanged();
-        }
-    }
+    Views.GamePageView tmp;
+
     public GamePage(uint width, uint height, uint numberOfBlocksToChoose)
     {
-        Score = 0;
-        Global.GamePage = this;
-        b = new BlocksBoard(width, height);
+        tmp = new Views.GamePageView(width, height, numberOfBlocksToChoose);
+        BindingContext = tmp;
+        BlocksBoard = tmp.BlocksBoard;
+        ToChoose = tmp.ToChoose;
         InitializeComponent();
-        ToChoose = new List<Block>();
-        Thread createBoard = new Thread(new ThreadStart(b.CreateGrid));
-        createBoard.Start();
-
-        for (int i = 0; i < numberOfBlocksToChoose; i++)
-        {
-            ToChoose.Add(Block.GenerateBlock(b));
-        }
-        //board = Board;
-        //blocks = Blocks;
-        Global.CreateGrid(Blocks, numberOfBlocksToChoose, 1);
-        for (int i = 0; i < ToChoose.Count; i++)
-        {
-            ToChoose[i].ShowBlock(i, 0, Blocks);
-        }
-        createBoard.Join();
-        Board = b.BoardView;
-        MainStackLayout.Children.Add(Board);
-        MainStackLayout.Children.Add(Blocks);
     }
     /// <summary>
-    /// Check that player lose and give score
+    /// Check block on grid position in blocksView
     /// </summary>
-    /// <param name="layout"></param>
-    /// <param name="b"></param>
+    /// <param name="grid"></param>
+    /// <returns>Object of Blocks</returns>
+    Block WhichToChooseBlock(Grid grid)
+    {
+        for (int i = 0; i < blocksView.Children.Count; i++)
+        {
+            if (blocksView.Children[i] is Grid)
+            {
+                if (blocksView.Children[i] == grid)
+                    return ToChoose[i];
+            }
+        }
+        return null;
+    }
+    #region AddBlocksToBoard
+
+    #region CheckPositionsBlocks
+    private bool IsPositionInGrid(int rowPosition, int columnPosition, IList<PositionsInTable> positions)
+    {
+        try
+        {
+            if (BlocksBoard.Fields[rowPosition, columnPosition].IsFree)
+            {
+                positions.Add(new PositionsInTable(columnPosition, rowPosition));
+                return true;
+            }
+        }
+        catch
+        {
+            return false;
+        }
+        return false;
+    }
+    private bool IsFreeSpaceOnBlock(int x, int y, double boardColumnWidth, double boardColumnHeight, IList<PositionsInTable> positions, Block block)
+    {
+        for (int i = 0, j = 0; j < block.BlockStructure.GetLength(0); i++)
+        {
+            if (block.BlockStructure[j, i])
+            {
+
+                if (!IsPositionInGrid(j + y, i + x, positions))
+                {
+                    return false;
+                }
+            }
+            if (i + 1 == block.BlockStructure.GetLength(1))
+            {
+                i = -1;
+                j++;
+            }
+        }
+        return true;
+    }
+    private bool IsPositionInGrid(int rowPosition, int columnPosition)
+    {
+        try
+        {
+            if (BlocksBoard.Fields[rowPosition, columnPosition].IsFree)
+                return true;
+        }
+        catch
+        {
+            return false;
+        }
+        return false;
+    }
+    public bool IsFreeSpaceOnBlock(int x, int y, Block block)
+    {
+        for (int i = 0, j = 0; j < block.BlockStructure.GetLength(0); i++)
+        {
+            if (block.BlockStructure[j, i])
+            {
+                if (!IsPositionInGrid(j + y, i + x))
+                {
+                    return false;
+                }
+            }
+            if (i + 1 == block.BlockStructure.GetLength(1))
+            {
+                i = -1;
+                j++;
+            }
+        }
+        return true;
+    }
+    #endregion  
+
+    /// <summary>
+    /// Add Blocks To Board
+    /// </summary>
+    /// <param name="BlockView"> Block's Grid </param>
+    /// <returns> Has added block </returns>
+    public bool AddBlockToBoard(Grid BlockView)
+    {
+        Position grid = GamePage.GetGridXY((Grid)BlockView.Parent);
+
+        double boardColumnWidth = boardGrid.Width / BlocksBoard.Width;
+        double boardColumnHeight = boardGrid.Height / BlocksBoard.Height;
+        IList<PositionsInTable> positions = new List<PositionsInTable>();
+        for (int i = 0, j = 0; j < BlocksBoard.Height; i += 1)
+        {
+            if (BlockView.X + grid.X + BlockView.TranslationX > i * boardColumnWidth + boardGrid.X && BlockView.X + grid.X + BlockView.TranslationX < (i + 1) * boardColumnWidth + boardGrid.X
+                && BlockView.Y + grid.Y + BlockView.TranslationY > j * boardColumnHeight + boardGrid.Y && BlockView.Y + grid.Y + BlockView.TranslationY < (j + 1) * boardColumnHeight + boardGrid.Y)
+            {
+                Block block = WhichToChooseBlock(BlockView);
+                if (block != null)
+                    if (IsFreeSpaceOnBlock(i, j, boardColumnWidth, boardColumnHeight, positions, block))
+                    {
+                        foreach (var position in positions)
+                        {
+                            BlocksBoard.Fields[position.y, position.x].BackgroundColor = block.BackgroundColor;
+                            BlocksBoard.Fields[position.y, position.x].IsFree = false;
+                        }
+
+                        return true;
+                    }
+            }
+            if (i + 1 == BlocksBoard.Width)
+            {
+                i = -1;
+                j++;
+            }
+        }
+        return false;
+    }
+
+    # region AddBlockToBoardWhilePanGetsureRunning
+    private bool AddBlockToBoardWhileRunning(Grid BlockView)
+    {
+        Position grid = GamePage.GetGridXY((Grid)BlockView.Parent);
+
+        double boardColumnWidth = boardGrid.Width / BlocksBoard.Width;
+        double boardColumnHeight = boardGrid.Height / BlocksBoard.Height;
+        IList<PositionsInTable> positions = new List<PositionsInTable>();
+        for (int j = 0; j < BlocksBoard.Height; j++)
+        {
+            for (int i = 0; i < BlocksBoard.Width; i++)
+                if (BlockView.X + grid.X + BlockView.TranslationX > i * boardColumnWidth + boardGrid.X && BlockView.X + grid.X + BlockView.TranslationX < (i + 1) * boardColumnWidth + boardGrid.X
+                   && BlockView.Y + grid.Y + BlockView.TranslationY > j * boardColumnHeight + boardGrid.Y && BlockView.Y + grid.Y + BlockView.TranslationY < (j + 1) * boardColumnHeight + boardGrid.Y)
+                {
+                    Block block = WhichToChooseBlock(BlockView);
+                    if (block != null)
+                        if (IsFreeSpaceOnBlock(i, j, boardColumnWidth, boardColumnHeight, positions, block))
+                        {
+                            List<Position> actualPositions = new List<Position>();
+                            foreach (var position in positions)
+                            {
+                                BlocksBoard.Fields[position.y, position.x].BackgroundColor = block.BackgroundColor;
+                                actualPositions.Add(new Position(position.x, position.y));
+                            }
+                            if (!IsThisSamePositions(TmpAddedBlocksPositions, actualPositions))
+                            {
+                                DeleteTmpBlocks();
+                            }
+                            TmpAddedBlocksPositions = actualPositions;
+                            return true;
+                        }
+                }
+        }
+        if (TmpAddedBlocksPositions != null)
+            if (TmpAddedBlocksPositions.Count > 0)
+            {
+                DeleteTmpBlocks();
+                TmpAddedBlocksPositions = new List<Position>();
+            }
+        return false;
+    }
+
+    private void DeleteTmpBlocks()
+    {
+        foreach (Position position in TmpAddedBlocksPositions)
+        {
+            if (BlocksBoard.Fields[(int)position.Y, (int)position.X].IsFree)
+                BlocksBoard.Fields[(int)position.Y, (int)position.X].BackgroundColor = Field.DefaultColor;
+        }
+    }
+
+    private bool IsThisSamePositions(IList<Position> positions, IList<Position> positionsToCheck)
+    {
+        IList<Position> positionsTmp = new List<Position>(positions); IList<Position> positionsToCheckTmp = new List<Position>(positionsToCheck);
+        for (int i = 0; i < positionsTmp.Count; i++)
+        {
+            for (int j = 0; j < positionsToCheckTmp.Count; j++)
+            {
+                if (positionsTmp[i] == positionsToCheckTmp[j])
+                {
+                    positionsTmp.RemoveAt(i);
+                    positionsToCheckTmp.RemoveAt(j);
+                    j--;
+                }
+                else
+                    return false;
+            }
+            i--;
+        }
+        return true;
+    }
+
+    private void ChangeBlockView(double newWidth, double newHeight, Grid grid)
+    {
+        foreach (var child in grid)
+        {
+            if (child.DesiredSize.Width > 10 && child.DesiredSize.Height > 10)
+            {
+                Border childL = child as Border;
+                childL.WidthRequest = newWidth;
+                childL.HeightRequest = newHeight;
+            }
+        }
+    }
+    public static void ChangeCompletedPositions(BlocksBoard b, Color newColor, IList<int> completedRows, IList<int> completedColumns)
+    {
+        foreach (int column in completedColumns)
+        {
+            for (int i = 0; i < b.Fields.GetLength(0); i++)
+            {
+                b.Fields[i, column].BackgroundColor = newColor;
+                //object value = await b.fields[i, column].Label.ColorTo(b.fields[i, column].BackgroundColor, newColor, c => b.fields[i, column].Label.BackgroundColor = c, 10);
+            }
+        }
+        foreach (int row in completedRows)
+        {
+            for (int i = 0; i < b.Fields.GetLength(1); i++)
+            {
+                b.Fields[row, i].BackgroundColor = newColor;
+                //object value = await b.fields[row, i].Label.ColorTo(b.fields[row, i].BackgroundColor, newColor, c => b.fields[row, i].Label.BackgroundColor = c, 10);
+            }
+        }
+    }
+
+    #endregion
+    #endregion
+
+    Block panGetsureBlock;
+    bool newPanGetsure = true;
+
+    public async void PanGetsureFnc(object sender, PanUpdatedEventArgs e)
+    {
+        if (sender is Grid)
+        {
+            Grid grid = sender as Grid;
+            switch (e.StatusType)
+            {
+                case GestureStatus.Running:
+
+                    if (newPanGetsure)
+                    {
+                        newPanGetsure = false;
+                        panGetsureBlock = WhichToChooseBlock(grid);
+                    }
+                    if (DeviceInfo.Platform == DevicePlatform.Android || DeviceInfo.Platform == DevicePlatform.iOS)
+                    {
+                        grid.TranslationX += e.TotalX; grid.TranslationY += e.TotalY;
+                    }
+                    else
+                    {
+                        grid.TranslationX = e.TotalX; grid.TranslationY = e.TotalY;
+                    }
+                    if (grid.Width / grid.ColumnDefinitions.Count != boardGrid.Width / BlocksBoard.Width)
+                    {
+
+                        ChangeBlockView(boardGrid.Width / BlocksBoard.Width,
+                            boardGrid.Height / BlocksBoard.Height,
+                            grid);
+
+                    }
+                    IList<int> completedRows = CheckCompletedRows(BlocksBoard, Field.DefaultColor);
+                    IList<int> completedColumns = CheckCompletedColumns(BlocksBoard, Field.DefaultColor);
+
+                    ChangeCompletedPositions(BlocksBoard, panGetsureBlock.BackgroundColor, completedRows, completedColumns);
+                    AddBlockToBoardWhileRunning(grid);
+                    break;
+                case GestureStatus.Completed:
+                    newPanGetsure = true;
+                    if (!AddBlockToBoard(grid))
+                    {
+                        await grid.TranslateTo(e.TotalX, e.TotalY);
+                        ChangeBlockView(Block.FieldWidth, Block.FieldHeight, grid);
+                        //isToChange = true;
+                    }
+                    else
+                    {
+                        grid.IsVisible = false;
+                        MenageToChoose((Grid)grid.Parent, BlocksBoard);
+                    }
+                    break;
+                case GestureStatus.Canceled:
+                    newPanGetsure = true;
+                    if (!AddBlockToBoard(grid))
+                    {
+                        await grid.TranslateTo(e.TotalX, e.TotalY);
+                        ChangeBlockView(Block.FieldWidth, Block.FieldHeight, grid);
+
+                    }
+                    else
+                    {
+                        grid.IsVisible = false;
+                        MenageToChoose((Grid)grid.Parent, BlocksBoard);
+                    }
+                    break;
+            }
+        }
+    }
+
+    #region MenageGame
     public void MenageToChoose(Grid layout, BlocksBoard b)
     {
         int beginBlocksToChoose = ToChoose.Count;
         int BlocksToChoose = 0;
         for (int i = 0; i < ToChoose.Count; i++)
         {
-            if (ToChoose[i].BlockView.IsVisible)
-                BlocksToChoose++;
+            if (blocksView.Children[i] is Grid)
+            {
+                Grid grid = (Grid)blocksView.Children[i];
+                if (grid.IsVisible)
+                    BlocksToChoose++;
+            }
         }
 
         beginBlocksToChoose = BlocksToChoose;
@@ -116,13 +379,7 @@ public partial class GamePage : ContentPage
 
             for (int i = 0; i < ToChoose.Count; i++)
             {
-                ToChoose[i] = Block.GenerateBlock(b);
-            }
-            for (int i = 0; i < ToChoose.Count; i++)
-            {
-
-                ToChoose[i].ShowBlock(i, 1, layout);
-
+                ToChoose[i] = Block.GenerateBlock(b, i);
             }
         }
 
@@ -131,72 +388,33 @@ public partial class GamePage : ContentPage
             loseButton.IsVisible = true;
         }
     }
-    public async void LoseButtonClicked(object sender, EventArgs e)
-    {
-        await Navigation.PopAsync();
-    }
-    public static Position GetGridXY(Grid layout)
-    {
-        return new Position
-        {
-            X = layout.X,
-            Y = layout.Y,
-        };
-    }
-    private void IsGetUserScore(object blocksBoard)
-    {
-        BlocksBoard b = blocksBoard as BlocksBoard;
-        IList<int> completedRows = CheckCompletedRows(b);
-        IList<int> completedColumns = CheckCompletedColumns(b);
-        ChangeCompletedPositions(b, Field.DefaultColor, true, completedRows, completedColumns);
-        SumScore(completedRows.Count, completedColumns.Count, b);
-    }
-
-    private void SumScore(int numberOfCompletedRows, int numberOfCompletedColumns, BlocksBoard board)
-    {
-        int score = 0;
-        if (numberOfCompletedRows != 0 && numberOfCompletedColumns != 0)
-            score += (int)Global.Impressivenes((int)b.Width, numberOfCompletedRows) * (int)Global.Impressivenes(b.Height, numberOfCompletedColumns);
-        else if (numberOfCompletedRows != 0)
-            score += (int)Global.Impressivenes((int)b.Width, numberOfCompletedRows);
-        else if (numberOfCompletedColumns != 0)
-            score += (int)Global.Impressivenes(b.Height, numberOfCompletedColumns);
-        if (b.IsClear())
-        {
-            Score += (int)Global.Impressivenes(score, 2);
-        }
-        else
-            Score += score;
-        if (Score > MainPageView.TheBestScore)
-        {
-            ScoreStr = "New The Best Score :";
-            MainPageView.TheBestScore = Score;
-            MainPageView.ChangeTheBestScoreInFile((int)board.Width, (int)board.Height, ToChoose.Count, Score);
-        }
-    }
-    public static bool IsUserLose(BlocksBoard b)
+    public bool IsUserLose(BlocksBoard b)
     {
         int unVisableElements = 0;
         for (int i = 0; i < ToChoose.Count; i++)
-            if (ToChoose[i].BlockView.IsVisible)
-                for (int j = 0, k = 0; j < b.fields.GetLength(1); k++)
-                {
-
-                    if (ToChoose[i].IsFreeSpaceOnBlock(k, j))
-                    {
-                        return false;
-                    }
-                    else
+            if (blocksView.Children[i] is Grid)
+            {
+                Grid grid = (Grid)blocksView.Children[i];
+                if (grid.IsVisible)
+                    for (int j = 0, k = 0; j < b.Fields.GetLength(1); k++)
                     {
 
-                    }
+                        if (IsFreeSpaceOnBlock(k, j, ToChoose[i]))
+                        {
+                            return false;
+                        }
+                        else
+                        {
 
-                    if (k + 1 == b.fields.GetLength(0))
-                    {
-                        k = -1;
-                        j++;
+                        }
+
+                        if (k + 1 == b.Fields.GetLength(0))
+                        {
+                            k = -1;
+                            j++;
+                        }
                     }
-                }
+            }
             else
             {
                 unVisableElements++;
@@ -205,62 +423,72 @@ public partial class GamePage : ContentPage
         return true;
 
     }
-    #region CompletedColumnsAndRows
-    /// <summary>
-    /// Changing isFree and Color in completed positions in board
-    /// </summary>
-    /// <param name="b"></param>
-    /// <param name="newColor"> new Color when position changed</param>
-    /// <param name="isFree"></param>
-    public static void ChangeCompletedPositions(BlocksBoard b,Color newColor,bool isFree, IList<int> completedRows, IList<int> completedColumns)
+    public async void LoseButtonClicked(object sender, EventArgs e)
     {
+        await Navigation.PopAsync();
+    }
+
+    #endregion
+
+    public static Position GetGridXY(Grid layout)
+    {
+        return new Position
+        {
+            X = layout.X,
+            Y = layout.Y,
+        };
+    }
+
+    #region UserScore
+    private void IsGetUserScore(object blocksBoard)
+    {
+        BlocksBoard b = blocksBoard as BlocksBoard;
+        IList<int> completedRows = CheckCompletedRows(b);
+        IList<int> completedColumns = CheckCompletedColumns(b);
         foreach (int column in completedColumns)
         {
-            for (int i = 0; i < b.fields.GetLength(0); i++)
+            for (int i = 0; i < b.Fields.GetLength(0); i++)
             {
-                b.fields[i, column].IsFree = isFree;
-                b.fields[i, column].BackgroundColor = newColor ;
+                b.Fields[i, column].IsFree = true;
+                b.Fields[i, column].BackgroundColor = Field.DefaultColor;
             }
         }
         foreach (int row in completedRows)
         {
-            for (int i = 0; i < b.fields.GetLength(1); i++)
+            for (int i = 0; i < b.Fields.GetLength(1); i++)
             {
-                b.fields[row, i].IsFree = isFree;
-                b.fields[row, i].BackgroundColor = newColor;
+                b.Fields[row, i].IsFree = true;
+                b.Fields[row, i].BackgroundColor = Field.DefaultColor;
             }
         }
+        SumScore(completedRows.Count, completedColumns.Count, b);
     }
-    public static void ChangeCompletedPositions(BlocksBoard b, Color newColor, IList<int> completedRows, IList<int> completedColumns)
+
+    private void SumScore(int numberOfCompletedRows, int numberOfCompletedColumns, BlocksBoard board)
     {
-        foreach (int column in completedColumns)
+        int score = 0;
+        if (numberOfCompletedRows != 0 && numberOfCompletedColumns != 0)
+            score += (int)Global.Impressivenes((int)BlocksBoard.Width, numberOfCompletedRows) * (int)Global.Impressivenes(BlocksBoard.Height, numberOfCompletedColumns);
+        else if (numberOfCompletedRows != 0)
+            score += (int)Global.Impressivenes((int)BlocksBoard.Width, numberOfCompletedRows);
+        else if (numberOfCompletedColumns != 0)
+            score += (int)Global.Impressivenes(BlocksBoard.Height, numberOfCompletedColumns);
+        if (BlocksBoard.IsClear())
         {
-            for (int i = 0; i < b.fields.GetLength(0); i++)
-            {
-                b.fields[i, column].BackgroundColor = newColor;
-                //object value = await b.fields[i, column].Label.ColorTo(b.fields[i, column].BackgroundColor, newColor, c => b.fields[i, column].Label.BackgroundColor = c, 10);
-            }
+            tmp.Score += (int)Global.Impressivenes(score, 2);
         }
-        foreach (int row in completedRows)
-        {
-            for (int i = 0; i < b.fields.GetLength(1); i++)
-            {
-                b.fields[row, i].BackgroundColor = newColor;
-                //object value = await b.fields[row, i].Label.ColorTo(b.fields[row, i].BackgroundColor, newColor, c => b.fields[row, i].Label.BackgroundColor = c, 10);
-            }
-        }
+        else
+            tmp.Score += score;
     }
-    /// <summary>
-    /// Check is columns completed
-    /// </summary>
-    /// <param name="b"></param>
-    /// <returns>List of columns positions</returns>
-    public static IList<int> CheckCompletedColumns(BlocksBoard b)
+    #endregion
+   
+    #region CheckCompletedPositions
+    private static IList<int> CheckCompletedColumns(BlocksBoard b)
     {
         IList<int> completedRows = new List<int>();
         for (int i = 0, j = 0; i < b.Width; j++)
         {
-            if (b.fields[j, i].IsFree)
+            if (b.Fields[j, i].IsFree)
             {
                 i++;
                 j = -1;
@@ -275,12 +503,12 @@ public partial class GamePage : ContentPage
         }
         return completedRows;
     }
-    public static IList<int> CheckCompletedColumns(BlocksBoard b,Color DefaultColor)
+    public static IList<int> CheckCompletedColumns(BlocksBoard b, Color DefaultColor)
     {
         IList<int> completedRows = new List<int>();
         for (int i = 0, j = 0; i < b.Width; j++)
         {
-            if (b.fields[j, i].BackgroundColor == DefaultColor)
+            if (b.Fields[j, i].BackgroundColor == DefaultColor)
             {
                 i++;
                 j = -1;
@@ -295,17 +523,12 @@ public partial class GamePage : ContentPage
         }
         return completedRows;
     }
-    /// <summary>
-    /// Check is row completed
-    /// </summary>
-    /// <param name="b"></param>
-    /// <returns>List of rows positions</returns>
-    public static IList<int> CheckCompletedRows(BlocksBoard b)
+    private static IList<int> CheckCompletedRows(BlocksBoard b)
     {
         IList<int> completedColumns = new List<int>();
         for (int i = 0, j = 0; j < b.Height; i++)
         {
-            if (b.fields[j, i].IsFree)
+            if (b.Fields[j, i].IsFree)
             {
                 j++;
                 i = -1;
@@ -320,12 +543,12 @@ public partial class GamePage : ContentPage
         }
         return completedColumns;
     }
-    public static IList<int> CheckCompletedRows(BlocksBoard b,Color DefaultColor)
+    public static IList<int> CheckCompletedRows(BlocksBoard b, Color DefaultColor)
     {
         IList<int> completedColumns = new List<int>();
         for (int i = 0, j = 0; j < b.Height; i++)
         {
-            if (b.fields[j, i].BackgroundColor == DefaultColor)
+            if (b.Fields[j, i].BackgroundColor == DefaultColor)
             {
                 j++;
                 i = -1;
@@ -341,8 +564,4 @@ public partial class GamePage : ContentPage
         return completedColumns;
     }
     #endregion
-    public async void NewButton(object sender, EventArgs e)
-    {
-        int i = 0;
-    }
 }
