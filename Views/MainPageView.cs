@@ -78,11 +78,17 @@ namespace BlocksGame.Views
         {
             3,4,5,6,7,8,9,10
         };
-        public async void StartGame()
+		public string[] GameModesStr { get; set; } =
+		{
+			"Normal","ChaoticBoard","ChaoticBlocks","ChaoticNumberOfBlocks","MaxChaotic"
+		};
+        public int GameModeInt { get; set; } = 0;
+		public GameModes GameMode { get; set; }
+		public async void StartGame()
         {
             if (Width > 1 && Height > 1 && NumberOfBlocksToChoose > 1)
             {
-                GamePage gamePage = new GamePage(Width, Height, NumberOfBlocksToChoose);
+                GamePage gamePage = new GamePage(Width, Height, NumberOfBlocksToChoose,(GameModes)GameModeInt);
                 await Global.MainPage.Navigation.PushAsync(gamePage);
             }
         }

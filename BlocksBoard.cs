@@ -37,7 +37,14 @@ namespace BlocksGame
                 }
             }
         }
-        public bool IsClear()
+		public BlocksBoard(uint width, uint height,BlocksBoard board)
+		{
+			this.Width = (int)width;
+			this.Height = (int)height;
+			Fields = new Field[height, width];
+			ChangeFieldsOnCreate(board);
+		}
+		public bool IsClear()
         {
             for (int i = 0; i < Fields.GetLength(0); i++)
             {
@@ -51,5 +58,32 @@ namespace BlocksGame
             }
             return true;
         }
-    }
+
+        public void ChangeFields(BlocksBoard board)
+        {
+			for (int i = 0; i < Height && i < board.Height; i++)
+			{
+				for (int j = 0; j < Width && j < board.Width; j++)
+				{
+                    if(!board.Fields[i, j].IsFree)
+					    Fields[i, j] = board.Fields[i, j];
+				}
+			}
+		}
+		public void ChangeFieldsOnCreate(BlocksBoard board)
+        {
+			for (int i = 0; i < Height; i++)
+			{
+				for (int j = 0; j < Width; j++)
+				{
+					if (i < board.Height && j < board.Width)
+						Fields[i, j] = board.Fields[i, j];
+					else
+					{
+						Fields[i, j] = new Field(i, j, MinimumWidthRequest, MinimumHeightRequest);
+					}
+				}
+			}
+		}
+	}
 }
