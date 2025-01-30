@@ -52,7 +52,13 @@
                                  BindableLayout.ItemsSource="{Binding Fields}"
                                    ColumnSpacing="0"
                                         Padding="0"
-                                  RowSpacing="0">
+                                  RowSpacing="0"
+                                
+                                >
+
+                                <Grid.GestureRecognizers>
+                                    <PanGestureRecognizer PanUpdated="PanGetsureFnc" />
+                                </Grid.GestureRecognizers>
                                 <BindableLayout.ItemTemplate>
                                     <DataTemplate>
                                         <Border Grid.Column="{Binding ColumnPosition}"
@@ -64,9 +70,7 @@
                                         </Border>
                                     </DataTemplate>
                                 </BindableLayout.ItemTemplate>
-                                <Grid.GestureRecognizers>
-                                    <PanGestureRecognizer PanUpdated="PanGetsureFnc"/>
-                                </Grid.GestureRecognizers>
+
                             </Grid>
                         </DataTemplate>
                     </BindableLayout.ItemTemplate>

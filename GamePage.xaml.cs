@@ -50,12 +50,12 @@ public partial class GamePage : ContentPage
 
 		InitializeComponent();
 	}
+
 	public GamePage(uint width, uint height, uint numberOfBlocksToChoose, GameModes gameModes)
 	{
 		tmp = new Views.GamePageView(width, height, numberOfBlocksToChoose, gameModes);
 		BindingContext = tmp;
 		InitializeComponent();
-		tmp.NumberOfBlocks = tmp.ToChoose.Count;
 	}
 	/// <summary>
 	/// Check block on grid position in blocksView
@@ -295,20 +295,18 @@ public partial class GamePage : ContentPage
 
 	Block panGetsureBlock;
 	bool newPanGetsure = true;
-	public async void PanGetsureFnc(object sender, PanUpdatedEventArgs e)
+	public void PanGetsureFnc(object sender, PanUpdatedEventArgs e)
 	{
 		if (sender is Grid)
 		{
 			Grid grid = sender as Grid;
 			switch (e.StatusType)
 			{
+				case GestureStatus.Started:
 				case GestureStatus.Running:
+					newPanGetsure = false;
+					panGetsureBlock = WhichToChooseBlock(grid);
 
-					if (newPanGetsure)
-					{
-						newPanGetsure = false;
-						panGetsureBlock = WhichToChooseBlock(grid);
-					}
 					if (DeviceInfo.Platform == DevicePlatform.Android || DeviceInfo.Platform == DevicePlatform.iOS)
 					{
 						grid.TranslationX += e.TotalX; grid.TranslationY += e.TotalY;
@@ -332,26 +330,12 @@ public partial class GamePage : ContentPage
 					AddBlockToBoardWhileRunning(grid);
 					break;
 				case GestureStatus.Completed:
-					newPanGetsure = true;
-					if (!AddBlockToBoard(grid))
-					{
-						await grid.TranslateTo(e.TotalX, e.TotalY);
-						ChangeBlockView(Block.FieldWidth, Block.FieldHeight, grid);
-						//isToChange = true;
-					}
-					else
-					{
-						grid.IsVisible = false;
-						MenageToChoose((Grid)grid.Parent);
-					}
-					break;
 				case GestureStatus.Canceled:
 					newPanGetsure = true;
 					if (!AddBlockToBoard(grid))
 					{
-						await grid.TranslateTo(e.TotalX, e.TotalY);
+						grid.TranslateTo(e.TotalX, e.TotalY);
 						ChangeBlockView(Block.FieldWidth, Block.FieldHeight, grid);
-
 					}
 					else
 					{
@@ -399,7 +383,7 @@ public partial class GamePage : ContentPage
 				{
 					tmp.ToChoose.Add(Block.GenerateBlock(tmp.BlocksBoard, i));
 				}
-				tmp.NumberOfBlocks = tmp.ToChoose.Count;	
+				tmp.NumberOfBlocks = tmp.ToChoose.Count;
 			}
 			else
 				for (int i = 0; i < tmp.ToChoose.Count; i++)
