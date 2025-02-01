@@ -12,7 +12,7 @@ namespace BlocksGame.Views
 
 	public class GamePageView : BindableObject
 	{
-		public GameModes GameMode = GameModes.Normal;
+		public GameModes GameMode { get; private set; } = GameModes.Normal;
 
 		int numberOfBlocks = 0;
 		public int NumberOfBlocks
@@ -24,7 +24,9 @@ namespace BlocksGame.Views
 				OnPropertyChanged(nameof(NumberOfBlocks));
 			}
 		}
-
+		public int BaseWidth { get; private set; }
+		public int BaseHeigh { get; private set; }
+		public int BaseNumberOfBlocks { get; private set; }
 		public ObservableCollection<Block> ToChoose { get; set; } = [];
 		public static IList<Block> NextToChoose { get; set; } = [];
 		public
@@ -74,6 +76,9 @@ namespace BlocksGame.Views
 				ToChoose.Add(Block.GenerateBlock(BlocksBoard, i));
 				NumberOfBlocks++;
 			}
+			BaseHeigh = (int)height;
+			BaseWidth = (int)width;
+			BaseNumberOfBlocks = (int)numberOfBlocksToChoose;
 			OnPropertyChanged(nameof(ToChoose));
 			GameMode = gameModes;
 		}

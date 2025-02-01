@@ -44,7 +44,7 @@ namespace BlocksGame.UtilsMaui
 
                 for (int i = 0; i < (int)newValue; i++)
                     grid.RowDefinitions.Add(
-                        new RowDefinition() { Height = new GridLength(1, GridUnitType.Star) });
+                        new RowDefinition() { Height = GridLength.Auto});
             }
 
             #endregion
@@ -83,7 +83,7 @@ namespace BlocksGame.UtilsMaui
 
                 for (int i = 0; i < (int)newValue; i++)
                     grid.ColumnDefinitions.Add(
-                        new ColumnDefinition() { Width = new GridLength(1, GridUnitType.Star) });
+                        new ColumnDefinition() { Width = GridLength.Auto });
             }
 
             #endregion

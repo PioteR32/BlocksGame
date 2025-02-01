@@ -9,32 +9,32 @@
     <!--<ContentPage.BindingContext>
         <local:GamePageView/>
     </ContentPage.BindingContext>-->
-    <ScrollView>
-        <VerticalStackLayout x:Name="MainAbsoluteLayout">
 
-            <VerticalStackLayout x:Name="MainStackLayout">
-                <Label Text="{Binding ScoreStr}"  FontSize="Header"  HorizontalOptions="Center" HorizontalTextAlignment="Center"/>
-                <VerticalStackLayout>
-                    <Button x:Name="loseButton" Clicked="LoseButtonClicked" Text="Lose" IsVisible="False"/>
-                </VerticalStackLayout>
-                <Grid utils:GridHelpers.ColumnCount="{Binding BlocksBoard.Width}"
+    <VerticalStackLayout x:Name="MainAbsoluteLayout">
+
+        <VerticalStackLayout x:Name="MainStackLayout">
+            <Label Text="{Binding ScoreStr}"  FontSize="Header"  HorizontalOptions="Center" HorizontalTextAlignment="Center"/>
+            <VerticalStackLayout>
+                <Button x:Name="loseButton" Clicked="LoseButtonClicked" Text="Lose" IsVisible="False"/>
+            </VerticalStackLayout>
+            <Grid utils:GridHelpers.ColumnCount="{Binding BlocksBoard.Width}"
                   utils:GridHelpers.RowCount="{Binding BlocksBoard.Height}"
                    BackgroundColor="Transparent"
                     HorizontalOptions="Center"
                   x:Name="boardGrid"
                   BindableLayout.ItemsSource="{Binding BlocksBoard.Fields}">
-                    <BindableLayout.ItemTemplate>
-                        <DataTemplate>
-                            <Border Grid.Row="{Binding RowPosition}" Grid.Column="{Binding ColumnPosition}" 
+                <BindableLayout.ItemTemplate>
+                    <DataTemplate>
+                        <Border Grid.Row="{Binding RowPosition}" Grid.Column="{Binding ColumnPosition}" 
                                 BackgroundColor="Transparent">
-                                <Label WidthRequest="{Binding Width}" HeightRequest="{Binding Height}" BackgroundColor="{Binding BackgroundColor}"/>
-                            </Border>
-                        </DataTemplate>
-                    </BindableLayout.ItemTemplate>
+                            <Label WidthRequest="{Binding Width}" HeightRequest="{Binding Height}" BackgroundColor="{Binding BackgroundColor}"/>
+                        </Border>
+                    </DataTemplate>
+                </BindableLayout.ItemTemplate>
 
-                </Grid>
+            </Grid>
 
-                <Grid utils:GridHelpers.ColumnCount="{Binding NumberOfBlocks}"
+            <Grid utils:GridHelpers.ColumnCount="{Binding NumberOfBlocks}"
                         utils:GridHelpers.RowCount="1"
                         BackgroundColor="Transparent"
                         HorizontalOptions="Center"
@@ -42,9 +42,9 @@
                       Padding="20"
                     BindableLayout.ItemsSource="{Binding ToChoose}"
                       x:Name="blocksView">
-                    <BindableLayout.ItemTemplate>
-                        <DataTemplate>
-                            <Grid utils:GridHelpers.ColumnCount="{Binding Width}"
+                <BindableLayout.ItemTemplate>
+                    <DataTemplate>
+                        <Grid utils:GridHelpers.ColumnCount="{Binding Width}"
                                 utils:GridHelpers.RowCount="{Binding Height}"
                                  BackgroundColor="Transparent"
                                  HorizontalOptions="Center"
@@ -56,28 +56,27 @@
                                 
                                 >
 
-                                <Grid.GestureRecognizers>
-                                    <PanGestureRecognizer PanUpdated="PanGetsureFnc" />
-                                </Grid.GestureRecognizers>
-                                <BindableLayout.ItemTemplate>
-                                    <DataTemplate>
-                                        <Border Grid.Column="{Binding ColumnPosition}"
+                            <Grid.GestureRecognizers>
+                                <PanGestureRecognizer PanUpdated="PanGetsureFnc" />
+                            </Grid.GestureRecognizers>
+                            <BindableLayout.ItemTemplate>
+                                <DataTemplate>
+                                    <Border Grid.Column="{Binding ColumnPosition}"
                                                 Grid.Row="{Binding RowPosition}"
                                                 WidthRequest="{Binding Width}"
                                                 HeightRequest="{Binding Height}"
                                                 VerticalOptions="CenterAndExpand">
-                                            <Label WidthRequest="{Binding Width}" HeightRequest="{Binding Height}" Background="{Binding BackgroundColor}"/>
-                                        </Border>
-                                    </DataTemplate>
-                                </BindableLayout.ItemTemplate>
+                                        <Label WidthRequest="{Binding Width}" HeightRequest="{Binding Height}" Background="{Binding BackgroundColor}"/>
+                                    </Border>
+                                </DataTemplate>
+                            </BindableLayout.ItemTemplate>
 
-                            </Grid>
-                        </DataTemplate>
-                    </BindableLayout.ItemTemplate>
+                        </Grid>
+                    </DataTemplate>
+                </BindableLayout.ItemTemplate>
 
-                </Grid>
-            </VerticalStackLayout>
-
+            </Grid>
         </VerticalStackLayout>
-    </ScrollView>
+
+    </VerticalStackLayout>
 </ContentPage>

@@ -6,6 +6,13 @@
     <ContentPage.BindingContext>
         <local:MainPageView/>
     </ContentPage.BindingContext>
+    <ContentPage.Resources>
+        <ResourceDictionary>
+            <Style TargetType="Picker">
+                <Setter Property="FontSize" Value="Small" />
+            </Style>
+        </ResourceDictionary>
+    </ContentPage.Resources>
     <ScrollView>
 
         <VerticalStackLayout
@@ -13,11 +20,11 @@
             Spacing="25">
             <Label Text="{Binding TheBestScoreStr}" FontSize="Header"/>
             <Button Command="{Binding Start}" Text="Start" />
-            <HorizontalStackLayout Padding="20">
-                <Picker SelectedItem="{Binding Width}" ItemsSource="{Binding PickerOptions}"   HorizontalOptions="Start" Title="Board Width"/>
-                <Picker SelectedItem="{Binding Height}" ItemsSource="{Binding PickerOptions}" HorizontalOptions="End"  Title="Board Height"/>
-                <Picker SelectedItem="{Binding NumberOfBlocksToChoose}" ItemsSource="{Binding PickerOptions}"  HorizontalOptions="End" Title="Blocks to choose"/>
-                <Picker ItemsSource="{Binding GameModesStr}" SelectedIndex="{Binding GameModeInt}" HorizontalOptions="End" Title="Game Mode"/>
+            <Picker ItemsSource="{Binding GameModesStr}" SelectedIndex="{Binding GameModeInt}" HorizontalOptions="Center" Title="Game Mode"/>
+            <HorizontalStackLayout Padding="10" HorizontalOptions="Center">
+                <Picker SelectedItem="{Binding Width}" ItemsSource="{Binding PickerOptions}"   HorizontalOptions="Center" Title="Board Width"/>
+                <Picker SelectedItem="{Binding Height}" ItemsSource="{Binding PickerOptions}" HorizontalOptions="Center"  Title="Board Height"/>
+                <Picker SelectedItem="{Binding NumberOfBlocksToChoose}" ItemsSource="{Binding PickerOptions}"  HorizontalOptions="Center" Title="Blocks to choose"/>
             </HorizontalStackLayout>
         </VerticalStackLayout>
     </ScrollView>

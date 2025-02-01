@@ -1,8 +1,11 @@
 //using Microsoft.UI.Xaml.Documents;
+
+using BlocksGame.Views;
 using Microsoft.Maui.Controls.PlatformConfiguration.GTKSpecific;
 using Microsoft.Maui.Handlers;
 using Microsoft.Maui.Layouts;
 using System.Data.Common;
+using System.Diagnostics;
 using System.Xml.Linq;
 using static BlocksGame.Block;
 
@@ -34,6 +37,7 @@ public struct Position
 public enum GameModes
 {
 	Normal, ChaoticBoard, ChaoticBlocks, ChaoticNumberOfBlocks, MaxChaotic
+
 }
 public partial class GamePage : ContentPage
 {
@@ -52,7 +56,7 @@ public partial class GamePage : ContentPage
 	}
 
 	public GamePage(uint width, uint height, uint numberOfBlocksToChoose, GameModes gameModes)
-	{
+	{ 
 		tmp = new Views.GamePageView(width, height, numberOfBlocksToChoose, gameModes);
 		BindingContext = tmp;
 		InitializeComponent();
@@ -164,13 +168,12 @@ public partial class GamePage : ContentPage
 			if (BlockView.X + grid.X + BlockView.TranslationX > i * boardColumnWidth + boardGrid.X && BlockView.X + grid.X + BlockView.TranslationX < (i + 1) * boardColumnWidth + boardGrid.X
 				&& BlockView.Y + grid.Y + BlockView.TranslationY > j * boardColumnHeight + boardGrid.Y && BlockView.Y + grid.Y + BlockView.TranslationY < (j + 1) * boardColumnHeight + boardGrid.Y)
 			{
-				Block block = WhichToChooseBlock(BlockView);
-				if (block != null)
-					if (IsFreeSpaceOnBlock(i, j, boardColumnWidth, boardColumnHeight, positions, block))
+				if (panGetsureBlock != null)
+					if (IsFreeSpaceOnBlock(i, j, boardColumnWidth, boardColumnHeight, positions, panGetsureBlock))
 					{
 						foreach (var position in positions)
 						{
-							tmp.BlocksBoard.Fields[position.y, position.x].BackgroundColor = block.BackgroundColor;
+							tmp.BlocksBoard.Fields[position.y, position.x].BackgroundColor = panGetsureBlock.BackgroundColor;
 							tmp.BlocksBoard.Fields[position.y, position.x].IsFree = false;
 						}
 
@@ -198,16 +201,15 @@ public partial class GamePage : ContentPage
 		{
 			for (int i = 0; i < tmp.BlocksBoard.Width; i++)
 				if (BlockView.X + grid.X + BlockView.TranslationX > i * boardColumnWidth + boardGrid.X && BlockView.X + grid.X + BlockView.TranslationX < (i + 1) * boardColumnWidth + boardGrid.X
-				   && BlockView.Y + grid.Y + BlockView.TranslationY > j * boardColumnHeight + boardGrid.Y && BlockView.Y + grid.Y + BlockView.TranslationY < (j + 1) * boardColumnHeight + boardGrid.Y)
+					&& BlockView.Y + grid.Y + BlockView.TranslationY > j * boardColumnHeight + boardGrid.Y && BlockView.Y + grid.Y + BlockView.TranslationY < (j + 1) * boardColumnHeight + boardGrid.Y)
 				{
-					Block block = WhichToChooseBlock(BlockView);
-					if (block != null)
-						if (IsFreeSpaceOnBlock(i, j, boardColumnWidth, boardColumnHeight, positions, block))
+					if (panGetsureBlock != null)
+						if (IsFreeSpaceOnBlock(i, j, boardColumnWidth, boardColumnHeight, positions, panGetsureBlock))
 						{
 							List<Position> actualPositions = new List<Position>();
 							foreach (var position in positions)
 							{
-								tmp.BlocksBoard.Fields[position.y, position.x].BackgroundColor = block.BackgroundColor;
+								tmp.BlocksBoard.Fields[position.y, position.x].BackgroundColor = panGetsureBlock.BackgroundColor;
 								actualPositions.Add(new Position(position.x, position.y));
 							}
 							if (!IsThisSamePositions(TmpAddedBlocksPositions, actualPositions))
@@ -264,7 +266,7 @@ public partial class GamePage : ContentPage
 		{
 			if (child.DesiredSize.Width > 10 && child.DesiredSize.Height > 10)
 			{
-				Border childL = child as Border;
+				VisualElement childL = child as VisualElement;
 				childL.WidthRequest = newWidth;
 				childL.HeightRequest = newHeight;
 			}
@@ -295,6 +297,7 @@ public partial class GamePage : ContentPage
 
 	Block panGetsureBlock;
 	bool newPanGetsure = true;
+	
 	public void PanGetsureFnc(object sender, PanUpdatedEventArgs e)
 	{
 		if (sender is Grid)
@@ -304,8 +307,10 @@ public partial class GamePage : ContentPage
 			{
 				case GestureStatus.Started:
 				case GestureStatus.Running:
-					newPanGetsure = false;
-					panGetsureBlock = WhichToChooseBlock(grid);
+					if(newPanGetsure)
+					{
+						panGetsureBlock = WhichToChooseBlock(grid);
+					}
 
 					if (DeviceInfo.Platform == DevicePlatform.Android || DeviceInfo.Platform == DevicePlatform.iOS)
 					{
@@ -497,6 +502,11 @@ public partial class GamePage : ContentPage
 		}
 		else
 			tmp.Score += score;
+		if(tmp.Score > MainPageView.TheBestScore)
+		{
+			MainPageView.TheBestScore = tmp.Score;
+			MainPageView.ChangeTheBestScoreInFile(tmp.BaseWidth, tmp.BaseHeigh, tmp.BaseNumberOfBlocks, tmp.GameMode,tmp.Score);
+		}
 	}
 	#endregion
 

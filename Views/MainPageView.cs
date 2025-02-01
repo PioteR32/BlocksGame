@@ -9,8 +9,8 @@ namespace BlocksGame.Views
 {
     public class MainPageView : BindableObject
     {
-
-        uint numberOfBlocksToChoose;
+		#region Properties
+		uint numberOfBlocksToChoose;
         public uint NumberOfBlocksToChoose
         {
             get => numberOfBlocksToChoose;
@@ -19,7 +19,7 @@ namespace BlocksGame.Views
                 numberOfBlocksToChoose = value;
                 if (numberOfBlocksToChoose > 2)
                 {
-                    TheBestScore = GetTheBestScore(Width, Height, NumberOfBlocksToChoose);
+                    TheBestScore = GetTheBestScore(Width, Height, NumberOfBlocksToChoose,GameMode);
                     OnPropertyChanged(nameof(TheBestScoreStr));
                 }
             }
@@ -31,7 +31,8 @@ namespace BlocksGame.Views
             set
             {
                 theBestScore = value;
-            }
+
+			}
         }
         uint width;
         public uint Width
@@ -42,7 +43,7 @@ namespace BlocksGame.Views
                 width = value;
                 if (width > 2)
                 {
-                    TheBestScore = GetTheBestScore(Width, Height, NumberOfBlocksToChoose);
+                    TheBestScore = GetTheBestScore(Width, Height, NumberOfBlocksToChoose,GameMode);
                     OnPropertyChanged(nameof(TheBestScoreStr));
                 }
             }
@@ -56,7 +57,7 @@ namespace BlocksGame.Views
                 height = value;
                 if (height > 2)
                 {
-                    TheBestScore = GetTheBestScore(Width, Height, NumberOfBlocksToChoose);
+                    TheBestScore = GetTheBestScore(Width, Height, NumberOfBlocksToChoose, GameMode);
                     OnPropertyChanged(nameof(TheBestScoreStr));
                 }
             }
@@ -69,21 +70,47 @@ namespace BlocksGame.Views
                 OnPropertyChanged();
             }
         }
-        public ICommand Start { get; set; }
-        public static int[] PickerOptionsStatic { get; } =
+      
+        int gameModeInt = 0;
+		public int GameModeInt 
+        { 
+            get => gameModeInt;
+            set
+            {
+                gameModeInt = value;
+                GameMode = (GameModes)gameModeInt;
+				TheBestScore = GetTheBestScore(Width, Height, NumberOfBlocksToChoose, GameMode);
+				OnPropertyChanged();
+				OnPropertyChanged(nameof(TheBestScoreStr));
+			}
+		}
+
+        GameModes gameMode = GameModes.Normal;
+		public GameModes GameMode
         {
-            3,4,5,6,7,8,9,10
-        };
-        public int[] PickerOptions { get; set; } =
-        {
-            3,4,5,6,7,8,9,10
-        };
-		public string[] GameModesStr { get; set; } =
+            get => gameMode;
+            set
+            {
+                gameMode = value;
+                OnPropertyChanged();
+            }
+        }
+		public ICommand Start { get; set; }
+		public static int[] PickerOptionsStatic { get; } =
+		{
+			3,4,5,6,7,8,9,10
+		};
+		public int[] PickerOptions { get; set; } =
+		{
+			3,4,5,6,7,8,9,10
+		};
+		public string[] GameModesStr { get; } = GameModesStrStatic;
+
+		public static string[] GameModesStrStatic { get; } =
 		{
 			"Normal","ChaoticBoard","ChaoticBlocks","ChaoticNumberOfBlocks","MaxChaotic"
 		};
-        public int GameModeInt { get; set; } = 0;
-		public GameModes GameMode { get; set; }
+		#endregion
 		public async void StartGame()
         {
             if (Width > 1 && Height > 1 && NumberOfBlocksToChoose > 1)
@@ -106,32 +133,41 @@ namespace BlocksGame.Views
             {
                 Global.CreateFolder(scoresFolderPath);
             }
-            WriteScoresInFiles();
+            for (int i = 0; GameModesStrStatic.Length > i; i++)
+            {
+				string tmp = Path.Combine(FileSystem.AppDataDirectory, "BlockGame", "TheBestScores", GameModesStrStatic[i]);
+				if (!Directory.Exists(tmp))
+				{
+					Global.CreateFolder(tmp);
+				}
+				WriteScoresInFiles((GameModes)i);
+            }
         }
-        public static void ChangeTheBestScoreInFile(int boardWidth, int boardHeight, int blocks, int theBestScore = 0)
+		#region FilesMenageFunctions
+		public static void ChangeTheBestScoreInFile(int boardWidth, int boardHeight, int blocks,GameModes gameMode, int theBestScore = 0)
         {
-            StreamWriter str = new StreamWriter(ScorePath(boardWidth, boardHeight, blocks));
+            StreamWriter str = new StreamWriter(ScorePath(boardWidth, boardHeight, blocks, gameMode));
             str.Write(theBestScore.ToString());
             str.Close();
         }
-        public static void WriteScoresInFiles()
+        public static void WriteScoresInFiles(GameModes gameMode)
         {
             foreach (int i in PickerOptionsStatic)
                 foreach (int j in PickerOptionsStatic)
                     foreach (int k in PickerOptionsStatic)
                     {
-                        string path = ScorePath(i, j, k);
+                        string path = ScorePath(i, j, k, gameMode);
                         if (!File.Exists(path))
                         {
-                            ChangeTheBestScoreInFile(i, j, k);
+                            ChangeTheBestScoreInFile(i, j, k, gameMode);
                         }
                     }
         }
-        public static int GetTheBestScore(int boardWidth, int boardHeight, int blocks)
+        public static int GetTheBestScore(int boardWidth, int boardHeight, int blocks,GameModes gameMode)
         {
             if (boardWidth > 2 && boardHeight > 2 && blocks > 2)
             {
-                StreamReader streamReader = new StreamReader(ScorePath(boardWidth, boardHeight, blocks));
+                StreamReader streamReader = new StreamReader(ScorePath(boardWidth, boardHeight, blocks, gameMode));
                 int bestScore = int.Parse(streamReader.ReadToEnd());
                 streamReader.Close();
                 return bestScore;
@@ -139,11 +175,11 @@ namespace BlocksGame.Views
             else
                 return 0;
         }
-        public static int GetTheBestScore(uint boardWidth, uint boardHeight, uint blocks)
+        public static int GetTheBestScore(uint boardWidth, uint boardHeight, uint blocks, GameModes gameMode)
         {
             if (boardWidth > 2 && boardHeight > 2 && blocks > 2)
             {
-                StreamReader streamReader = new StreamReader(ScorePath(boardWidth, boardHeight, blocks));
+                StreamReader streamReader = new StreamReader(ScorePath(boardWidth, boardHeight, blocks, gameMode));
                 int bestScore = int.Parse(streamReader.ReadToEnd());
                 streamReader.Close();
                 return bestScore;
@@ -151,15 +187,16 @@ namespace BlocksGame.Views
             else
                 return 0;
         }
-        public static string ScorePath(int boardWidth, int boardHeight, int blocks)
+        public static string ScorePath(int boardWidth, int boardHeight, int blocks,GameModes Mode)
         {
-            string folderPath = Path.Combine(FileSystem.AppDataDirectory, "BlockGame", "TheBestScores");
+            string folderPath = Path.Combine(FileSystem.AppDataDirectory, "BlockGame", "TheBestScores", GameModesStrStatic[(int)Mode]);
             return Path.Combine(folderPath, boardHeight.ToString() + " " + boardWidth.ToString() + " " + blocks.ToString() + ".txt");
         }
-        public static string ScorePath(uint boardWidth, uint boardHeight, uint blocks)
+        public static string ScorePath(uint boardWidth, uint boardHeight, uint blocks, GameModes Mode)
         {
-            string folderPath = Path.Combine(FileSystem.AppDataDirectory, "BlockGame", "TheBestScores");
+            string folderPath = Path.Combine(FileSystem.AppDataDirectory, "BlockGame", "TheBestScores", GameModesStrStatic[(int)Mode]);
             return Path.Combine(folderPath, boardHeight.ToString() + " " + boardWidth.ToString() + " " + blocks.ToString() + ".txt");
         }
     }
+	#endregion
 }
