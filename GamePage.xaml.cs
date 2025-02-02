@@ -1,5 +1,4 @@
 //using Microsoft.UI.Xaml.Documents;
-
 using BlocksGame.Views;
 using Microsoft.Maui.Controls.PlatformConfiguration.GTKSpecific;
 using Microsoft.Maui.Handlers;
@@ -45,20 +44,20 @@ public partial class GamePage : ContentPage
 	public static IList<Block> NextToChoose { get; set; } = [];
 
 	static int score = 0;
-	Views.GamePageView tmp;
+	Views.GamePageView viewModel;
 
 	public GamePage(uint width, uint height, uint numberOfBlocksToChoose)
 	{
-		tmp = new Views.GamePageView(width, height, numberOfBlocksToChoose, GameModes.Normal);
-		BindingContext = tmp;
+		viewModel = new Views.GamePageView(width, height, numberOfBlocksToChoose, GameModes.Normal);
+		BindingContext = viewModel;
 
 		InitializeComponent();
 	}
 
 	public GamePage(uint width, uint height, uint numberOfBlocksToChoose, GameModes gameModes)
 	{ 
-		tmp = new Views.GamePageView(width, height, numberOfBlocksToChoose, gameModes);
-		BindingContext = tmp;
+		viewModel = new Views.GamePageView(width, height, numberOfBlocksToChoose, gameModes);
+		BindingContext = viewModel;
 		InitializeComponent();
 	}
 	/// <summary>
@@ -73,7 +72,7 @@ public partial class GamePage : ContentPage
 			if (blocksView.Children[i] is Grid)
 			{
 				if (blocksView.Children[i] == grid)
-					return tmp.ToChoose[i];
+					return viewModel.ToChoose[i];
 			}
 		}
 		return null;
@@ -85,7 +84,7 @@ public partial class GamePage : ContentPage
 	{
 		try
 		{
-			if (tmp.BlocksBoard.Fields[rowPosition, columnPosition].IsFree)
+			if (viewModel.BlocksBoard.Fields[rowPosition, columnPosition].IsFree)
 			{
 				positions.Add(new PositionsInTable(columnPosition, rowPosition));
 				return true;
@@ -121,7 +120,7 @@ public partial class GamePage : ContentPage
 	{
 		try
 		{
-			if (tmp.BlocksBoard.Fields[rowPosition, columnPosition].IsFree)
+			if (viewModel.BlocksBoard.Fields[rowPosition, columnPosition].IsFree)
 				return true;
 		}
 		catch
@@ -160,10 +159,10 @@ public partial class GamePage : ContentPage
 	{
 		Position grid = GamePage.GetGridXY((Grid)BlockView.Parent);
 
-		double boardColumnWidth = boardGrid.Width / tmp.BlocksBoard.Width;
-		double boardColumnHeight = boardGrid.Height / tmp.BlocksBoard.Height;
+		double boardColumnWidth = boardGrid.Width / viewModel.BlocksBoard.Width;
+		double boardColumnHeight = boardGrid.Height / viewModel.BlocksBoard.Height;
 		IList<PositionsInTable> positions = new List<PositionsInTable>();
-		for (int i = 0, j = 0; j < tmp.BlocksBoard.Height; i += 1)
+		for (int i = 0, j = 0; j < viewModel.BlocksBoard.Height; i += 1)
 		{
 			if (BlockView.X + grid.X + BlockView.TranslationX > i * boardColumnWidth + boardGrid.X && BlockView.X + grid.X + BlockView.TranslationX < (i + 1) * boardColumnWidth + boardGrid.X
 				&& BlockView.Y + grid.Y + BlockView.TranslationY > j * boardColumnHeight + boardGrid.Y && BlockView.Y + grid.Y + BlockView.TranslationY < (j + 1) * boardColumnHeight + boardGrid.Y)
@@ -173,14 +172,14 @@ public partial class GamePage : ContentPage
 					{
 						foreach (var position in positions)
 						{
-							tmp.BlocksBoard.Fields[position.y, position.x].BackgroundColor = panGetsureBlock.BackgroundColor;
-							tmp.BlocksBoard.Fields[position.y, position.x].IsFree = false;
+							viewModel.BlocksBoard.Fields[position.y, position.x].BackgroundColor = panGetsureBlock.BackgroundColor;
+							viewModel.BlocksBoard.Fields[position.y, position.x].IsFree = false;
 						}
 
 						return true;
 					}
 			}
-			if (i + 1 == tmp.BlocksBoard.Width)
+			if (i + 1 == viewModel.BlocksBoard.Width)
 			{
 				i = -1;
 				j++;
@@ -194,12 +193,12 @@ public partial class GamePage : ContentPage
 	{
 		Position grid = GamePage.GetGridXY((Grid)BlockView.Parent);
 
-		double boardColumnWidth = boardGrid.Width / tmp.BlocksBoard.Width;
-		double boardColumnHeight = boardGrid.Height / tmp.BlocksBoard.Height;
+		double boardColumnWidth = boardGrid.Width / viewModel.BlocksBoard.Width;
+		double boardColumnHeight = boardGrid.Height / viewModel.BlocksBoard.Height;
 		IList<PositionsInTable> positions = new List<PositionsInTable>();
-		for (int j = 0; j < tmp.BlocksBoard.Height; j++)
+		for (int j = 0; j < viewModel.BlocksBoard.Height; j++)
 		{
-			for (int i = 0; i < tmp.BlocksBoard.Width; i++)
+			for (int i = 0; i < viewModel.BlocksBoard.Width; i++)
 				if (BlockView.X + grid.X + BlockView.TranslationX > i * boardColumnWidth + boardGrid.X && BlockView.X + grid.X + BlockView.TranslationX < (i + 1) * boardColumnWidth + boardGrid.X
 					&& BlockView.Y + grid.Y + BlockView.TranslationY > j * boardColumnHeight + boardGrid.Y && BlockView.Y + grid.Y + BlockView.TranslationY < (j + 1) * boardColumnHeight + boardGrid.Y)
 				{
@@ -209,7 +208,7 @@ public partial class GamePage : ContentPage
 							List<Position> actualPositions = new List<Position>();
 							foreach (var position in positions)
 							{
-								tmp.BlocksBoard.Fields[position.y, position.x].BackgroundColor = panGetsureBlock.BackgroundColor;
+								viewModel.BlocksBoard.Fields[position.y, position.x].BackgroundColor = panGetsureBlock.BackgroundColor;
 								actualPositions.Add(new Position(position.x, position.y));
 							}
 							if (!IsThisSamePositions(TmpAddedBlocksPositions, actualPositions))
@@ -234,8 +233,12 @@ public partial class GamePage : ContentPage
 	{
 		foreach (Position position in TmpAddedBlocksPositions)
 		{
-			if (tmp.BlocksBoard.Fields[(int)position.Y, (int)position.X].IsFree)
-				tmp.BlocksBoard.Fields[(int)position.Y, (int)position.X].BackgroundColor = Field.DefaultColor;
+			try
+			{
+				if (viewModel.BlocksBoard.Fields[(int)position.Y, (int)position.X].IsFree)
+					viewModel.BlocksBoard.Fields[(int)position.Y, (int)position.X].BackgroundColor = Field.DefaultColor;
+			}
+			catch { }
 		}
 	}
 
@@ -320,18 +323,18 @@ public partial class GamePage : ContentPage
 					{
 						grid.TranslationX = e.TotalX; grid.TranslationY = e.TotalY;
 					}
-					if (grid.Width / grid.ColumnDefinitions.Count != boardGrid.Width / tmp.BlocksBoard.Width)
+					if (grid.Width / grid.ColumnDefinitions.Count != boardGrid.Width / viewModel.BlocksBoard.Width)
 					{
 
-						ChangeBlockView(boardGrid.Width / tmp.BlocksBoard.Width,
-							boardGrid.Height / tmp.BlocksBoard.Height,
+						ChangeBlockView(boardGrid.Width / viewModel.BlocksBoard.Width,
+							boardGrid.Height / viewModel.BlocksBoard.Height,
 							grid);
 
 					}
-					IList<int> completedRows = CheckCompletedRows(tmp.BlocksBoard, Field.DefaultColor);
-					IList<int> completedColumns = CheckCompletedColumns(tmp.BlocksBoard, Field.DefaultColor);
+					IList<int> completedRows = CheckCompletedRows(viewModel.BlocksBoard, Field.DefaultColor);
+					IList<int> completedColumns = CheckCompletedColumns(viewModel.BlocksBoard, Field.DefaultColor);
 
-					ChangeCompletedPositions(tmp.BlocksBoard, panGetsureBlock.BackgroundColor, completedRows, completedColumns);
+					ChangeCompletedPositions(viewModel.BlocksBoard, panGetsureBlock.BackgroundColor, completedRows, completedColumns);
 					AddBlockToBoardWhileRunning(grid);
 					break;
 				case GestureStatus.Completed:
@@ -357,10 +360,10 @@ public partial class GamePage : ContentPage
 	{
 		Random random = new Random();
 		bool canGenerateNewBlocks = true;
-		int beginBlocksToChoose = tmp.ToChoose.Count;
-		IsGetUserScore(tmp.BlocksBoard);
+		int beginBlocksToChoose = viewModel.ToChoose.Count;
+		
 
-		for (int i = 0; i < tmp.ToChoose.Count; i++)
+		for (int i = 0; i < viewModel.ToChoose.Count; i++)
 		{
 			if (blocksView.Children[i] is Grid)
 			{
@@ -375,38 +378,42 @@ public partial class GamePage : ContentPage
 		}
 		if (canGenerateNewBlocks)
 		{
-			if (tmp.GameMode == GameModes.ChaoticBoard || tmp.GameMode == GameModes.MaxChaotic)
+			if (viewModel.GameMode == GameModes.ChaoticBoard || viewModel.GameMode == GameModes.MaxChaotic)
 			{
-
-				tmp.BlocksBoard = new BlocksBoard((uint)random.Next(3, 10), (uint)random.Next(3, 10), tmp.BlocksBoard);
+				viewModel.BlocksBoard = new BlocksBoard((uint)random.Next(3, 10), (uint)random.Next(3, 10), viewModel.BlocksBoard);
 			}
-			if (tmp.GameMode == GameModes.ChaoticNumberOfBlocks || tmp.GameMode == GameModes.MaxChaotic)
+			if (viewModel.GameMode == GameModes.ChaoticNumberOfBlocks || viewModel.GameMode == GameModes.MaxChaotic)
 			{
 				int numberOfBlocks = random.Next(3, 10);
-				tmp.ToChoose.Clear();
+				viewModel.ToChoose.Clear();
 				for (int i = 0; i < numberOfBlocks; i++)
 				{
-					tmp.ToChoose.Add(Block.GenerateBlock(tmp.BlocksBoard, i));
+					viewModel.ToChoose.Add(Block.GenerateBlock(viewModel.BlocksBoard, i));
 				}
-				tmp.NumberOfBlocks = tmp.ToChoose.Count;
+				viewModel.NumberOfBlocks = viewModel.ToChoose.Count;
 			}
-			else
-				for (int i = 0; i < tmp.ToChoose.Count; i++)
+			else if(viewModel.GameMode != GameModes.ChaoticBlocks)
+				for (int i = 0; i < viewModel.ToChoose.Count; i++)
 				{
-					tmp.ToChoose[i] = Block.GenerateBlock(tmp.BlocksBoard, i);
+					viewModel.ToChoose[i] = Block.GenerateBlock(viewModel.BlocksBoard, i);
 				}
 
 		}
-		if (tmp.GameMode == GameModes.ChaoticBlocks || tmp.GameMode == GameModes.MaxChaotic)
+		if (viewModel.GameMode == GameModes.ChaoticBlocks || viewModel.GameMode == GameModes.MaxChaotic)
 		{
-			tmp.ToChoose.Clear();
-			for (int i = 0; i < tmp.NumberOfBlocks - 1; i++)
+			viewModel.ToChoose.Clear();
+			if(viewModel.NumberOfBlocks - 1 == 0)
 			{
-				tmp.ToChoose.Add(Block.GenerateBlock(tmp.BlocksBoard, i));
+				viewModel.NumberOfBlocks = viewModel.BaseNumberOfBlocks + 1;
 			}
-			tmp.NumberOfBlocks -= 1;
+			for (int i = 0; i < viewModel.NumberOfBlocks - 1; i++)
+			{
+				viewModel.ToChoose.Add(Block.GenerateBlock(viewModel.BlocksBoard, i));
+			}
+			viewModel.NumberOfBlocks -= 1;
 		}
-		if (IsUserLose(tmp.BlocksBoard))
+		IsGetUserScore(viewModel.BlocksBoard);
+		if (IsUserLose(viewModel.BlocksBoard))
 		{
 			loseButton.IsVisible = true;
 		}
@@ -414,7 +421,7 @@ public partial class GamePage : ContentPage
 	public bool IsUserLose(BlocksBoard b)
 	{
 		int unVisableElements = 0;
-		for (int i = 0; i < tmp.ToChoose.Count; i++)
+		for (int i = 0; i < viewModel.ToChoose.Count; i++)
 			if (blocksView.Children[i] is Grid)
 			{
 				Grid grid = (Grid)blocksView.Children[i];
@@ -422,7 +429,7 @@ public partial class GamePage : ContentPage
 					for (int j = 0, k = 0; j < b.Fields.GetLength(1); k++)
 					{
 
-						if (IsFreeSpaceOnBlock(k, j, tmp.ToChoose[i]))
+						if (IsFreeSpaceOnBlock(k, j, viewModel.ToChoose[i]))
 						{
 							return false;
 						}
@@ -491,21 +498,21 @@ public partial class GamePage : ContentPage
 	{
 		int score = 0;
 		if (numberOfCompletedRows != 0 && numberOfCompletedColumns != 0)
-			score += (int)Global.Impressivenes((int)tmp.BlocksBoard.Width, numberOfCompletedRows) * (int)Global.Impressivenes(tmp.BlocksBoard.Height, numberOfCompletedColumns);
+			score += (int)Global.Impressivenes((int)viewModel.BlocksBoard.Width, numberOfCompletedRows) * (int)Global.Impressivenes(viewModel.BlocksBoard.Height, numberOfCompletedColumns);
 		else if (numberOfCompletedRows != 0)
-			score += (int)Global.Impressivenes((int)tmp.BlocksBoard.Width, numberOfCompletedRows);
+			score += (int)Global.Impressivenes((int)viewModel.BlocksBoard.Width, numberOfCompletedRows);
 		else if (numberOfCompletedColumns != 0)
-			score += (int)Global.Impressivenes(tmp.BlocksBoard.Height, numberOfCompletedColumns);
-		if (tmp.BlocksBoard.IsClear())
+			score += (int)Global.Impressivenes(viewModel.BlocksBoard.Height, numberOfCompletedColumns);
+		if (viewModel.BlocksBoard.IsClear())
 		{
-			tmp.Score += (int)Global.Impressivenes(score, 2);
+			viewModel.Score += (int)Global.Impressivenes(score, 2);
 		}
 		else
-			tmp.Score += score;
-		if(tmp.Score > MainPageView.TheBestScore)
+			viewModel.Score += score;
+		if(viewModel.Score > MainPageView.TheBestScore)
 		{
-			MainPageView.TheBestScore = tmp.Score;
-			MainPageView.ChangeTheBestScoreInFile(tmp.BaseWidth, tmp.BaseHeigh, tmp.BaseNumberOfBlocks, tmp.GameMode,tmp.Score);
+			MainPageView.TheBestScore = viewModel.Score;
+			MainPageView.ChangeTheBestScoreInFile(viewModel.BaseWidth, viewModel.BaseHeigh, viewModel.BaseNumberOfBlocks, viewModel.GameMode,viewModel.Score);
 		}
 	}
 	#endregion
