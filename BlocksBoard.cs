@@ -29,14 +29,20 @@ namespace BlocksGame
             this.Width = (int)width;
             this.Height = (int)height;
             Fields = new Field[height, width];
-            for (int i = 0; i < height; i++)
-            {
-                for (int j = 0; j < width; j++)
-                {
-                    Fields[i, j] = new Field(i,j, MinimumWidthRequest, MinimumHeightRequest);
-                }
-            }
-        }
+            GenerateBaseBoard();
+		}
+
+        void GenerateBaseBoard()
+        {
+			for (int i = 0; i < Width; i++)
+			{
+				for (int j = 0; j < Height; j++)
+				{
+					Fields[i, j] = new Field(i, j, MinimumWidthRequest, MinimumHeightRequest);
+				}
+			}
+            //return Task.CompletedTask;
+		}
 		public BlocksBoard(uint width, uint height,BlocksBoard board)
 		{
 			this.Width = (int)width;
@@ -59,18 +65,7 @@ namespace BlocksGame
             return true;
         }
 
-        public void ChangeFields(BlocksBoard board)
-        {
-			for (int i = 0; i < Height && i < board.Height; i++)
-			{
-				for (int j = 0; j < Width && j < board.Width; j++)
-				{
-                    if(!board.Fields[i, j].IsFree)
-					    Fields[i, j] = board.Fields[i, j];
-				}
-			}
-		}
-		public void ChangeFieldsOnCreate(BlocksBoard board)
+		public Task ChangeFieldsOnCreate(BlocksBoard board)
         {
 			for (int i = 0; i < Height; i++)
 			{
@@ -84,6 +79,7 @@ namespace BlocksGame
 					}
 				}
 			}
+            return Task.CompletedTask;
 		}
 	}
 }

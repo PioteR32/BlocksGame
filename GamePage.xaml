@@ -22,7 +22,8 @@
                    BackgroundColor="Transparent"
                     HorizontalOptions="Center"
                   x:Name="boardGrid"
-                  BindableLayout.ItemsSource="{Binding BlocksBoard.Fields}">
+                  BindableLayout.ItemsSource="{Binding BlocksBoard.Fields}"
+                  ZIndex="-1">
                 <BindableLayout.ItemTemplate>
                     <DataTemplate>
                         <Border Grid.Row="{Binding RowPosition}" Grid.Column="{Binding ColumnPosition}" 
@@ -41,7 +42,9 @@
                       ColumnSpacing="20"
                       Padding="20"
                     BindableLayout.ItemsSource="{Binding ToChoose}"
-                      x:Name="blocksView">
+                      x:Name="blocksView"
+                  ZIndex="1"
+                                >
                 <BindableLayout.ItemTemplate>
                     <DataTemplate>
                         <Grid utils:GridHelpers.ColumnCount="{Binding Width}"
@@ -53,7 +56,7 @@
                                    ColumnSpacing="0"
                                         Padding="0"
                                   RowSpacing="0"
-                                
+                                ZIndex="1"
                                 >
 
                             <Grid.GestureRecognizers>

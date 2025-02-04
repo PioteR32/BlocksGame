@@ -55,7 +55,7 @@ public partial class GamePage : ContentPage
 	}
 
 	public GamePage(uint width, uint height, uint numberOfBlocksToChoose, GameModes gameModes)
-	{ 
+	{
 		viewModel = new Views.GamePageView(width, height, numberOfBlocksToChoose, gameModes);
 		BindingContext = viewModel;
 		InitializeComponent();
@@ -300,7 +300,7 @@ public partial class GamePage : ContentPage
 
 	Block panGetsureBlock;
 	bool newPanGetsure = true;
-	
+
 	public void PanGetsureFnc(object sender, PanUpdatedEventArgs e)
 	{
 		if (sender is Grid)
@@ -310,7 +310,7 @@ public partial class GamePage : ContentPage
 			{
 				case GestureStatus.Started:
 				case GestureStatus.Running:
-					if(newPanGetsure)
+					if (newPanGetsure)
 					{
 						panGetsureBlock = WhichToChooseBlock(grid);
 					}
@@ -356,12 +356,12 @@ public partial class GamePage : ContentPage
 	}
 
 	#region MenageGame
-	public void MenageToChoose(Grid layout)
+	public async void MenageToChoose(Grid layout)
 	{
 		Random random = new Random();
 		bool canGenerateNewBlocks = true;
 		int beginBlocksToChoose = viewModel.ToChoose.Count;
-		
+
 
 		for (int i = 0; i < viewModel.ToChoose.Count; i++)
 		{
@@ -376,6 +376,7 @@ public partial class GamePage : ContentPage
 
 			}
 		}
+		IsGetUserScore(viewModel.BlocksBoard);
 		if (canGenerateNewBlocks)
 		{
 			if (viewModel.GameMode == GameModes.ChaoticBoard || viewModel.GameMode == GameModes.MaxChaotic)
@@ -392,58 +393,69 @@ public partial class GamePage : ContentPage
 				}
 				viewModel.NumberOfBlocks = viewModel.ToChoose.Count;
 			}
-			else if(viewModel.GameMode != GameModes.ChaoticBlocks)
+			else if (viewModel.GameMode != GameModes.ChaoticBlocks)
 				for (int i = 0; i < viewModel.ToChoose.Count; i++)
 				{
-					viewModel.ToChoose[i] = Block.GenerateBlock(viewModel.BlocksBoard, i);
+					viewModel.ToChoose[i] = new Block(viewModel.BlocksBoard, i);
 				}
 
 		}
 		if (viewModel.GameMode == GameModes.ChaoticBlocks || viewModel.GameMode == GameModes.MaxChaotic)
 		{
 			viewModel.ToChoose.Clear();
-			if(viewModel.NumberOfBlocks - 1 == 0)
+			if (viewModel.NumberOfBlocks - 1 == 0)
 			{
 				viewModel.NumberOfBlocks = viewModel.BaseNumberOfBlocks + 1;
 			}
 			for (int i = 0; i < viewModel.NumberOfBlocks - 1; i++)
 			{
-				viewModel.ToChoose.Add(Block.GenerateBlock(viewModel.BlocksBoard, i));
+				viewModel.ToChoose.Add(new Block(viewModel.BlocksBoard, i));
 			}
 			viewModel.NumberOfBlocks -= 1;
 		}
-		IsGetUserScore(viewModel.BlocksBoard);
-		if (IsUserLose(viewModel.BlocksBoard))
+		if (canGenerateNewBlocks && (viewModel.GameMode == GameModes.ChaoticBoard || viewModel.GameMode == GameModes.MaxChaotic))
+			IsGetUserScore(viewModel.BlocksBoard);
+		if (await IsUserLose())
 		{
 			loseButton.IsVisible = true;
 		}
 	}
-	public bool IsUserLose(BlocksBoard b)
+	public async Task<bool> IsPlaceOnBlock(int blocksViewPosition)
+	{
+		int i = blocksViewPosition;
+		Grid grid = (Grid)blocksView.Children[i];
+		if (grid.IsVisible)
+			for (int j = 0, k = 0; j < viewModel.BlocksBoard.Fields.GetLength(1); k++)
+			{
+
+				if (IsFreeSpaceOnBlock(k, j, viewModel.ToChoose[i]))
+				{
+					return true; 
+				}
+				else
+				{
+
+				}
+
+				if (k + 1 == viewModel.BlocksBoard.Fields.GetLength(0))
+				{
+					k = -1;
+					j++;
+				}
+			}
+		return false;
+	}
+	public async Task<bool> IsUserLose()
 	{
 		int unVisableElements = 0;
 		for (int i = 0; i < viewModel.ToChoose.Count; i++)
 			if (blocksView.Children[i] is Grid)
 			{
-				Grid grid = (Grid)blocksView.Children[i];
-				if (grid.IsVisible)
-					for (int j = 0, k = 0; j < b.Fields.GetLength(1); k++)
-					{
-
-						if (IsFreeSpaceOnBlock(k, j, viewModel.ToChoose[i]))
-						{
-							return false;
-						}
-						else
-						{
-
-						}
-
-						if (k + 1 == b.Fields.GetLength(0))
-						{
-							k = -1;
-							j++;
-						}
-					}
+			
+				if(await IsPlaceOnBlock(i))
+				{
+					return false;
+				}
 			}
 			else
 			{
@@ -509,10 +521,10 @@ public partial class GamePage : ContentPage
 		}
 		else
 			viewModel.Score += score;
-		if(viewModel.Score > MainPageView.TheBestScore)
+		if (viewModel.Score > MainPageView.TheBestScore)
 		{
 			MainPageView.TheBestScore = viewModel.Score;
-			MainPageView.ChangeTheBestScoreInFile(viewModel.BaseWidth, viewModel.BaseHeigh, viewModel.BaseNumberOfBlocks, viewModel.GameMode,viewModel.Score);
+			MainPageView.ChangeTheBestScoreInFile(viewModel.BaseWidth, viewModel.BaseHeigh, viewModel.BaseNumberOfBlocks, viewModel.GameMode, viewModel.Score);
 		}
 	}
 	#endregion

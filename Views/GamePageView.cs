@@ -3,6 +3,7 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -69,13 +70,15 @@ namespace BlocksGame.Views
 		}
 		public GamePageView(uint width, uint height, uint numberOfBlocksToChoose, GameModes gameModes)
 		{
+			
 			Score = 0;
 			BlocksBoard = new BlocksBoard(width, height);
 			for (int i = 0; i < numberOfBlocksToChoose; i++)
 			{
-				ToChoose.Add(Block.GenerateBlock(BlocksBoard, i));
+				ToChoose.Add(new Block(BlocksBoard, i));
 				NumberOfBlocks++;
 			}
+
 			BaseHeigh = (int)height;
 			BaseWidth = (int)width;
 			BaseNumberOfBlocks = (int)numberOfBlocksToChoose;
