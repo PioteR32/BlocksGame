@@ -32,7 +32,7 @@ namespace BlocksGame
             GenerateBaseBoard();
 		}
 
-        void GenerateBaseBoard()
+        Task GenerateBaseBoard()
         {
 			for (int i = 0; i < Width; i++)
 			{
@@ -41,8 +41,8 @@ namespace BlocksGame
 					Fields[i, j] = new Field(i, j, MinimumWidthRequest, MinimumHeightRequest);
 				}
 			}
-            //return Task.CompletedTask;
-		}
+            return Task.CompletedTask;
+        }
 		public BlocksBoard(uint width, uint height,BlocksBoard board)
 		{
 			this.Width = (int)width;
