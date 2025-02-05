@@ -48,8 +48,9 @@ namespace BlocksGame
 			else
 				BackgroundColor = Color.FromArgb("#FFD700");
 			PositionInToChoose = positionInToChoose;
-			GenerateBlock(board);
-		}
+            //Task.Run(()=> { GenerateBlock(board); });
+            GenerateBlock(board);
+        }
 		public int PositionInToChoose { get; set; }
 
 		Field[,] fields;

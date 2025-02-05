@@ -28,8 +28,18 @@ namespace BlocksGame.Views
 		public int BaseWidth { get; private set; }
 		public int BaseHeigh { get; private set; }
 		public int BaseNumberOfBlocks { get; private set; }
-		public ObservableCollection<Block> ToChoose { get; set; } = [];
-		public static IList<Block> NextToChoose { get; set; } = [];
+        ObservableCollection<Block> toChoose = [];
+
+        public ObservableCollection<Block> ToChoose
+		{
+			get => toChoose;
+			set
+			{
+				toChoose = value;
+				OnPropertyChanged();
+			}
+		}
+		public ObservableCollection<Block> NextToChoose { get; set; } = [];
 		public
 		static int score = 0;
 		public int Score
@@ -68,6 +78,7 @@ namespace BlocksGame.Views
 			BlocksBoard = new BlocksBoard(3, 3);
 
 		}
+
 		public GamePageView(uint width, uint height, uint numberOfBlocksToChoose, GameModes gameModes)
 		{
 			
@@ -78,13 +89,22 @@ namespace BlocksGame.Views
 				ToChoose.Add(new Block(BlocksBoard, i));
 				NumberOfBlocks++;
 			}
-
+			GenerateNewBlocks(NumberOfBlocks, NextToChoose);
 			BaseHeigh = (int)height;
 			BaseWidth = (int)width;
 			BaseNumberOfBlocks = (int)numberOfBlocksToChoose;
 			OnPropertyChanged(nameof(ToChoose));
 			GameMode = gameModes;
 		}
+		public void GenerateNewBlocks(int numberOfBlocks, ObservableCollection<Block> blocks)
+		{
+			blocks.Clear();
+            for (int i = 0; i < numberOfBlocks; i++)
+            {
+                blocks.Add(new Block(BlocksBoard, i));
+            }
+			
+        }
 		/// <summary>
 		/// Check that player lose and give score
 		/// </summary>
