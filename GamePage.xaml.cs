@@ -303,9 +303,9 @@ public partial class GamePage : ContentPage
 
     public void PanGetsureFnc(object sender, PanUpdatedEventArgs e)
     {
-        if (sender is Grid)
+        if (sender is Grid grid)
         {
-            Grid grid = sender as Grid;
+           // Grid grid = sender as Grid;
             switch (e.StatusType)
             {
                 case GestureStatus.Started:
