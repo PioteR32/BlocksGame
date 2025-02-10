@@ -279,7 +279,7 @@ namespace BlocksGame
 		{
 			Random random = new Random();
 			int width = random.Next(1, (int)blocksBoard.Width);
-			int height = (int)blocksBoard.Height / width;
+			int height = random.Next(1,(int)blocksBoard.Height / width);
 			if (numberOfBlocks == 1)
 			{
 				return new bool[1, 1] { { true } };
