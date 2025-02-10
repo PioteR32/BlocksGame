@@ -8,10 +8,8 @@ namespace BlocksGame
 {
     public class Global
     {
-        public static StreamWriter WatchWriter = new StreamWriter( "pp.txt");
-
         public static Color BoundsColor = Color.FromRgba(255, 255, 0, 200);
-        public static  Views.MainPageView? MainPageView { get; set; }
+        public static  Views.MainPageView? MainPageView { get; set; } = new Views.MainPageView();
         public static MainPage MainPage { get; set; }
         public static GamePage GamePage { get; set; }
         public static string GlobalPath { get; set; } = Microsoft.Maui.Storage.FileSystem.AppDataDirectory;

@@ -3,6 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="BlocksGame.GamePage"
              xmlns:local="clr-namespace:BlocksGame.Views"
+             xmlns:global="clr-namespace:BlocksGame"
              xmlns:utils="clr-namespace:BlocksGame.UtilsMaui.UtilsMaui.Utils"
              Title="GamePage" x:Name="Page"
             >
@@ -25,7 +26,7 @@
                   BindableLayout.ItemsSource="{Binding BlocksBoard.Fields}"
                   ZIndex="-1">
                 <BindableLayout.ItemTemplate>
-                    <DataTemplate>
+                    <DataTemplate x:DataType="global:Field">
                         <Border Grid.Row="{Binding RowPosition}" Grid.Column="{Binding ColumnPosition}" 
                                 BackgroundColor="Transparent">
                             <Label WidthRequest="{Binding Width}" HeightRequest="{Binding Height}" BackgroundColor="{Binding BackgroundColor}"/>
@@ -46,7 +47,7 @@
                   ZIndex="1"
                                 >
                 <BindableLayout.ItemTemplate>
-                    <DataTemplate>
+                    <DataTemplate x:DataType="global:Block">
                         <Grid utils:GridHelpers.ColumnCount="{Binding Width}"
                                 utils:GridHelpers.RowCount="{Binding Height}"
                                  BackgroundColor="Transparent"
@@ -63,7 +64,7 @@
                                 <PanGestureRecognizer PanUpdated="PanGetsureFnc" />
                             </Grid.GestureRecognizers>
                             <BindableLayout.ItemTemplate>
-                                <DataTemplate>
+                                <DataTemplate x:DataType="global:Field"> 
                                     <Border Grid.Column="{Binding ColumnPosition}"
                                                 Grid.Row="{Binding RowPosition}"
                                                 WidthRequest="{Binding Width}"
