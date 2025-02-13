@@ -300,6 +300,7 @@ public partial class GamePage : ContentPage
 
 	Block panGetsureBlock;
 	bool newPanGetsure = true;
+	int toSwitch = 50;
 
 	public void PanGetsureFnc(object sender, PanUpdatedEventArgs e)
 	{
@@ -309,7 +310,8 @@ public partial class GamePage : ContentPage
 			switch (e.StatusType)
 			{
 				case GestureStatus.Started:
-				case GestureStatus.Running:
+               
+                case GestureStatus.Running:
 					if (newPanGetsure)
 					{
 						panGetsureBlock = WhichToChooseBlock(grid);
@@ -317,11 +319,11 @@ public partial class GamePage : ContentPage
 
 					if (DeviceInfo.Platform == DevicePlatform.Android || DeviceInfo.Platform == DevicePlatform.iOS)
 					{
-						grid.TranslationX += e.TotalX; grid.TranslationY += e.TotalY;
+						grid.TranslationX += e.TotalX; grid.TranslationY +=e.TotalY - toSwitch;
 					}
 					else
 					{
-						grid.TranslationX = e.TotalX; grid.TranslationY = e.TotalY;
+						grid.TranslationX = e.TotalX; grid.TranslationY = e.TotalY - toSwitch;
 					}
 					if (grid.Width / grid.ColumnDefinitions.Count != boardGrid.Width / viewModel.BlocksBoard.Width)
 					{
