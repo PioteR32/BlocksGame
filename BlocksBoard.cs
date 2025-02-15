@@ -38,7 +38,7 @@ namespace BlocksGame
 			{
 				for (int j = 0; j < Height; j++)
 				{
-					Fields[i, j] = new Field(i, j, MinimumWidthRequest, MinimumHeightRequest);
+					Fields[j, i] = new Field(j, i, MinimumWidthRequest, MinimumHeightRequest);
 				}
 			}
             return Task.CompletedTask;

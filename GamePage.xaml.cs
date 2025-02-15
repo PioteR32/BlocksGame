@@ -174,6 +174,7 @@ public partial class GamePage : ContentPage
 						{
 							viewModel.BlocksBoard.Fields[position.y, position.x].BackgroundColor = panGetsureBlock.BackgroundColor;
 							viewModel.BlocksBoard.Fields[position.y, position.x].IsFree = false;
+							viewModel.BlocksBoard.Fields[position.y, position.x].ShadowOpacity = 0;
 						}
 
 						return true;
@@ -236,7 +237,10 @@ public partial class GamePage : ContentPage
 			try
 			{
 				if (viewModel.BlocksBoard.Fields[(int)position.Y, (int)position.X].IsFree)
+				{
 					viewModel.BlocksBoard.Fields[(int)position.Y, (int)position.X].BackgroundColor = Field.DefaultColor;
+					viewModel.BlocksBoard.Fields[(int)position.Y, (int)position.X].ShadowOpacity = 0;
+				}
 			}
 			catch { }
 		}
@@ -249,14 +253,18 @@ public partial class GamePage : ContentPage
 		{
 			for (int j = 0; j < positionsToCheckTmp.Count; j++)
 			{
-				if (positionsTmp[i] == positionsToCheckTmp[j])
+				try
 				{
-					positionsTmp.RemoveAt(i);
-					positionsToCheckTmp.RemoveAt(j);
-					j--;
+					if (positionsTmp[i] == positionsToCheckTmp[j])
+					{
+						positionsTmp.RemoveAt(i);
+						positionsToCheckTmp.RemoveAt(j);
+						j--;
+					}
+					else
+						return false;
 				}
-				else
-					return false;
+				catch { }
 			}
 			i--;
 		}
@@ -275,21 +283,53 @@ public partial class GamePage : ContentPage
 			}
 		}
 	}
-	public static void ChangeCompletedPositions(BlocksBoard b, Color newColor, IList<int> completedRows, IList<int> completedColumns)
+	private bool IListsIsThisSameValues(IList<int> values, IList<int> values1)
+	{
+		if (values.Count != values1.Count)
+			return false;
+		IList<int> tmp = new List<int>(values), tmp1 = new List<int>(values1);
+		for (int i = 0; i < tmp.Count; i++)
+		{
+			bool IsTheSame = false;
+			for (int j = 0; j < tmp1.Count; j++)
+			{
+				if (values[i] == tmp1[j])
+				{
+					IsTheSame = true;
+					tmp.RemoveAt(i);
+					tmp1.RemoveAt(j);
+					i--;
+					j--;
+					break;
+				}
+			}
+			if (!IsTheSame)
+			{
+				return false;
+			}
+		}
+		return true;
+	}
+	public static void ChangeCompletedPositions(BlocksBoard b, Color newColor, IList<int> completedRows, IList<int> completedColumns, double Opacity = 1)
 	{
 		foreach (int column in completedColumns)
 		{
 			for (int i = 0; i < b.Fields.GetLength(0); i++)
 			{
-				b.Fields[i, column].BackgroundColor = newColor;
-				//object value = await b.fields[i, column].Label.ColorTo(b.fields[i, column].BackgroundColor, newColor, c => b.fields[i, column].Label.BackgroundColor = c, 10);
+				//if(!b.Fields[i, column].IsFree)
+				//	b.Fields[i, column].BackgroundColor = newColor;
+				b.Fields[i, column].ShadowColor = newColor;
+				b.Fields[i, column].ShadowOpacity = Opacity;
 			}
 		}
 		foreach (int row in completedRows)
 		{
 			for (int i = 0; i < b.Fields.GetLength(1); i++)
 			{
-				b.Fields[row, i].BackgroundColor = newColor;
+				//if (!b.Fields[row, i].IsFree)
+				//	b.Fields[row, i].BackgroundColor = newColor;
+				b.Fields[row, i].ShadowColor = newColor;
+				b.Fields[row, i].ShadowOpacity = Opacity;
 				//object value = await b.fields[row, i].Label.ColorTo(b.fields[row, i].BackgroundColor, newColor, c => b.fields[row, i].Label.BackgroundColor = c, 10);
 			}
 		}
@@ -301,7 +341,8 @@ public partial class GamePage : ContentPage
 	Block panGetsureBlock;
 	bool newPanGetsure = true;
 	int toSwitch = 50;
-
+	IList<int> completedRows = new List<int>();
+	IList<int> completedColumns = new List<int>();
 	public void PanGetsureFnc(object sender, PanUpdatedEventArgs e)
 	{
 		if (sender is Grid)
@@ -310,8 +351,8 @@ public partial class GamePage : ContentPage
 			switch (e.StatusType)
 			{
 				case GestureStatus.Started:
-               
-                case GestureStatus.Running:
+
+				case GestureStatus.Running:
 					if (newPanGetsure)
 					{
 						panGetsureBlock = WhichToChooseBlock(grid);
@@ -319,7 +360,7 @@ public partial class GamePage : ContentPage
 
 					if (DeviceInfo.Platform == DevicePlatform.Android || DeviceInfo.Platform == DevicePlatform.iOS)
 					{
-						grid.TranslationX += e.TotalX; grid.TranslationY +=e.TotalY - toSwitch;
+						grid.TranslationX += e.TotalX; grid.TranslationY += e.TotalY - toSwitch;
 					}
 					else
 					{
@@ -335,9 +376,18 @@ public partial class GamePage : ContentPage
 					}
 					IList<int> completedRows = CheckCompletedRows(viewModel.BlocksBoard, Field.DefaultColor);
 					IList<int> completedColumns = CheckCompletedColumns(viewModel.BlocksBoard, Field.DefaultColor);
-
+					if (!IListsIsThisSameValues(completedColumns, this.completedColumns))
+					{
+						ChangeCompletedPositions(viewModel.BlocksBoard, panGetsureBlock.BackgroundColor, new List<int>(), this.completedColumns, 0);
+					}
+					if (!IListsIsThisSameValues(completedRows, this.completedRows))
+					{
+						ChangeCompletedPositions(viewModel.BlocksBoard, panGetsureBlock.BackgroundColor, this.completedRows, new List<int>(), 0);
+					}
 					ChangeCompletedPositions(viewModel.BlocksBoard, panGetsureBlock.BackgroundColor, completedRows, completedColumns);
 					AddBlockToBoardWhileRunning(grid);
+					this.completedColumns = completedColumns;
+					this.completedRows = completedRows;
 					break;
 				case GestureStatus.Completed:
 				case GestureStatus.Canceled:
@@ -352,6 +402,8 @@ public partial class GamePage : ContentPage
 						grid.IsVisible = false;
 						MenageToChoose((Grid)grid.Parent);
 					}
+					ChangeCompletedPositions(viewModel.BlocksBoard, panGetsureBlock.BackgroundColor, new List<int>(), this.completedColumns, 0);
+					ChangeCompletedPositions(viewModel.BlocksBoard, panGetsureBlock.BackgroundColor, this.completedRows, new List<int>(), 0);
 					break;
 			}
 		}
@@ -363,7 +415,6 @@ public partial class GamePage : ContentPage
 		Random random = new Random();
 		bool canGenerateNewBlocks = true;
 		int beginBlocksToChoose = viewModel.ToChoose.Count;
-
 
 		for (int i = 0; i < viewModel.ToChoose.Count; i++)
 		{
@@ -389,6 +440,9 @@ public partial class GamePage : ContentPage
 			{
 				int numberOfBlocks = random.Next(3, 10);
 				viewModel.ToChoose.Clear();
+				if (viewModel.IsEndCombo)
+					viewModel.Combo = 0;
+				viewModel.IsEndCombo = true;
 				for (int i = 0; i < numberOfBlocks; i++)
 				{
 					viewModel.ToChoose.Add(Block.GenerateBlock(viewModel.BlocksBoard, i));
@@ -396,10 +450,15 @@ public partial class GamePage : ContentPage
 				viewModel.NumberOfBlocks = viewModel.ToChoose.Count;
 			}
 			else if (viewModel.GameMode != GameModes.ChaoticBlocks)
+			{
+				if (viewModel.IsEndCombo)
+					viewModel.Combo = 0;
+				viewModel.IsEndCombo = true;
 				for (int i = 0; i < viewModel.ToChoose.Count; i++)
 				{
 					viewModel.ToChoose[i] = new Block(viewModel.BlocksBoard, i);
 				}
+			}
 
 		}
 		if (viewModel.GameMode == GameModes.ChaoticBlocks || viewModel.GameMode == GameModes.MaxChaotic)
@@ -408,6 +467,9 @@ public partial class GamePage : ContentPage
 			if (viewModel.NumberOfBlocks - 1 == 0)
 			{
 				viewModel.NumberOfBlocks = viewModel.BaseNumberOfBlocks + 1;
+				if (viewModel.IsEndCombo)
+					viewModel.Combo = 0;
+				viewModel.IsEndCombo = true;
 			}
 			for (int i = 0; i < viewModel.NumberOfBlocks - 1; i++)
 			{
@@ -432,7 +494,7 @@ public partial class GamePage : ContentPage
 
 				if (IsFreeSpaceOnBlock(k, j, viewModel.ToChoose[i]))
 				{
-					return true; 
+					return true;
 				}
 				else
 				{
@@ -453,8 +515,8 @@ public partial class GamePage : ContentPage
 		for (int i = 0; i < viewModel.ToChoose.Count; i++)
 			if (blocksView.Children[i] is Grid)
 			{
-			
-				if(await IsPlaceOnBlock(i))
+
+				if (await IsPlaceOnBlock(i))
 				{
 					return false;
 				}
@@ -511,20 +573,40 @@ public partial class GamePage : ContentPage
 	private void SumScore(int numberOfCompletedRows, int numberOfCompletedColumns, BlocksBoard board)
 	{
 		int score = 0;
+		//if (numberOfCompletedRows != 0 && numberOfCompletedColumns != 0)
+		//	score += (int)Global.Impressivenes((int)viewModel.BlocksBoard.Width, numberOfCompletedRows)
+		//		* (int)Global.Impressivenes(viewModel.BlocksBoard.Height, numberOfCompletedColumns);
+		//else if (numberOfCompletedRows != 0)
+		//	score += (int)Global.Impressivenes((int)viewModel.BlocksBoard.Width, numberOfCompletedRows);
+		//else if (numberOfCompletedColumns != 0)
+		//	score += (int)Global.Impressivenes(viewModel.BlocksBoard.Height, numberOfCompletedColumns);
+
 		if (numberOfCompletedRows != 0 && numberOfCompletedColumns != 0)
-			score += (int)Global.Impressivenes((int)viewModel.BlocksBoard.Width, numberOfCompletedRows) * (int)Global.Impressivenes(viewModel.BlocksBoard.Height, numberOfCompletedColumns);
+			score += ((int)viewModel.BlocksBoard.Width + numberOfCompletedRows * 10) * numberOfCompletedRows * 10
+				+ ((int)viewModel.BlocksBoard.Height + numberOfCompletedColumns * 10) * numberOfCompletedColumns * 10;
 		else if (numberOfCompletedRows != 0)
-			score += (int)Global.Impressivenes((int)viewModel.BlocksBoard.Width, numberOfCompletedRows);
+			score += ((int)viewModel.BlocksBoard.Width + numberOfCompletedRows * 10) * numberOfCompletedRows * 10;
 		else if (numberOfCompletedColumns != 0)
-			score += (int)Global.Impressivenes(viewModel.BlocksBoard.Height, numberOfCompletedColumns);
+			score += ((int)viewModel.BlocksBoard.Height + numberOfCompletedColumns * 10) * numberOfCompletedColumns * 10;
 		if (viewModel.BlocksBoard.IsClear())
 		{
-			viewModel.Score += (int)Global.Impressivenes(score, 2);
+			score = (int)score * 2;
 		}
-		else
-			viewModel.Score += score;
+		if (score > 0)
+		{
+			viewModel.Score += score += viewModel.Combo * 10;
+			viewModel.IsEndCombo = false;
+			viewModel.Combo++;
+		}
+		if (score != 0)
+		{
+			viewModel.NewScore = score;
+			newScoreLabel.Opacity = 1;
+			newScoreLabel.FadeTo(0, 1500);
+		}
 		if (viewModel.Score > MainPageView.TheBestScore)
 		{
+			viewModel.ScoreStr = "New the best score";
 			MainPageView.TheBestScore = viewModel.Score;
 			MainPageView.ChangeTheBestScoreInFile(viewModel.BaseWidth, viewModel.BaseHeigh, viewModel.BaseNumberOfBlocks, viewModel.GameMode, viewModel.Score);
 		}

@@ -25,10 +25,36 @@ namespace BlocksGame.Views
 				OnPropertyChanged(nameof(NumberOfBlocks));
 			}
 		}
+		private int combo = 0;
+		public int Combo 
+		{
+			get => combo;
+			set
+			{
+				combo = value;
+				OnPropertyChanged();
+			}
+		}
+		public bool IsEndCombo { get; set; } = false;
 		public int BaseWidth { get; private set; }
 		public int BaseHeigh { get; private set; }
 		public int BaseNumberOfBlocks { get; private set; }
 		public ObservableCollection<Block> ToChoose { get; set; } = [];
+		int newScore = 0;
+		public int NewScore
+		{
+			get => newScore;
+			set
+			{
+				newScore = value;
+				OnPropertyChanged(nameof(NewScoreStr));
+			}
+		}
+		public string NewScoreStr
+		{
+			get => "+" + NewScore.ToString();
+			
+		}
 		static int score = 0;
 		public int Score
 		{
@@ -68,7 +94,7 @@ namespace BlocksGame.Views
 		}
 		public GamePageView(uint width, uint height, uint numberOfBlocksToChoose, GameModes gameModes)
 		{
-			
+
 			Score = 0;
 			BlocksBoard = new BlocksBoard(width, height);
 			for (int i = 0; i < numberOfBlocksToChoose; i++)

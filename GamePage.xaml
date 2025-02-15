@@ -12,74 +12,97 @@
     </ContentPage.BindingContext>-->
 
     <VerticalStackLayout x:Name="MainAbsoluteLayout">
+        <HorizontalStackLayout HorizontalOptions="CenterAndExpand">
+            <Label Text="{Binding ScoreStr}"  FontSize="Header" />
 
+            <Label x:Name="newScoreLabel"  Text="{Binding NewScoreStr}" 
+             FontSize="Header"  
+             HorizontalOptions="Center" 
+             HorizontalTextAlignment="Center"
+             TextColor="Red"
+             >
+
+                <Label.Triggers>
+                    <Trigger TargetType="Label" Property="Text" Value="+0">
+                        <Setter Property="IsVisible" Value="False"/>
+                    </Trigger>
+                </Label.Triggers>
+            </Label>
+        </HorizontalStackLayout>
+        <VerticalStackLayout>
+            <Button x:Name="loseButton" Clicked="LoseButtonClicked" Text="Lose" IsVisible="False"/>
+        </VerticalStackLayout>
+        <Grid utils:GridHelpers.ColumnCount="{Binding BlocksBoard.Width}"
+        utils:GridHelpers.RowCount="{Binding BlocksBoard.Height}"
+         BackgroundColor="Transparent"
+          HorizontalOptions="Center"
+        x:Name="boardGrid"
+        BindableLayout.ItemsSource="{Binding BlocksBoard.Fields}"
+        ZIndex="-1">
+            <BindableLayout.ItemTemplate>
+                <DataTemplate x:DataType="global:Field">
+                    <Border Grid.Row="{Binding RowPosition}" Grid.Column="{Binding ColumnPosition}" 
+                      BackgroundColor="Transparent"
+                      
+                      >
+                        <Label WidthRequest="{Binding Width}" HeightRequest="{Binding Height}" BackgroundColor="{Binding BackgroundColor}">
+
+                        </Label>
+                        <Border.Shadow >
+                            <Shadow Brush="{Binding ShadowColor}" Radius="20" Opacity="{Binding ShadowOpacity}" Offset="{Binding ShadowOffset}"/>
+                        </Border.Shadow>
+                    </Border>
+                </DataTemplate>
+            </BindableLayout.ItemTemplate>
+
+        </Grid>
+
+        <Grid utils:GridHelpers.ColumnCount="{Binding NumberOfBlocks}"
+              utils:GridHelpers.RowCount="1"
+              BackgroundColor="Transparent"
+              HorizontalOptions="Center"
+            ColumnSpacing="20"
+            Padding="20"
+          BindableLayout.ItemsSource="{Binding ToChoose}"
+            x:Name="blocksView"
+        ZIndex="1"
+                      >
+            <BindableLayout.ItemTemplate>
+                <DataTemplate x:DataType="global:Block">
+                    <Grid utils:GridHelpers.ColumnCount="{Binding Width}"
+                      utils:GridHelpers.RowCount="{Binding Height}"
+                       BackgroundColor="Transparent"
+                       HorizontalOptions="Center"
+                        Grid.Column="{Binding PositionInToChoose}"
+                       BindableLayout.ItemsSource="{Binding Fields}"
+                         ColumnSpacing="0"
+                              Padding="0"
+                        RowSpacing="0"
+                      ZIndex="1"
+                      >
+
+                        <Grid.GestureRecognizers>
+                            <PanGestureRecognizer PanUpdated="PanGetsureFnc" />
+                        </Grid.GestureRecognizers>
+                        <BindableLayout.ItemTemplate>
+                            <DataTemplate x:DataType="global:Field">
+                                <Border Grid.Column="{Binding ColumnPosition}"
+                                      Grid.Row="{Binding RowPosition}"
+                                      WidthRequest="{Binding Width}"
+                                      HeightRequest="{Binding Height}"
+                                      VerticalOptions="CenterAndExpand">
+                                    <Label WidthRequest="{Binding Width}" HeightRequest="{Binding Height}" Background="{Binding BackgroundColor}"/>
+                                </Border>
+                            </DataTemplate>
+                        </BindableLayout.ItemTemplate>
+
+                    </Grid>
+                </DataTemplate>
+            </BindableLayout.ItemTemplate>
+
+        </Grid>
         <VerticalStackLayout x:Name="MainStackLayout">
-            <Label Text="{Binding ScoreStr}"  FontSize="Header"  HorizontalOptions="Center" HorizontalTextAlignment="Center"/>
-            <VerticalStackLayout>
-                <Button x:Name="loseButton" Clicked="LoseButtonClicked" Text="Lose" IsVisible="False"/>
-            </VerticalStackLayout>
-            <Grid utils:GridHelpers.ColumnCount="{Binding BlocksBoard.Width}"
-                  utils:GridHelpers.RowCount="{Binding BlocksBoard.Height}"
-                   BackgroundColor="Transparent"
-                    HorizontalOptions="Center"
-                  x:Name="boardGrid"
-                  BindableLayout.ItemsSource="{Binding BlocksBoard.Fields}"
-                  ZIndex="-1">
-                <BindableLayout.ItemTemplate>
-                    <DataTemplate x:DataType="global:Field">
-                        <Border Grid.Row="{Binding RowPosition}" Grid.Column="{Binding ColumnPosition}" 
-                                BackgroundColor="Transparent">
-                            <Label WidthRequest="{Binding Width}" HeightRequest="{Binding Height}" BackgroundColor="{Binding BackgroundColor}"/>
-                        </Border>
-                    </DataTemplate>
-                </BindableLayout.ItemTemplate>
-
-            </Grid>
-
-            <Grid utils:GridHelpers.ColumnCount="{Binding NumberOfBlocks}"
-                        utils:GridHelpers.RowCount="1"
-                        BackgroundColor="Transparent"
-                        HorizontalOptions="Center"
-                      ColumnSpacing="20"
-                      Padding="20"
-                    BindableLayout.ItemsSource="{Binding ToChoose}"
-                      x:Name="blocksView"
-                  ZIndex="1"
-                                >
-                <BindableLayout.ItemTemplate>
-                    <DataTemplate x:DataType="global:Block">
-                        <Grid utils:GridHelpers.ColumnCount="{Binding Width}"
-                                utils:GridHelpers.RowCount="{Binding Height}"
-                                 BackgroundColor="Transparent"
-                                 HorizontalOptions="Center"
-                                  Grid.Column="{Binding PositionInToChoose}"
-                                 BindableLayout.ItemsSource="{Binding Fields}"
-                                   ColumnSpacing="0"
-                                        Padding="0"
-                                  RowSpacing="0"
-                                ZIndex="1"
-                                >
-
-                            <Grid.GestureRecognizers>
-                                <PanGestureRecognizer PanUpdated="PanGetsureFnc" />
-                            </Grid.GestureRecognizers>
-                            <BindableLayout.ItemTemplate>
-                                <DataTemplate x:DataType="global:Field"> 
-                                    <Border Grid.Column="{Binding ColumnPosition}"
-                                                Grid.Row="{Binding RowPosition}"
-                                                WidthRequest="{Binding Width}"
-                                                HeightRequest="{Binding Height}"
-                                                VerticalOptions="CenterAndExpand">
-                                        <Label WidthRequest="{Binding Width}" HeightRequest="{Binding Height}" Background="{Binding BackgroundColor}"/>
-                                    </Border>
-                                </DataTemplate>
-                            </BindableLayout.ItemTemplate>
-
-                        </Grid>
-                    </DataTemplate>
-                </BindableLayout.ItemTemplate>
-
-            </Grid>
+            <Label Text="{Binding Combo}"/>
         </VerticalStackLayout>
 
     </VerticalStackLayout>
