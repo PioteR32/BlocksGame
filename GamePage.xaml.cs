@@ -253,18 +253,17 @@ public partial class GamePage : ContentPage
 		{
 			for (int j = 0; j < positionsToCheckTmp.Count; j++)
 			{
-				try
+
+				if (positionsTmp[i] == positionsToCheckTmp[j])
 				{
-					if (positionsTmp[i] == positionsToCheckTmp[j])
-					{
-						positionsTmp.RemoveAt(i);
-						positionsToCheckTmp.RemoveAt(j);
-						j--;
-					}
-					else
-						return false;
+					positionsTmp.RemoveAt(i);
+					positionsToCheckTmp.RemoveAt(j);
+					j--;
 				}
-				catch { }
+				else
+					return false;
+
+
 			}
 			i--;
 		}
@@ -317,9 +316,9 @@ public partial class GamePage : ContentPage
 			for (int i = 0; i < b.Fields.GetLength(0); i++)
 			{
 				//if(!b.Fields[i, column].IsFree)
-				//	b.Fields[i, column].BackgroundColor = newColor;
-				b.Fields[i, column].ShadowColor = newColor;
-				b.Fields[i, column].ShadowOpacity = Opacity;
+				b.Fields[i, column].BackgroundColor = newColor;
+				//b.Fields[i, column].ShadowColor = newColor;
+				//b.Fields[i, column].ShadowOpacity = Opacity;
 			}
 		}
 		foreach (int row in completedRows)
@@ -327,9 +326,9 @@ public partial class GamePage : ContentPage
 			for (int i = 0; i < b.Fields.GetLength(1); i++)
 			{
 				//if (!b.Fields[row, i].IsFree)
-				//	b.Fields[row, i].BackgroundColor = newColor;
-				b.Fields[row, i].ShadowColor = newColor;
-				b.Fields[row, i].ShadowOpacity = Opacity;
+				b.Fields[row, i].BackgroundColor = newColor;
+				//b.Fields[row, i].ShadowColor = newColor;
+				//b.Fields[row, i].ShadowOpacity = Opacity;
 				//object value = await b.fields[row, i].Label.ColorTo(b.fields[row, i].BackgroundColor, newColor, c => b.fields[row, i].Label.BackgroundColor = c, 10);
 			}
 		}
@@ -376,14 +375,14 @@ public partial class GamePage : ContentPage
 					}
 					IList<int> completedRows = CheckCompletedRows(viewModel.BlocksBoard, Field.DefaultColor);
 					IList<int> completedColumns = CheckCompletedColumns(viewModel.BlocksBoard, Field.DefaultColor);
-					if (!IListsIsThisSameValues(completedColumns, this.completedColumns))
-					{
-						ChangeCompletedPositions(viewModel.BlocksBoard, panGetsureBlock.BackgroundColor, new List<int>(), this.completedColumns, 0);
-					}
-					if (!IListsIsThisSameValues(completedRows, this.completedRows))
-					{
-						ChangeCompletedPositions(viewModel.BlocksBoard, panGetsureBlock.BackgroundColor, this.completedRows, new List<int>(), 0);
-					}
+					//if (!IListsIsThisSameValues(completedColumns, this.completedColumns))
+					//{
+					//	ChangeCompletedPositions(viewModel.BlocksBoard, panGetsureBlock.BackgroundColor, new List<int>(), this.completedColumns, 0);
+					//}
+					//if (!IListsIsThisSameValues(completedRows, this.completedRows))
+					//{
+					//	ChangeCompletedPositions(viewModel.BlocksBoard, panGetsureBlock.BackgroundColor, this.completedRows, new List<int>(), 0);
+					//}
 					ChangeCompletedPositions(viewModel.BlocksBoard, panGetsureBlock.BackgroundColor, completedRows, completedColumns);
 					AddBlockToBoardWhileRunning(grid);
 					this.completedColumns = completedColumns;
@@ -400,17 +399,17 @@ public partial class GamePage : ContentPage
 					else
 					{
 						grid.IsVisible = false;
-						MenageToChoose((Grid)grid.Parent);
+						ManageGame((Grid)grid.Parent);
 					}
-					ChangeCompletedPositions(viewModel.BlocksBoard, panGetsureBlock.BackgroundColor, new List<int>(), this.completedColumns, 0);
-					ChangeCompletedPositions(viewModel.BlocksBoard, panGetsureBlock.BackgroundColor, this.completedRows, new List<int>(), 0);
+					//ChangeCompletedPositions(viewModel.BlocksBoard, Field.DefaultColor, new List<int>(), this.completedColumns, 0);
+					//ChangeCompletedPositions(viewModel.BlocksBoard, Field.DefaultColor, this.completedRows, new List<int>(), 0);
 					break;
 			}
 		}
 	}
 
 	#region MenageGame
-	public async void MenageToChoose(Grid layout)
+	public async void ManageGame(Grid layout)
 	{
 		Random random = new Random();
 		bool canGenerateNewBlocks = true;
@@ -481,7 +480,15 @@ public partial class GamePage : ContentPage
 			IsGetUserScore(viewModel.BlocksBoard);
 		if (await IsUserLose())
 		{
-			loseButton.IsVisible = true;
+			viewModel.Lives--;
+			minusLives.Opacity = 1;
+			minusLives.FadeTo(0, 1500);
+			if (viewModel.Lives <= 0)
+				loseButton.IsVisible = true;
+			else
+			{
+				viewModel.BlocksBoard = new BlocksBoard((uint)viewModel.BlocksBoard.Width, (uint)viewModel.BlocksBoard.Height);
+			}
 		}
 	}
 	public async Task<bool> IsPlaceOnBlock(int blocksViewPosition)

@@ -35,6 +35,23 @@ namespace BlocksGame.Views
 				OnPropertyChanged();
 			}
 		}
+		private int lives = 2;
+		public int Lives
+		{
+			get => lives;
+			set
+			{
+				lives = value;
+				OnPropertyChanged();
+				OnPropertyChanged(nameof(LivesStr));
+			}
+		}
+
+		public string LivesStr
+		{
+			get => "Lives: " + Lives;
+		}
+
 		public bool IsEndCombo { get; set; } = false;
 		public int BaseWidth { get; private set; }
 		public int BaseHeigh { get; private set; }

@@ -32,7 +32,7 @@ namespace BlocksGame
             GenerateBaseBoard();
 		}
 
-        Task GenerateBaseBoard()
+		public Task GenerateBaseBoard()
         {
 			for (int i = 0; i < Width; i++)
 			{
