@@ -79,6 +79,7 @@
                     <Grid utils:GridHelpers.ColumnCount="{Binding Width}"
                       utils:GridHelpers.RowCount="{Binding Height}"
                        BackgroundColor="Transparent"
+                          IsVisible="True"
                        HorizontalOptions="Center"
                         Grid.Column="{Binding PositionInToChoose}"
                        BindableLayout.ItemsSource="{Binding Fields}"

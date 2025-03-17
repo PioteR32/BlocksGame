@@ -409,13 +409,65 @@ public partial class GamePage : ContentPage
 	}
 
 	#region MenageGame
+	public void GenerateBlocks(bool canGenerateNewBlocks)
+	{
+		Random random = new Random();
+        if (canGenerateNewBlocks)
+        {
+            if (viewModel.GameMode == GameModes.ChaoticBoard || viewModel.GameMode == GameModes.MaxChaotic)
+            {
+                viewModel.BlocksBoard = new BlocksBoard((uint)random.Next(3, 10), (uint)random.Next(3, 10), viewModel.BlocksBoard);
+            }
+            if (viewModel.GameMode == GameModes.ChaoticNumberOfBlocks || viewModel.GameMode == GameModes.MaxChaotic)
+            {
+                int numberOfBlocks = random.Next(3, 10);
+                viewModel.ToChoose.Clear();
+                if (viewModel.IsEndCombo)
+                    viewModel.Combo = 0;
+                viewModel.IsEndCombo = true;
+                for (int i = 0; i < numberOfBlocks; i++)
+                {
+                    viewModel.ToChoose.Add(Block.GenerateBlock(viewModel.BlocksBoard, i));
+                }
+                viewModel.NumberOfBlocks = viewModel.ToChoose.Count;
+            }
+            else if (viewModel.GameMode != GameModes.ChaoticBlocks)
+            {
+                if (viewModel.IsEndCombo)
+                    viewModel.Combo = 0;
+                viewModel.IsEndCombo = true;
+				viewModel.ToChoose.Clear();
+                for (int i = 0; i < viewModel.NumberOfBlocks; i++)
+                {
+                    viewModel.ToChoose.Add(Block.GenerateBlock(viewModel.BlocksBoard, i));
+                }
+            }
+
+        }
+        if (viewModel.GameMode == GameModes.ChaoticBlocks || viewModel.GameMode == GameModes.MaxChaotic)
+        {
+            viewModel.ToChoose.Clear();
+            if (viewModel.NumberOfBlocks - 1 == 0)
+            {
+                viewModel.NumberOfBlocks = viewModel.BaseNumberOfBlocks + 1;
+                if (viewModel.IsEndCombo)
+                    viewModel.Combo = 0;
+                viewModel.IsEndCombo = true;
+            }
+            for (int i = 0; i < viewModel.NumberOfBlocks - 1; i++)
+            {
+                viewModel.ToChoose.Add(new Block(viewModel.BlocksBoard, i));
+            }
+            viewModel.NumberOfBlocks -= 1;
+        }
+    }
 	public async void ManageGame(Grid layout)
 	{
 		Random random = new Random();
 		bool canGenerateNewBlocks = true;
 		int beginBlocksToChoose = viewModel.ToChoose.Count;
 
-		for (int i = 0; i < viewModel.ToChoose.Count; i++)
+        for (int i = 0; i < viewModel.ToChoose.Count; i++)
 		{
 			if (blocksView.Children[i] is Grid)
 			{
@@ -429,56 +481,10 @@ public partial class GamePage : ContentPage
 			}
 		}
 		IsGetUserScore(viewModel.BlocksBoard);
-		if (canGenerateNewBlocks)
-		{
-			if (viewModel.GameMode == GameModes.ChaoticBoard || viewModel.GameMode == GameModes.MaxChaotic)
-			{
-				viewModel.BlocksBoard = new BlocksBoard((uint)random.Next(3, 10), (uint)random.Next(3, 10), viewModel.BlocksBoard);
-			}
-			if (viewModel.GameMode == GameModes.ChaoticNumberOfBlocks || viewModel.GameMode == GameModes.MaxChaotic)
-			{
-				int numberOfBlocks = random.Next(3, 10);
-				viewModel.ToChoose.Clear();
-				if (viewModel.IsEndCombo)
-					viewModel.Combo = 0;
-				viewModel.IsEndCombo = true;
-				for (int i = 0; i < numberOfBlocks; i++)
-				{
-					viewModel.ToChoose.Add(Block.GenerateBlock(viewModel.BlocksBoard, i));
-				}
-				viewModel.NumberOfBlocks = viewModel.ToChoose.Count;
-			}
-			else if (viewModel.GameMode != GameModes.ChaoticBlocks)
-			{
-				if (viewModel.IsEndCombo)
-					viewModel.Combo = 0;
-				viewModel.IsEndCombo = true;
-				for (int i = 0; i < viewModel.ToChoose.Count; i++)
-				{
-					viewModel.ToChoose[i] = new Block(viewModel.BlocksBoard, i);
-				}
-			}
-
-		}
-		if (viewModel.GameMode == GameModes.ChaoticBlocks || viewModel.GameMode == GameModes.MaxChaotic)
-		{
-			viewModel.ToChoose.Clear();
-			if (viewModel.NumberOfBlocks - 1 == 0)
-			{
-				viewModel.NumberOfBlocks = viewModel.BaseNumberOfBlocks + 1;
-				if (viewModel.IsEndCombo)
-					viewModel.Combo = 0;
-				viewModel.IsEndCombo = true;
-			}
-			for (int i = 0; i < viewModel.NumberOfBlocks - 1; i++)
-			{
-				viewModel.ToChoose.Add(new Block(viewModel.BlocksBoard, i));
-			}
-			viewModel.NumberOfBlocks -= 1;
-		}
-		if (canGenerateNewBlocks && (viewModel.GameMode == GameModes.ChaoticBoard || viewModel.GameMode == GameModes.MaxChaotic))
+        GenerateBlocks(canGenerateNewBlocks);
+        if (canGenerateNewBlocks && (viewModel.GameMode == GameModes.ChaoticBoard || viewModel.GameMode == GameModes.MaxChaotic))
 			IsGetUserScore(viewModel.BlocksBoard);
-		if (await IsUserLose())
+		if (IsUserLose())
 		{
 			viewModel.Lives--;
 			minusLives.Opacity = 1;
@@ -488,10 +494,10 @@ public partial class GamePage : ContentPage
 			else
 			{
 				viewModel.BlocksBoard = new BlocksBoard((uint)viewModel.BlocksBoard.Width, (uint)viewModel.BlocksBoard.Height);
-			}
+            }
 		}
 	}
-	public async Task<bool> IsPlaceOnBlock(int blocksViewPosition)
+	public bool IsPlaceOnBlock(int blocksViewPosition)
 	{
 		int i = blocksViewPosition;
 		Grid grid = (Grid)blocksView.Children[i];
@@ -516,14 +522,14 @@ public partial class GamePage : ContentPage
 			}
 		return false;
 	}
-	public async Task<bool> IsUserLose()
+	public bool IsUserLose()
 	{
 		int unVisableElements = 0;
 		for (int i = 0; i < viewModel.ToChoose.Count; i++)
 			if (blocksView.Children[i] is Grid)
 			{
 
-				if (await IsPlaceOnBlock(i))
+				if ( IsPlaceOnBlock(i))
 				{
 					return false;
 				}

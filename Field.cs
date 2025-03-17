@@ -17,7 +17,7 @@ namespace BlocksGame
 
 		}
 		public Color baseColor;
-		public Field(Color color, bool isFree) { BackgroundColor = color; this.IsFree = IsFree; shadowColor = BackgroundColor; }
+		public Field(Color color, bool isFree) { BackgroundColor = color; this.IsFree = isFree; shadowColor = BackgroundColor; }
 		public Field(int rowPosition, int columnPosition)
 		{
 			RowPosition = rowPosition;
@@ -36,7 +36,7 @@ namespace BlocksGame
 		public Field(Color color, bool isFree, int rowPosition, int columnPosition)
 		{
 			baseColor =BackgroundColor = color;
-			this.IsFree = IsFree;
+			this.IsFree = isFree;
 			RowPosition = rowPosition;
 			ColumnPosition = columnPosition;
 			shadowColor = BackgroundColor;
@@ -44,7 +44,7 @@ namespace BlocksGame
 		public Field(Color color, bool isFree, int rowPosition, int columnPosition, int width, int height)
 		{
 			baseColor = BackgroundColor = color;
-			this.IsFree = IsFree;
+			this.IsFree = isFree;
 			RowPosition = rowPosition;
 			ColumnPosition = columnPosition;
 			Width = width;
