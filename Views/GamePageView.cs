@@ -35,6 +35,16 @@ namespace BlocksGame.Views
 				OnPropertyChanged();
 			}
 		}
+		private int changeCombo = 0;
+		public int ChangeCombo 
+		{
+			get => changeCombo;
+			set
+			{
+                changeCombo = value;
+				OnPropertyChanged();
+			}
+		}
 		private int lives = 2;
 		public int Lives
 		{

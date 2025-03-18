@@ -12,13 +12,19 @@
     </ContentPage.BindingContext>-->
 
     <VerticalStackLayout x:Name="MainAbsoluteLayout">
-        <HorizontalStackLayout HorizontalOptions="EndAndExpand">
-            <Label HorizontalOptions="End" Text="{Binding LivesStr}" Padding="2"/>
-            <Label x:Name="minusLives" HorizontalOptions="End" Text=" -1" Padding="2" Opacity="0" TextColor="Red"/>
-        </HorizontalStackLayout>
-      
-        <HorizontalStackLayout HorizontalOptions="CenterAndExpand">
-          
+        <Grid RowDefinitions="*" ColumnDefinitions="*,*" MaximumWidthRequest="5000">
+            <HorizontalStackLayout  Grid.Column="0" HorizontalOptions="Start" VerticalOptions="Start">
+                <Label  Text="{Binding Combo, StringFormat='Combo : {0}'}" HorizontalOptions="Fill"/>
+                <Label  Text="{Binding ChangeCombo, StringFormat=' {0}'}" HorizontalOptions="Fill"/>
+            </HorizontalStackLayout>
+            <HorizontalStackLayout  Grid.Column="1" HorizontalOptions="End" VerticalOptions="Start">
+                <Label HorizontalOptions="End" Text="{Binding LivesStr}" Padding="2"/>
+                <Label x:Name="minusLives" HorizontalOptions="End" Text=" -1" Padding="2" Opacity="0" TextColor="Red"/>
+            </HorizontalStackLayout>
+        </Grid>
+
+        <HorizontalStackLayout HorizontalOptions="Center">
+
             <Label Text="{Binding ScoreStr}"  FontSize="Header" />
 
             <Label x:Name="newScoreLabel"  Text="{Binding NewScoreStr}" 
@@ -34,7 +40,7 @@
                     </Trigger>
                 </Label.Triggers>
             </Label>
-        
+
         </HorizontalStackLayout>
         <VerticalStackLayout>
             <Button x:Name="loseButton" Clicked="LoseButtonClicked" Text="Lose" IsVisible="False"/>
@@ -109,9 +115,6 @@
             </BindableLayout.ItemTemplate>
 
         </Grid>
-        <VerticalStackLayout x:Name="MainStackLayout">
-            <Label Text="{Binding Combo}"/>
-        </VerticalStackLayout>
 
     </VerticalStackLayout>
 </ContentPage>
