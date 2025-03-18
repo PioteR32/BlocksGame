@@ -619,7 +619,7 @@ public partial class GamePage : ContentPage
 		}
 		if (viewModel.Score > MainPageView.TheBestScore)
 		{
-			viewModel.ScoreStr = "New the best score";
+			viewModel.ScoreStr = "NEW THE BEST SCORE : ";
 			MainPageView.TheBestScore = viewModel.Score;
 			MainPageView.ChangeTheBestScoreInFile(viewModel.BaseWidth, viewModel.BaseHeigh, viewModel.BaseNumberOfBlocks, viewModel.GameMode, viewModel.Score);
 		}

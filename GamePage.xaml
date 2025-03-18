@@ -15,7 +15,7 @@
         <Grid RowDefinitions="*" ColumnDefinitions="*,*" MaximumWidthRequest="5000">
             <HorizontalStackLayout  Grid.Column="0" HorizontalOptions="Start" VerticalOptions="Start">
                 <Label  Text="{Binding Combo, StringFormat='Combo : {0}'}" HorizontalOptions="Fill"/>
-                <Label  Text="{Binding ChangeCombo, StringFormat=' {0}'}" HorizontalOptions="Fill"/>
+                <Label  Text="{Binding ChangeCombo, StringFormat=' {0}'}" HorizontalOptions="Fill" Opacity="{Binding ChangeComboOpacity}"/>
             </HorizontalStackLayout>
             <HorizontalStackLayout  Grid.Column="1" HorizontalOptions="End" VerticalOptions="Start">
                 <Label HorizontalOptions="End" Text="{Binding LivesStr}" Padding="2"/>

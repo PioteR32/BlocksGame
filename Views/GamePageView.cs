@@ -26,22 +26,40 @@ namespace BlocksGame.Views
 			}
 		}
 		private int combo = 0;
-		public int Combo 
+		public int Combo
 		{
 			get => combo;
 			set
 			{
+				ChangeCombo = (value - combo).ToString();
 				combo = value;
 				OnPropertyChanged();
 			}
 		}
 		private int changeCombo = 0;
-		public int ChangeCombo 
+		public string ChangeCombo
 		{
-			get => changeCombo;
+			get
+			{
+				if (changeCombo < 0)
+					return changeCombo.ToString();
+				else return "+" + changeCombo.ToString();
+			}
 			set
 			{
-                changeCombo = value;
+				changeCombo = int.Parse(value);
+				ChangeComboOpacity = 1;
+				OpacityAnimation(150);
+				OnPropertyChanged();
+			}
+		}
+		private double changeComboOpacity = 0;
+		public double ChangeComboOpacity
+		{
+			get => changeComboOpacity;
+			set
+			{
+				changeComboOpacity = value;
 				OnPropertyChanged();
 			}
 		}
@@ -80,7 +98,7 @@ namespace BlocksGame.Views
 		public string NewScoreStr
 		{
 			get => "+" + NewScore.ToString();
-			
+
 		}
 		static int score = 0;
 		public int Score
@@ -141,6 +159,14 @@ namespace BlocksGame.Views
 		/// </summary>
 		/// <param name="layout"></param>
 		/// <param name="b"></param>
-
+		public async Task OpacityAnimation(int miliseconds)
+		{
+			double minusOpacity = ChangeComboOpacity / miliseconds;
+			while (ChangeComboOpacity > 0 )
+			{
+				await Task.Delay(1);
+				ChangeComboOpacity = ChangeComboOpacity - minusOpacity;
+			}
+		}
 	}
 }
