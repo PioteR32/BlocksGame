@@ -6,6 +6,7 @@
              xmlns:global="clr-namespace:BlocksGame"
              xmlns:utils="clr-namespace:BlocksGame.UtilsMaui.UtilsMaui.Utils"
              Title="GamePage" x:Name="Page"
+             
             >
     <!--<ContentPage.BindingContext>
         <local:GamePageView/>
@@ -22,7 +23,7 @@
                     HorizontalOptions="Fill" 
                     Opacity="{Binding ChangeComboOpacity}"/>
             </HorizontalStackLayout>
-            
+
             <HorizontalStackLayout  Grid.Column="1" 
                                     HorizontalOptions="End" 
                                     VerticalOptions="Start">
@@ -50,16 +51,16 @@
                    TextColor="Red"
                    Opacity="0"
              >
-              
+
             </Label>
         </HorizontalStackLayout>
-        
+
         <VerticalStackLayout>
             <Button x:Name="loseButton" 
                     Clicked="LoseButtonClicked" 
                     Text="Lose" IsVisible="False"/>
         </VerticalStackLayout>
-        
+
         <Grid utils:GridHelpers.ColumnCount="{Binding BlocksBoard.Width}"       
               utils:GridHelpers.RowCount="{Binding BlocksBoard.Height}"        
               BackgroundColor="Transparent"      
@@ -67,7 +68,7 @@
               x:Name="boardGrid"
               BindableLayout.ItemsSource="{Binding BlocksBoard.Fields}"
              >
-         
+
             <BindableLayout.ItemTemplate >
                 <DataTemplate x:DataType="global:Field" >
                     <Border Grid.Row="{Binding RowPosition}" Grid.Column="{Binding ColumnPosition}" 
@@ -78,9 +79,9 @@
                     </Border>
                 </DataTemplate>
             </BindableLayout.ItemTemplate>
-          
-        </Grid>
 
+        </Grid>
+        
         <Grid utils:GridHelpers.ColumnCount="{Binding NumberOfBlocks}"
               RowDefinitions="*"
               BackgroundColor="Transparent"

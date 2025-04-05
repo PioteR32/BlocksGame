@@ -2,7 +2,9 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:local="clr-namespace:BlocksGame.Views"
-             x:Class="BlocksGame.MainPage" x:Name="Page">
+             x:Class="BlocksGame.MainPage" x:Name="Page"
+            
+            >
     <ContentPage.BindingContext>
         <local:MainPageView/>
     </ContentPage.BindingContext>
@@ -18,14 +20,23 @@
         <VerticalStackLayout
             Padding="30,0"
             Spacing="25">
-            <Label Text="{Binding TheBestScoreStr}" FontSize="Header"/>
-            <Button Command="{Binding Start}" Text="Start" />
-            <Picker ItemsSource="{Binding GameModesStr}" SelectedIndex="{Binding GameModeInt}" HorizontalOptions="Center" Title="Game Mode"/>
-            <HorizontalStackLayout Padding="10" HorizontalOptions="Center">
-                <Picker SelectedItem="{Binding Width}" ItemsSource="{Binding PickerOptions}"   HorizontalOptions="Center" Title="Board Width"/>
+           <Label Text="Blocks Game" HorizontalOptions="Center" Padding="20" FontSize="30" TextColor="Red"/>
+            <Label Text="{Binding TheBestScoreStr}" FontSize="Header" HorizontalOptions="Center"/>
+            <Picker ItemsSource="{Binding GameModesStr}" SelectedIndex="{Binding GameModeInt}" HorizontalOptions="Center" Title="Game Mode" FontSize="Header"/>
+            <!--<HorizontalStackLayout Padding="10" Spacing="30" HorizontalOptions="Center">
+                <Label Text="Board Width"     
+                       IsVisible="{OnPlatform Android=true, Default=false}" />
+                <Label Text="Board Height"     
+                       IsVisible="{OnPlatform Android=true, Default=false}" />
+                <Label Text="Blocks to choose"     
+                       IsVisible="{OnPlatform Android=true, Default=false}" />
+            </HorizontalStackLayout>-->
+            <HorizontalStackLayout  Spacing="20" HorizontalOptions="Center">
+                <Picker SelectedItem="{Binding Width}" ItemsSource="{Binding PickerOptions}"   HorizontalOptions="Center" Title="Board Width" />
                 <Picker SelectedItem="{Binding Height}" ItemsSource="{Binding PickerOptions}" HorizontalOptions="Center"  Title="Board Height"/>
                 <Picker SelectedItem="{Binding NumberOfBlocksToChoose}" ItemsSource="{Binding PickerOptions}"  HorizontalOptions="Center" Title="Blocks to choose"/>
             </HorizontalStackLayout>
+            <Button Command="{Binding Start}" Text="Start" FontSize="Header" Background="Transparent" TextColor="White"/>
         </VerticalStackLayout>
     </ScrollView>
 
