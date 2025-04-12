@@ -81,14 +81,15 @@
             </BindableLayout.ItemTemplate>
 
         </Grid>
-        
-        <Grid utils:GridHelpers.ColumnCount="{Binding NumberOfBlocks}"
-              RowDefinitions="*"
+        <!--<Grid x:Name="blocksView"/>-->
+        <Grid utils:GridHelpers.ColumnCount="{Binding ColumnCount}"
+              utils:GridHelpers.RowCount="{Binding RowCount}"
               BackgroundColor="Transparent"
               HorizontalOptions="Center"
               ColumnSpacing="20"
               Padding="20"
               BindableLayout.ItemsSource="{Binding ToChoose}"
+              RowSpacing="10"
               x:Name="blocksView"
                       >
             <BindableLayout.ItemTemplate>
@@ -99,8 +100,10 @@
                         BackgroundColor="Transparent"
                         IsVisible="True"
                         HorizontalOptions="Center"
-                        Grid.Column="{Binding PositionInToChoose}"
+                        Grid.Column="{Binding ColumnPosition}"
+                        Grid.Row="{Binding RowPosition}"
                         BindableLayout.ItemsSource="{Binding Fields}"
+
                       >
                         <Grid.GestureRecognizers>
                             <PanGestureRecognizer PanUpdated="PanGetsureFnc" />

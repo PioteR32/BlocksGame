@@ -51,7 +51,21 @@ namespace BlocksGame
 			GenerateBlock(board);
 		}
 		public int PositionInToChoose { get; set; }
-
+		public int RowPosition
+		{
+			get
+			{
+				return PositionInToChoose / Views.GamePageView.columnCount ;
+				
+			}
+		}
+		public int ColumnPosition
+		{
+			get
+			{
+				return (PositionInToChoose - RowPosition * Views.GamePageView.columnCount);
+			}
+		}
 		Field[,] fields;
 		public Field[,] Fields
 		{
@@ -68,8 +82,8 @@ namespace BlocksGame
 		public Color BackgroundColor = Color.FromRgb(255, 0, 0);
 		/// <summary>
 		/// Structure Of Block 
-		/// true = 1 = have block in this position
-		/// false = 0 = dont have block
+		/// true = 1 = have field in this position
+		/// false = 0 = dont have field
 		/// </summary>
 		public bool[,] BlockStructure { get; private set; } = new bool[9, 9];
 		bool isInGrid = true;
@@ -258,9 +272,13 @@ namespace BlocksGame
 			//	numberOfBlocks = random.Next(1, ((int)blocksBoard.Width + (int)blocksBoard.Height) / 2);
 			//else
 			//	numberOfBlocks = random.Next(1, ((int)blocksBoard.Width + (int)blocksBoard.Height) / 2);
-			return new Block(GenerateBlockStructure(blocksBoard, numberOfBlocks), positionInToChoose);
+
+			if ((int)blocksBoard.Width > 5 && 5 < (int)blocksBoard.Height)
+				return new Block(GenerateBlockStructure(blocksBoard, numberOfBlocks, true), positionInToChoose);
+			else
+				return new Block(GenerateBlockStructure(blocksBoard, numberOfBlocks), positionInToChoose);
 		}
-		public  Task GenerateBlock(BlocksBoard blocksBoard)
+		public  Task  GenerateBlock(BlocksBoard blocksBoard)
 		{
 			Random random = new Random();
 			int numberOfBlocks;
@@ -275,7 +293,7 @@ namespace BlocksGame
 			OnPropertyChanged(nameof(Fields));
 			return Task.CompletedTask;
 		}
-		public bool[,] GenerateBlockStructure(BlocksBoard blocksBoard, int numberOfBlocks, bool t = true)
+		static public bool[,] GenerateBlockStructure(BlocksBoard blocksBoard, int numberOfBlocks, bool t = true)
 		{
 			Random random = new Random();
 			int width = random.Next(1, (int)blocksBoard.Width);

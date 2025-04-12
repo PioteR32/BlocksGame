@@ -5,6 +5,7 @@ using Microsoft.Maui.Handlers;
 using Microsoft.Maui.Layouts;
 using System.Data.Common;
 using System.Diagnostics;
+using System.IO;
 using System.Xml.Linq;
 using static BlocksGame.Block;
 
@@ -486,6 +487,7 @@ public partial class GamePage : ContentPage
 			IsGetUserScore(viewModel.BlocksBoard);
 		if (IsUserLose())
 		{
+
 			viewModel.Lives--;
 			minusLives.Opacity = 1;
 			minusLives.FadeTo(0, 1500);
@@ -505,8 +507,11 @@ public partial class GamePage : ContentPage
 			for (int j = 0, k = 0; j < viewModel.BlocksBoard.Fields.GetLength(1); k++)
 			{
 
-				if (IsFreeSpaceOnBlock(k, j, viewModel.ToChoose[i]))
+				//streamWriter.WriteLine("IsPlaceOnBlock");
+				//streamWriter.WriteLine($"x={j}, y = {k} , ToChoose[{i}]");
+				if (IsFreeSpaceOnBlock(j,k , viewModel.ToChoose[i]))
 				{
+					//streamWriter.WriteLine($"True");
 					return true;
 				}
 				else
@@ -520,17 +525,23 @@ public partial class GamePage : ContentPage
 					j++;
 				}
 			}
+		//streamWriter.WriteLine($"False");
 		return false;
 	}
+	//StreamWriter streamWriter = new StreamWriter("d:\\plik.txt");
 	public bool IsUserLose()
 	{
 		int unVisableElements = 0;
+		
+		//streamWriter.WriteLine("IsUserLose");
+		//streamWriter.WriteLine($"ToChoose :{viewModel.ToChoose.Count},blocksView: {blocksView.Children.Count} ");
 		for (int i = 0; i < viewModel.ToChoose.Count; i++)
 			if (blocksView.Children[i] is Grid)
 			{
 
 				if ( IsPlaceOnBlock(i))
 				{
+					//streamWriter.Flush();
 					return false;
 				}
 			}
@@ -538,7 +549,7 @@ public partial class GamePage : ContentPage
 			{
 				unVisableElements++;
 			}
-
+		//streamWriter.Flush();
 		return true;
 
 	}

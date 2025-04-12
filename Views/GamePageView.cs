@@ -1,5 +1,6 @@
 ﻿
 //using Android.Database;
+
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -14,7 +15,25 @@ namespace BlocksGame.Views
 	public class GamePageView : BindableObject
 	{
 		public GameModes GameMode { get; private set; } = GameModes.Normal;
-
+#if ANDROID
+		public static int columnCount { get; private set; }  = 3;
+#elif WINDOWS
+		public static int columnCount { get; private set; }  = 4;
+#else
+		public static int columnCount { get; private set; } = 4;
+#endif
+		public int ColumnCount { get; } = columnCount;
+		public int RowCount
+		{
+			get
+			{
+				int tmp = NumberOfBlocks / columnCount;
+				float tmpF = float.Parse(NumberOfBlocks.ToString()) / columnCount;
+				if (tmp < tmpF)
+					return tmp + 1;
+				return tmp;
+			}
+		}
 		int numberOfBlocks = 0;
 		public int NumberOfBlocks
 		{
@@ -23,6 +42,7 @@ namespace BlocksGame.Views
 			{
 				numberOfBlocks = value;
 				OnPropertyChanged(nameof(NumberOfBlocks));
+				OnPropertyChanged(nameof(RowCount));
 			}
 		}
 		private int combo = 0;
@@ -162,7 +182,7 @@ namespace BlocksGame.Views
 		public async Task OpacityAnimation(int miliseconds)
 		{
 			double minusOpacity = ChangeComboOpacity / miliseconds;
-			while (ChangeComboOpacity > 0 )
+			while (ChangeComboOpacity > 0)
 			{
 				await Task.Delay(1);
 				ChangeComboOpacity = ChangeComboOpacity - minusOpacity;
