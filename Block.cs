@@ -296,8 +296,17 @@ namespace BlocksGame
 		static public bool[,] GenerateBlockStructure(BlocksBoard blocksBoard, int numberOfBlocks, bool t = true)
 		{
 			Random random = new Random();
-			int width = random.Next(1, (int)blocksBoard.Width);
-			int height = random.Next(1,(int)blocksBoard.Height / width);
+			int width, height;
+			try
+			{
+				 width = random.Next(1, (int)blocksBoard.Width);
+				 height = random.Next(1, (int)blocksBoard.Height / width);
+			}
+			catch
+			{
+				width = random.Next(1, (int)blocksBoard.Width);
+				height = random.Next(1, 2);
+			}
 			if (numberOfBlocks == 1)
 			{
 				return new bool[1, 1] { { true } };
