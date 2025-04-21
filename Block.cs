@@ -313,7 +313,6 @@ namespace BlocksGame
 			}
 
 			bool[,] tmp = new bool[height, width];
-			//bool[,] tmp = new bool[random.Next(numberOfBlocks, blocksBoard.Height), random.Next(numberOfBlocks, blocksBoard.Width)];
 
 			for (int i = 0; i < numberOfBlocks; i++)
 			{
@@ -323,8 +322,6 @@ namespace BlocksGame
 				{
 					tmp[y, x] = true;
 				}
-				//else
-				//	i--;
 			}
 			return tmp;
 		}
@@ -349,8 +346,6 @@ namespace BlocksGame
 				{
 					tmp[y, x] = true;
 				}
-				//else
-				//	i--;
 			}
 			return tmp;
 		}
