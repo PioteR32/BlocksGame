@@ -36,7 +36,7 @@
                 <Picker SelectedItem="{Binding Height}" ItemsSource="{Binding PickerOptions}" HorizontalOptions="Center"  Title="Board Height"/>
                 <Picker SelectedItem="{Binding NumberOfBlocksToChoose}" ItemsSource="{Binding PickerOptions}"  HorizontalOptions="Center" Title="Blocks to choose"/>
             </HorizontalStackLayout>
-            <Button Command="{Binding Start}" Text="Start" FontSize="Header" Background="Transparent" TextColor="White"/>
+            <Button Command="{Binding Start}" Text="Start" FontSize="Header" Background="Transparent" TextColor="Black"/>
         </VerticalStackLayout>
     </ScrollView>
 
