@@ -1,11 +1,13 @@
 ﻿
 using System.Collections.ObjectModel;
+using System.Runtime;
 using System.Windows.Input;
 
 namespace BlocksGame
 {
     public partial class MainPage : ContentPage
     {
+
         public MainPage()
         {
             InitializeComponent();
@@ -16,6 +18,7 @@ namespace BlocksGame
         {
             base.OnAppearing();
             Global.MainPageView.TheBestScoreStr = Global.MainPageView.TheBestScoreStr;
+            GCSettings.LatencyMode = Global.DefaultGCLatencyMode;
         }
     }
 

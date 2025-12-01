@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -12,6 +13,7 @@ namespace BlocksGame
         public static  Views.MainPageView? MainPageView { get; set; } = new Views.MainPageView();
         public static MainPage MainPage { get; set; }
         public static GamePage GamePage { get; set; }
+        public static GCLatencyMode DefaultGCLatencyMode { get;private set; } = GCSettings.LatencyMode;
         public static string GlobalPath { get; set; } = Microsoft.Maui.Storage.FileSystem.AppDataDirectory;
         /// <summary>
         /// Create grid columns and rows

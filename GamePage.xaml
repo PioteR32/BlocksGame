@@ -60,7 +60,7 @@
                     Clicked="LoseButtonClicked" 
                     Text="Lose" IsVisible="False"/>
         </VerticalStackLayout>
-
+        <!--BoardView-->
         <Grid utils:GridHelpers.ColumnCount="{Binding BlocksBoard.Width}"       
               utils:GridHelpers.RowCount="{Binding BlocksBoard.Height}"        
               BackgroundColor="Transparent"      
@@ -75,7 +75,8 @@
                       BackgroundColor="Transparent">
                         <Label WidthRequest="{Binding Width}" 
                                HeightRequest="{Binding Height}" 
-                               BackgroundColor="{Binding BackgroundColor}"/>
+                               BackgroundColor="{Binding BackgroundColor}"
+                               Opacity="{Binding Opacity}"/>
                     </Border>
                 </DataTemplate>
             </BindableLayout.ItemTemplate>

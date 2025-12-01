@@ -39,6 +39,8 @@ namespace BlocksGame
 				for (int j = 0; j < Height; j++)
 				{
 					Fields[j, i] = new Field(j, i, MinimumWidthRequest, MinimumHeightRequest);
+					//Fields[j,i].Opacity = 0;
+					//Task.Run(() => Fields[j- 1,i-1].FadeOpacity(1, 100));
 				}
 			}
             return Task.CompletedTask;

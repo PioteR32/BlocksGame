@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Input;
@@ -115,6 +116,7 @@ namespace BlocksGame.Views
         {
             if (Width > 1 && Height > 1 && NumberOfBlocksToChoose > 1)
             {
+                GCSettings.LatencyMode = GCLatencyMode.SustainedLowLatency;
                 GamePage gamePage = new GamePage(Width, Height, NumberOfBlocksToChoose,(GameModes)GameModeInt);
                 await Global.MainPage.Navigation.PushAsync(gamePage);
             }
