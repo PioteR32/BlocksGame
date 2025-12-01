@@ -1,0 +1,338 @@
+{
+  "Version": 1,
+  "WorkspaceRootPath": "D:\\programowanie\\projekty c#\\BlocksGame\\",
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{F8EDEA62-91F8-4877-B61D-AC92243F7DC1}|..\\BlocksGameTests\\BlocksGameTests.csproj|d:\\programowanie\\projekty c#\\blocksgametests\\blocktests.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{C3BE327E-98E7-4B79-9483-EE09B927197D}|BlocksGame.csproj|d:\\programowanie\\projekty c#\\blocksgame\\block.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{C3BE327E-98E7-4B79-9483-EE09B927197D}|BlocksGame.csproj|solutionrelative:block.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{F8EDEA62-91F8-4877-B61D-AC92243F7DC1}|..\\BlocksGameTests\\BlocksGameTests.csproj|d:\\programowanie\\projekty c#\\blocksgametests\\gamepageviewtests.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{F8EDEA62-91F8-4877-B61D-AC92243F7DC1}|..\\BlocksGameTests\\BlocksGameTests.csproj|d:\\programowanie\\projekty c#\\blocksgametests\\blocksboardtests.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{C3BE327E-98E7-4B79-9483-EE09B927197D}|BlocksGame.csproj|d:\\programowanie\\projekty c#\\blocksgame\\gamepage.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}",
+      "RelativeMoniker": "D:0:0:{C3BE327E-98E7-4B79-9483-EE09B927197D}|BlocksGame.csproj|solutionrelative:gamepage.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{F8EDEA62-91F8-4877-B61D-AC92243F7DC1}|..\\BlocksGameTests\\BlocksGameTests.csproj|d:\\programowanie\\projekty c#\\blocksgametests\\blocksgametests.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{C3BE327E-98E7-4B79-9483-EE09B927197D}|BlocksGame.csproj|d:\\programowanie\\projekty c#\\blocksgame\\utilsmaui\\gridhelpers.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{C3BE327E-98E7-4B79-9483-EE09B927197D}|BlocksGame.csproj|solutionrelative:utilsmaui\\gridhelpers.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{C3BE327E-98E7-4B79-9483-EE09B927197D}|BlocksGame.csproj|d:\\programowanie\\projekty c#\\blocksgame\\field.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{C3BE327E-98E7-4B79-9483-EE09B927197D}|BlocksGame.csproj|solutionrelative:field.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{C3BE327E-98E7-4B79-9483-EE09B927197D}|BlocksGame.csproj|d:\\programowanie\\projekty c#\\blocksgame\\mainpage.xaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{C3BE327E-98E7-4B79-9483-EE09B927197D}|BlocksGame.csproj|solutionrelative:mainpage.xaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{C3BE327E-98E7-4B79-9483-EE09B927197D}|BlocksGame.csproj|d:\\programowanie\\projekty c#\\blocksgame\\views\\mainpageview.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{C3BE327E-98E7-4B79-9483-EE09B927197D}|BlocksGame.csproj|solutionrelative:views\\mainpageview.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{C3BE327E-98E7-4B79-9483-EE09B927197D}|BlocksGame.csproj|d:\\programowanie\\projekty c#\\blocksgame\\views\\gamepageview.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{C3BE327E-98E7-4B79-9483-EE09B927197D}|BlocksGame.csproj|solutionrelative:views\\gamepageview.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{C3BE327E-98E7-4B79-9483-EE09B927197D}|BlocksGame.csproj|d:\\programowanie\\projekty c#\\blocksgame\\global.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{C3BE327E-98E7-4B79-9483-EE09B927197D}|BlocksGame.csproj|solutionrelative:global.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{C3BE327E-98E7-4B79-9483-EE09B927197D}|BlocksGame.csproj|d:\\programowanie\\projekty c#\\blocksgame\\blocksboard.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{C3BE327E-98E7-4B79-9483-EE09B927197D}|BlocksGame.csproj|solutionrelative:blocksboard.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{C3BE327E-98E7-4B79-9483-EE09B927197D}|BlocksGame.csproj|d:\\programowanie\\projekty c#\\blocksgame\\gamepage.xaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{C3BE327E-98E7-4B79-9483-EE09B927197D}|BlocksGame.csproj|solutionrelative:gamepage.xaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{C3BE327E-98E7-4B79-9483-EE09B927197D}|BlocksGame.csproj|d:\\programowanie\\projekty c#\\blocksgame\\mainpage.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}",
+      "RelativeMoniker": "D:0:0:{C3BE327E-98E7-4B79-9483-EE09B927197D}|BlocksGame.csproj|solutionrelative:mainpage.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}"
+    }
+  ],
+  "DocumentGroupContainers": [
+    {
+      "Orientation": 0,
+      "VerticalTabListWidth": 256,
+      "DocumentGroups": [
+        {
+          "DockedWidth": 200,
+          "SelectedChildIndex": 14,
+          "Children": [
+            {
+              "$type": "Bookmark",
+              "Name": "ST:131:0:{1fc202d4-d401-403c-9834-5b218574bb67}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:130:0:{1fc202d4-d401-403c-9834-5b218574bb67}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:129:0:{1fc202d4-d401-403c-9834-5b218574bb67}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:128:0:{116d2292-e37d-41cd-a077-ebacac4c8cc4}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{1c64b9c2-e352-428e-a56d-0ace190b99a6}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{3ae79031-e1bc-11d0-8f78-00a0c9110057}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:1:0:{d212f56b-c48a-434c-a121-1c5d80b59b9f}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{6d4078d1-5951-4ed1-ac0e-0a8099c1cce5}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{34e76e81-ee4a-11d0-ae2e-00a0c90fffc3}"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "GamePageViewTests.cs",
+              "DocumentMoniker": "D:\\programowanie\\projekty c#\\BlocksGameTests\\GamePageViewTests.cs",
+              "RelativeDocumentMoniker": "..\\BlocksGameTests\\GamePageViewTests.cs",
+              "ToolTip": "D:\\programowanie\\projekty c#\\BlocksGameTests\\GamePageViewTests.cs",
+              "RelativeToolTip": "..\\BlocksGameTests\\GamePageViewTests.cs",
+              "ViewState": "AgIAADkAAAAAAAAAAAAqwEUAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-12-01T15:01:15.181Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "BlocksBoardTests.cs",
+              "DocumentMoniker": "D:\\programowanie\\projekty c#\\BlocksGameTests\\BlocksBoardTests.cs",
+              "RelativeDocumentMoniker": "..\\BlocksGameTests\\BlocksBoardTests.cs",
+              "ToolTip": "D:\\programowanie\\projekty c#\\BlocksGameTests\\BlocksBoardTests.cs",
+              "RelativeToolTip": "..\\BlocksGameTests\\BlocksBoardTests.cs",
+              "ViewState": "AgIAABwAAAAAAAAAAAAQwAkAAAAIAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-12-01T15:00:42.929Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 5,
+              "Title": "BlocksGameTests",
+              "DocumentMoniker": "D:\\programowanie\\projekty c#\\BlocksGameTests\\BlocksGameTests.csproj",
+              "RelativeDocumentMoniker": "..\\BlocksGameTests\\BlocksGameTests.csproj",
+              "ToolTip": "D:\\programowanie\\projekty c#\\BlocksGameTests\\BlocksGameTests.csproj",
+              "RelativeToolTip": "..\\BlocksGameTests\\BlocksGameTests.csproj",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAMAAAAVAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000758|",
+              "WhenOpened": "2025-12-01T14:54:26.001Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 11,
+              "Title": "Global.cs",
+              "DocumentMoniker": "D:\\programowanie\\projekty c#\\BlocksGame\\Global.cs",
+              "RelativeDocumentMoniker": "Global.cs",
+              "ToolTip": "D:\\programowanie\\projekty c#\\BlocksGame\\Global.cs",
+              "RelativeToolTip": "Global.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAA8AAAA4AAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-07-24T21:08:13.507Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 8,
+              "Title": "MainPage.xaml.cs",
+              "DocumentMoniker": "D:\\programowanie\\projekty c#\\BlocksGame\\MainPage.xaml.cs",
+              "RelativeDocumentMoniker": "MainPage.xaml.cs",
+              "ToolTip": "D:\\programowanie\\projekty c#\\BlocksGame\\MainPage.xaml.cs",
+              "RelativeToolTip": "MainPage.xaml.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABQAAABBAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-01-29T12:05:47.878Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "Block.cs",
+              "DocumentMoniker": "D:\\programowanie\\projekty c#\\BlocksGame\\Block.cs",
+              "RelativeDocumentMoniker": "Block.cs",
+              "ToolTip": "D:\\programowanie\\projekty c#\\BlocksGame\\Block.cs",
+              "RelativeToolTip": "Block.cs",
+              "ViewState": "AgIAAEUBAAAAAAAAAAAqwE0BAAAYAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-01-29T11:18:36.424Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 10,
+              "Title": "GamePageView.cs",
+              "DocumentMoniker": "D:\\programowanie\\projekty c#\\BlocksGame\\Views\\GamePageView.cs",
+              "RelativeDocumentMoniker": "Views\\GamePageView.cs",
+              "ToolTip": "D:\\programowanie\\projekty c#\\BlocksGame\\Views\\GamePageView.cs",
+              "RelativeToolTip": "Views\\GamePageView.cs",
+              "ViewState": "AgIAAAMAAAAAAAAAAIBJwAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-02-01T17:14:05.547Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
+              "Title": "GamePage.xaml",
+              "DocumentMoniker": "D:\\programowanie\\projekty c#\\BlocksGame\\GamePage.xaml",
+              "RelativeDocumentMoniker": "GamePage.xaml",
+              "ToolTip": "D:\\programowanie\\projekty c#\\BlocksGame\\GamePage.xaml",
+              "RelativeToolTip": "GamePage.xaml",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAwAAAAkAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003549|",
+              "WhenOpened": "2025-04-12T14:00:53.671Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 9,
+              "Title": "MainPageView.cs",
+              "DocumentMoniker": "D:\\programowanie\\projekty c#\\BlocksGame\\Views\\MainPageView.cs",
+              "RelativeDocumentMoniker": "Views\\MainPageView.cs",
+              "ToolTip": "D:\\programowanie\\projekty c#\\BlocksGame\\Views\\MainPageView.cs",
+              "RelativeToolTip": "Views\\MainPageView.cs",
+              "ViewState": "AgIAAAQAAAAAAAAAAIBJwHYAAABLAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-02-01T16:59:30.818Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 12,
+              "Title": "BlocksBoard.cs",
+              "DocumentMoniker": "D:\\programowanie\\projekty c#\\BlocksGame\\BlocksBoard.cs",
+              "RelativeDocumentMoniker": "BlocksBoard.cs",
+              "ToolTip": "D:\\programowanie\\projekty c#\\BlocksGame\\BlocksBoard.cs",
+              "RelativeToolTip": "BlocksBoard.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAoAAAAtAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-01-29T11:49:58.442Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 13,
+              "Title": "GamePage.xaml.cs",
+              "DocumentMoniker": "D:\\programowanie\\projekty c#\\BlocksGame\\GamePage.xaml.cs",
+              "RelativeDocumentMoniker": "GamePage.xaml.cs",
+              "ToolTip": "D:\\programowanie\\projekty c#\\BlocksGame\\GamePage.xaml.cs",
+              "RelativeToolTip": "GamePage.xaml.cs",
+              "ViewState": "AgIAAAkAAAAAAAAAAIBJwOwBAAAUAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-01-29T11:26:18.096Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 6,
+              "Title": "GridHelpers.cs",
+              "DocumentMoniker": "D:\\programowanie\\projekty c#\\BlocksGame\\UtilsMaui\\GridHelpers.cs",
+              "RelativeDocumentMoniker": "UtilsMaui\\GridHelpers.cs",
+              "ToolTip": "D:\\programowanie\\projekty c#\\BlocksGame\\UtilsMaui\\GridHelpers.cs",
+              "RelativeToolTip": "UtilsMaui\\GridHelpers.cs",
+              "ViewState": "AgIAAEMAAAAAAAAAAIBQwFgAAAAWAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-02-01T16:01:32.556Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 7,
+              "Title": "Field.cs",
+              "DocumentMoniker": "D:\\programowanie\\projekty c#\\BlocksGame\\Field.cs",
+              "RelativeDocumentMoniker": "Field.cs",
+              "ToolTip": "D:\\programowanie\\projekty c#\\BlocksGame\\Field.cs",
+              "RelativeToolTip": "Field.cs",
+              "ViewState": "AgIAAJEAAAAAAAAAAAAawJ0AAAAeAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-02-14T09:49:41.099Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 14,
+              "Title": "MainPage.xaml",
+              "DocumentMoniker": "D:\\programowanie\\projekty c#\\BlocksGame\\MainPage.xaml",
+              "RelativeDocumentMoniker": "MainPage.xaml",
+              "ToolTip": "D:\\programowanie\\projekty c#\\BlocksGame\\MainPage.xaml",
+              "RelativeToolTip": "MainPage.xaml",
+              "ViewState": "AgIAAAkAAAAAAAAAAIBJwCAAAAAnAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003549|",
+              "WhenOpened": "2025-01-29T12:22:08.445Z",
+              "EditorCaption": ""
+            }
+          ]
+        },
+        {
+          "DockedWidth": 200,
+          "SelectedChildIndex": -1,
+          "Children": [
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{d78612c7-9962-4b83-95d9-268046dad23a}"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "Orientation": 0,
+      "VerticalTabListWidth": 256,
+      "FloatingWindowState": {
+        "Id": "2dc324f2-b398-4788-93d7-b93de1fb4e3a",
+        "Display": 0,
+        "X": 710,
+        "Y": 179,
+        "Width": 892,
+        "Height": 544,
+        "WindowState": 2
+      },
+      "DocumentGroups": [
+        {
+          "DockedWidth": 200,
+          "SelectedChildIndex": 0,
+          "Children": [
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "BlockTests.cs",
+              "DocumentMoniker": "D:\\programowanie\\projekty c#\\BlocksGameTests\\BlockTests.cs",
+              "RelativeDocumentMoniker": "..\\BlocksGameTests\\BlockTests.cs",
+              "ToolTip": "D:\\programowanie\\projekty c#\\BlocksGameTests\\BlockTests.cs*",
+              "RelativeToolTip": "..\\BlocksGameTests\\BlockTests.cs*",
+              "ViewState": "AgIAADYAAAAAAAAAAAAqwEEAAAAHAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-12-01T14:59:42.389Z",
+              "EditorCaption": ""
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

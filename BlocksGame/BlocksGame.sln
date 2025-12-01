@@ -5,6 +5,8 @@ VisualStudioVersion = 17.10.35013.160
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BlocksGame", "BlocksGame.csproj", "{C3BE327E-98E7-4B79-9483-EE09B927197D}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BlocksGameTests", "..\BlocksGameTests\BlocksGameTests.csproj", "{F8EDEA62-91F8-4877-B61D-AC92243F7DC1}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -17,6 +19,10 @@ Global
 		{C3BE327E-98E7-4B79-9483-EE09B927197D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C3BE327E-98E7-4B79-9483-EE09B927197D}.Release|Any CPU.Build.0 = Release|Any CPU
 		{C3BE327E-98E7-4B79-9483-EE09B927197D}.Release|Any CPU.Deploy.0 = Release|Any CPU
+		{F8EDEA62-91F8-4877-B61D-AC92243F7DC1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F8EDEA62-91F8-4877-B61D-AC92243F7DC1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F8EDEA62-91F8-4877-B61D-AC92243F7DC1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F8EDEA62-91F8-4877-B61D-AC92243F7DC1}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
