@@ -1,29 +1,29 @@
 {
   "version": 2,
-  "dgSpecHash": "xNn82H/Vrc4=",
+  "dgSpecHash": "IeUIzjhpsik=",
   "success": true,
-  "projectFilePath": "D:\\programowanie\\projekty c#\\BlocksGame\\BlocksGameTests\\BlocksGameTests.csproj",
+  "projectFilePath": "c:\\Users\\piotr\\Desktop\\BlocksGame\\BlocksGameTests\\BlocksGameTests.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\piotr\\.nuget\\packages\\coverlet.collector\\6.0.0\\coverlet.collector.6.0.0.nupkg.sha512",
     "C:\\Users\\piotr\\.nuget\\packages\\microsoft.codecoverage\\17.8.0\\microsoft.codecoverage.17.8.0.nupkg.sha512",
     "C:\\Users\\piotr\\.nuget\\packages\\microsoft.extensions.configuration\\8.0.0\\microsoft.extensions.configuration.8.0.0.nupkg.sha512",
     "C:\\Users\\piotr\\.nuget\\packages\\microsoft.extensions.configuration.abstractions\\8.0.0\\microsoft.extensions.configuration.abstractions.8.0.0.nupkg.sha512",
-    "C:\\Users\\piotr\\.nuget\\packages\\microsoft.extensions.dependencyinjection\\8.0.1\\microsoft.extensions.dependencyinjection.8.0.1.nupkg.sha512",
-    "C:\\Users\\piotr\\.nuget\\packages\\microsoft.extensions.dependencyinjection.abstractions\\8.0.2\\microsoft.extensions.dependencyinjection.abstractions.8.0.2.nupkg.sha512",
-    "C:\\Users\\piotr\\.nuget\\packages\\microsoft.extensions.logging\\8.0.1\\microsoft.extensions.logging.8.0.1.nupkg.sha512",
-    "C:\\Users\\piotr\\.nuget\\packages\\microsoft.extensions.logging.abstractions\\8.0.2\\microsoft.extensions.logging.abstractions.8.0.2.nupkg.sha512",
+    "C:\\Users\\piotr\\.nuget\\packages\\microsoft.extensions.dependencyinjection\\8.0.0\\microsoft.extensions.dependencyinjection.8.0.0.nupkg.sha512",
+    "C:\\Users\\piotr\\.nuget\\packages\\microsoft.extensions.dependencyinjection.abstractions\\8.0.0\\microsoft.extensions.dependencyinjection.abstractions.8.0.0.nupkg.sha512",
+    "C:\\Users\\piotr\\.nuget\\packages\\microsoft.extensions.logging\\8.0.0\\microsoft.extensions.logging.8.0.0.nupkg.sha512",
+    "C:\\Users\\piotr\\.nuget\\packages\\microsoft.extensions.logging.abstractions\\8.0.0\\microsoft.extensions.logging.abstractions.8.0.0.nupkg.sha512",
     "C:\\Users\\piotr\\.nuget\\packages\\microsoft.extensions.logging.debug\\8.0.0\\microsoft.extensions.logging.debug.8.0.0.nupkg.sha512",
-    "C:\\Users\\piotr\\.nuget\\packages\\microsoft.extensions.options\\8.0.2\\microsoft.extensions.options.8.0.2.nupkg.sha512",
+    "C:\\Users\\piotr\\.nuget\\packages\\microsoft.extensions.options\\8.0.0\\microsoft.extensions.options.8.0.0.nupkg.sha512",
     "C:\\Users\\piotr\\.nuget\\packages\\microsoft.extensions.primitives\\8.0.0\\microsoft.extensions.primitives.8.0.0.nupkg.sha512",
-    "C:\\Users\\piotr\\.nuget\\packages\\microsoft.maui.controls\\8.0.100\\microsoft.maui.controls.8.0.100.nupkg.sha512",
-    "C:\\Users\\piotr\\.nuget\\packages\\microsoft.maui.controls.build.tasks\\8.0.100\\microsoft.maui.controls.build.tasks.8.0.100.nupkg.sha512",
-    "C:\\Users\\piotr\\.nuget\\packages\\microsoft.maui.controls.compatibility\\8.0.100\\microsoft.maui.controls.compatibility.8.0.100.nupkg.sha512",
-    "C:\\Users\\piotr\\.nuget\\packages\\microsoft.maui.controls.core\\8.0.100\\microsoft.maui.controls.core.8.0.100.nupkg.sha512",
-    "C:\\Users\\piotr\\.nuget\\packages\\microsoft.maui.controls.xaml\\8.0.100\\microsoft.maui.controls.xaml.8.0.100.nupkg.sha512",
-    "C:\\Users\\piotr\\.nuget\\packages\\microsoft.maui.core\\8.0.100\\microsoft.maui.core.8.0.100.nupkg.sha512",
-    "C:\\Users\\piotr\\.nuget\\packages\\microsoft.maui.essentials\\8.0.100\\microsoft.maui.essentials.8.0.100.nupkg.sha512",
-    "C:\\Users\\piotr\\.nuget\\packages\\microsoft.maui.graphics\\8.0.100\\microsoft.maui.graphics.8.0.100.nupkg.sha512",
-    "C:\\Users\\piotr\\.nuget\\packages\\microsoft.maui.resizetizer\\8.0.100\\microsoft.maui.resizetizer.8.0.100.nupkg.sha512",
+    "C:\\Users\\piotr\\.nuget\\packages\\microsoft.maui.controls\\8.0.3\\microsoft.maui.controls.8.0.3.nupkg.sha512",
+    "C:\\Users\\piotr\\.nuget\\packages\\microsoft.maui.controls.build.tasks\\8.0.3\\microsoft.maui.controls.build.tasks.8.0.3.nupkg.sha512",
+    "C:\\Users\\piotr\\.nuget\\packages\\microsoft.maui.controls.compatibility\\8.0.3\\microsoft.maui.controls.compatibility.8.0.3.nupkg.sha512",
+    "C:\\Users\\piotr\\.nuget\\packages\\microsoft.maui.controls.core\\8.0.3\\microsoft.maui.controls.core.8.0.3.nupkg.sha512",
+    "C:\\Users\\piotr\\.nuget\\packages\\microsoft.maui.controls.xaml\\8.0.3\\microsoft.maui.controls.xaml.8.0.3.nupkg.sha512",
+    "C:\\Users\\piotr\\.nuget\\packages\\microsoft.maui.core\\8.0.3\\microsoft.maui.core.8.0.3.nupkg.sha512",
+    "C:\\Users\\piotr\\.nuget\\packages\\microsoft.maui.essentials\\8.0.3\\microsoft.maui.essentials.8.0.3.nupkg.sha512",
+    "C:\\Users\\piotr\\.nuget\\packages\\microsoft.maui.graphics\\8.0.3\\microsoft.maui.graphics.8.0.3.nupkg.sha512",
+    "C:\\Users\\piotr\\.nuget\\packages\\microsoft.maui.resizetizer\\8.0.3\\microsoft.maui.resizetizer.8.0.3.nupkg.sha512",
     "C:\\Users\\piotr\\.nuget\\packages\\microsoft.net.test.sdk\\17.8.0\\microsoft.net.test.sdk.17.8.0.nupkg.sha512",
     "C:\\Users\\piotr\\.nuget\\packages\\microsoft.netcore.platforms\\1.1.0\\microsoft.netcore.platforms.1.1.0.nupkg.sha512",
     "C:\\Users\\piotr\\.nuget\\packages\\microsoft.netcore.targets\\1.1.0\\microsoft.netcore.targets.1.1.0.nupkg.sha512",
@@ -112,5 +112,30 @@
     "C:\\Users\\piotr\\.nuget\\packages\\xunit.extensibility.execution\\2.5.3\\xunit.extensibility.execution.2.5.3.nupkg.sha512",
     "C:\\Users\\piotr\\.nuget\\packages\\xunit.runner.visualstudio\\2.5.3\\xunit.runner.visualstudio.2.5.3.nupkg.sha512"
   ],
-  "logs": []
+  "logs": [
+    {
+      "code": "NU1602",
+      "level": "Warning",
+      "message": "BlocksGame does not provide an inclusive lower bound for dependency Microsoft.Maui.Controls. Microsoft.Maui.Controls 8.0.3 was resolved instead.",
+      "projectPath": "c:\\Users\\piotr\\Desktop\\BlocksGame\\BlocksGameTests\\BlocksGameTests.csproj",
+      "warningLevel": 1,
+      "filePath": "c:\\Users\\piotr\\Desktop\\BlocksGame\\BlocksGameTests\\BlocksGameTests.csproj",
+      "libraryId": "Microsoft.Maui.Controls",
+      "targetGraphs": [
+        "net8.0"
+      ]
+    },
+    {
+      "code": "NU1602",
+      "level": "Warning",
+      "message": "BlocksGame does not provide an inclusive lower bound for dependency Microsoft.Maui.Controls.Compatibility. Microsoft.Maui.Controls.Compatibility 8.0.3 was resolved instead.",
+      "projectPath": "c:\\Users\\piotr\\Desktop\\BlocksGame\\BlocksGameTests\\BlocksGameTests.csproj",
+      "warningLevel": 1,
+      "filePath": "c:\\Users\\piotr\\Desktop\\BlocksGame\\BlocksGameTests\\BlocksGameTests.csproj",
+      "libraryId": "Microsoft.Maui.Controls.Compatibility",
+      "targetGraphs": [
+        "net8.0"
+      ]
+    }
+  ]
 }
